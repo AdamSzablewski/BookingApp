@@ -10,10 +10,16 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<BookingAppContext>(options =>{
     options.UseSqlite(conString);
 });
+builder.Services.AddControllers().AddNewtonsoftJson(options => {
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+});
 builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 builder.Services.AddScoped<PersonService>();
 builder.Services.AddScoped<FacilityService>();
 builder.Services.AddScoped<IFacilityRepository, FacilityRepository>();
+builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
+builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
+
 
 var app = builder.Build();
 

@@ -120,3 +120,8 @@
 /Users/adamszablewski/Documents/c#/BookingApp/BookingApp/obj/Debug/net8.0/BookingApp.pdb
 /Users/adamszablewski/Documents/c#/BookingApp/BookingApp/obj/Debug/net8.0/BookingApp.genruntimeconfig.cache
 /Users/adamszablewski/Documents/c#/BookingApp/BookingApp/obj/Debug/net8.0/ref/BookingApp.dll
+/Users/adamszablewski/Documents/c#/BookingApp/BookingApp/obj/Debug/net8.0/BookingApp.sourcelink.json
+/Users/adamszablewski/Documents/c#/BookingApp/BookingApp/bin/Debug/net8.0/Microsoft.AspNetCore.JsonPatch.dll
+/Users/adamszablewski/Documents/c#/BookingApp/BookingApp/bin/Debug/net8.0/Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+/Users/adamszablewski/Documents/c#/BookingApp/BookingApp/bin/Debug/net8.0/Newtonsoft.Json.dll
+/Users/adamszablewski/Documents/c#/BookingApp/BookingApp/bin/Debug/net8.0/Newtonsoft.Json.Bson.dll

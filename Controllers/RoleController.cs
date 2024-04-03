@@ -12,7 +12,7 @@ public class RoleController : ControllerBase
     }
     [HttpGet("owner/{Id}")]
     public IActionResult AddOwnerFunctionality([FromRoute] long Id){
-        Person? person = _dbContext.persons.Find(Id);
+        Person? person = _dbContext.Persons.Find(Id);
         if(person == null){
             return NotFound();
         }
@@ -30,7 +30,7 @@ public class RoleController : ControllerBase
 
     [HttpGet("client/{Id}")]
     public IActionResult AddCustomerFunctionality([FromRoute] long Id){
-        Person? person = _dbContext.persons.Find(Id);
+        Person? person = _dbContext.Persons.Find(Id);
         if(person == null){
             return NotFound();
         }
@@ -47,7 +47,7 @@ public class RoleController : ControllerBase
     }
     [HttpGet("employee/{Id}")]
     public IActionResult AddEmployeeFunctionality([FromRoute] long Id){
-        Person? person = _dbContext.persons.Find(Id);
+        Person? person = _dbContext.Persons.Find(Id);
         if(person == null){
             return NotFound();
         }

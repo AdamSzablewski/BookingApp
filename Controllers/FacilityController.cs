@@ -11,12 +11,12 @@ public class FacilityController : ControllerBase
         _facilityService = facilityService;
     }
     [HttpGet("{Id}")]
-    public IActionResult getById([FromRoute]long Id){
-        return Ok(_facilityService.GetById(Id));
+    public async Task<IActionResult> GetById([FromRoute]long Id){
+        return Ok(await _facilityService.GetById(Id));
     }
     [HttpPost("{Id}")]
-    public IActionResult create([FromRoute]long Id, [FromBody]FacilityCreateDto dto){
-        _facilityService.Create(Id, dto);
+    public async Task<IActionResult> Create([FromRoute]long Id, [FromBody]FacilityCreateDto dto){
+        await _facilityService.CreateAsync(Id, dto);
         return Ok();
     }
 }

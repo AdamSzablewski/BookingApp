@@ -2,6 +2,7 @@
 
 public interface IFacilityRepository
 {
-    public Facility? GetById(long id);
-    public Facility Create(Facility facility, Owner owner);
+    public Task<Facility?> GetByIdAsync(long id);
+    public Task<Facility> CreateAsync(Facility facility, Owner owner);
+    public Task<Facility> SaveAsync(Facility facility);
 }

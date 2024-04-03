@@ -10,20 +10,20 @@ public class PersonService
     {
         _personRepository = repository;
     }
-    public Person? GetUserById(long id)
+    public async Task<Person?> GetUserById(long id)
     {
-     return _personRepository.getById(id);
+     return await _personRepository.GetByIdAsync(id);
     }
-    public Person? GetUserByEmail(string email)
+    public async Task<Person?> GetUserByEmail(string email)
     {
-     return _personRepository.getByEmail(email);
+     return await _personRepository.GetByEmailAsync(email);
     }
-    public bool DeletePerson(long id){
-        _personRepository.deletePerson(id);
+    public async Task<bool> DeletePerson(long id){
+        await _personRepository.DeletePersonAsync(id);
         return true;
     }
     public void CreatePerson(PersonCreateDto personCreateDto){
         Person user = personCreateDto.MapToEntity();
-        _personRepository.createPerson(user);
+        _personRepository.CreatePersonAsync(user);
     }
 }

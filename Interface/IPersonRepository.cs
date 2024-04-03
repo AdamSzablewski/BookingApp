@@ -2,9 +2,9 @@
 
 public interface IPersonRepository
 {
-    Person? getById(long id);
-    Person createPerson(Person person);
-    Person? updatePerson(long id, Person person);
-    Person? deletePerson(long id);
-    Person? getByEmail(string email);
+    Task<Person?> GetByIdAsync(long id);
+    Task<Person> CreatePersonAsync(Person person);
+    Task<Person?> UpdatePersonAsync(long id, Person person);
+    Task<Person?> DeletePersonAsync(long id);
+    Task<Person?> GetByEmailAsync(string email);
 }

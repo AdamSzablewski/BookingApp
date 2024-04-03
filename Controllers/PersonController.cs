@@ -16,7 +16,7 @@ public class PersonController : ControllerBase
     [HttpGet]
     public IActionResult getAll()
     {
-       return Ok( _context.persons.ToList()); 
+       return Ok( _context.Persons.ToList()); 
     }
 
     [HttpGet("{id}")]
@@ -31,9 +31,9 @@ public class PersonController : ControllerBase
         return Ok();
     }
     [HttpDelete("{id}")]
-    public IActionResult deletePerson([FromRoute] long id)
+    public async Task<IActionResult> deletePerson([FromRoute] long id)
     {
-       bool success = _personService.DeletePerson(id); 
+       bool success = await _personService.DeletePerson(id); 
        if(success){
             return Ok();
        }else{

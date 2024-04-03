@@ -5,10 +5,17 @@ namespace BookingApp;
 public class BookingAppContext(DbContextOptions<BookingAppContext> options) 
 : DbContext(options)
 {
-    public DbSet<Person> persons => Set<Person>();
-    public DbSet<Customer> customers => Set<Customer>();
-    public DbSet<Owner> owners => Set<Owner>();
-    public DbSet<Employee> employees => Set<Employee>();
+    public DbSet<Person> Persons => Set<Person>();
+    public DbSet<Customer> Customers => Set<Customer>();
+    public DbSet<Owner> Owners => Set<Owner>();
+    public DbSet<Employee> Employees => Set<Employee>();
+    public DbSet<Facility> Facilities => Set<Facility>();
+    public DbSet<Appointment> Appointments => Set<Appointment>();
+    public DbSet<Service> Services => Set<Service>();
+    public DbSet<Adress> Adresses => Set<Adress>();
+
+
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
 {

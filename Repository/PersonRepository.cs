@@ -9,34 +9,36 @@ public class PersonRepository : IPersonRepository
         _context = context;
     }
 
-    public Person createPerson(Person person)
+    public async Task<Person> CreatePersonAsync(Person person)
     {
-        _context.Add(person);
-        _context.SaveChanges();
+        await _context.AddAsync(person);
+        await _context.SaveChangesAsync();
         return person;
     }
 
-    public Person? deletePerson(long id)
+    public Task<Person?> DeletePersonAsync(long id)
     {
         throw new NotImplementedException();
     }
 
-    public Person? getByEmail(string email)
+    public async Task<Person?> GetByEmailAsync(string email)
     {
-        return _context.persons.FirstOrDefault(p => p.Email == email);
+        return await _context.Persons.FirstOrDefaultAsync(p => p.Email == email);
     }
 
-    public Person? getById(long id)
+    public async Task<Person?> GetByIdAsync(long id)
     {
-        return _context.persons
+        return await _context.Persons
             .Include(p => p.Owner)
             .Include(p => p.Employee)
             .Include(p => p.Customer)
-            .FirstOrDefault(p => p.Id == id);
+            .FirstOrDefaultAsync(p => p.Id == id);
     }
 
-    public Person? updatePerson(long id, Person person)
+    public Task<Person?> UpdatePersonAsync(long id, Person person)
     {
         throw new NotImplementedException();
     }
+
+
 }
