@@ -8,5 +8,7 @@ public class Facility
     public List<Service> Services {get; set;}
     public long OwnerId {get; set;}
     public Owner Owner {get; set;}
+    public TimeOnly StartTime {get; set;}
+    public TimeOnly EndTime {get; set;}
 
 }

@@ -20,11 +20,11 @@ public class RoleController : ControllerBase
             UserId = Id,
             User = person
         };
-        _dbContext.Add(owner);
+        _dbContext.Owners.Add(owner);
         _dbContext.SaveChanges();
 
         person.Owner = owner;
-         _dbContext.SaveChanges();
+        _dbContext.SaveChanges();
         return Ok();
     }
 
@@ -55,7 +55,7 @@ public class RoleController : ControllerBase
             UserId = Id,
             User = person
         };
-        _dbContext.Add(employee);
+        _dbContext.Employees.Add(employee);
         _dbContext.SaveChanges();
 
         person.Employee = employee;

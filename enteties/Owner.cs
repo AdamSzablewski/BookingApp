@@ -7,5 +7,6 @@ public class Owner
   public Facility? Facility {get; set;}
   public long? UserId {get; set;}
   public Person? User {get; set;}
+  public List<EmploymentRequest> ActiveRequests {get; set;}
 
 }

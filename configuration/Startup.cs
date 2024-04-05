@@ -14,7 +14,7 @@ public class Startup
         public void ConfigureServices(IServiceCollection services)
         {
             // services.AddDbContext<BookingAppContext>(options =>
-            //     options.UseSqlite(Configuration.GetConnectionString("BookingApp")));
+            // options.UseSqlite(Configuration.GetConnectionString("BookingApp")));
            
             services.AddScoped<PersonService>();
         }

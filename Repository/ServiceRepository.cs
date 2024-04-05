@@ -19,6 +19,14 @@ public class ServiceRepository : IServiceRepository
     {
         throw new NotImplementedException();
     }
+
+    public async Task<List<Service>> GetAllForFacility(long FacilityId)
+    {
+        return await _dbContext.Services
+                    .Where(e => e.FacilityId == FacilityId)
+                    .ToListAsync();
+    }
+
     public async Task<Service?> GetByIdAsync(long Id)
     {
         return await _dbContext.Services.FirstOrDefaultAsync(s => s.Id == Id);

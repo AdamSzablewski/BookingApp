@@ -16,4 +16,8 @@ public class Person
     public Customer? Customer {get; set;}
     public long? EmployeeId {get; set;}
     public Employee? Employee {get; set;}
+    public override string ToString()
+    {
+        return $"FirstName: {FirstName}, LastName: {LastName}, Employee: {Employee}";
+    }
 }

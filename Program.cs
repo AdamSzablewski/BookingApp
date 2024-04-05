@@ -19,7 +19,11 @@ builder.Services.AddScoped<FacilityService>();
 builder.Services.AddScoped<IFacilityRepository, FacilityRepository>();
 builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
 builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
-
+builder.Services.AddScoped<IEmploymentRepository, EmploymentRepository>();
+builder.Services.AddScoped<ServiceService>();
+builder.Services.AddScoped<AppointmentService>();
+builder.Services.AddScoped<EmployeeService>();
+builder.Services.AddScoped<EmploymentService>();
 
 var app = builder.Build();
 
