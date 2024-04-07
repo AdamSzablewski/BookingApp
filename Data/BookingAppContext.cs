@@ -13,6 +13,7 @@ public class BookingAppContext(DbContextOptions<BookingAppContext> options)
     public DbSet<Appointment> Appointments => Set<Appointment>();
     public DbSet<Service> Services => Set<Service>();
     public DbSet<Adress> Adresses => Set<Adress>();
+    public DbSet<EmploymentRequest> EmploymentRequests => Set<EmploymentRequest>();
 
 
 
@@ -37,14 +38,14 @@ public class BookingAppContext(DbContextOptions<BookingAppContext> options)
                 .HasOne(e => e.Owner)
                 .WithOne(p => p.User)
                 .HasForeignKey<Person>(e => e.OwnerId);
-    modelBuilder.Entity<Facility>()
-                .HasOne(f => f.Owner)
-                .WithOne(o => o.Facility)
-                .HasForeignKey<Owner>(o => o.FacilityId);
-    modelBuilder.Entity<Owner>()
-                .HasOne(o => o.Facility)
-                .WithOne(p => p.Owner)
-                .HasForeignKey<Owner>(o => o.FacilityId);
+    // modelBuilder.Entity<Facility>()
+    //             .HasOne(f => f.Owner)
+    //             .WithOne(o => o.Facility)
+    //             .HasForeignKey<Owner>(o => o.FacilityId);
+    // modelBuilder.Entity<Owner>()
+    //             .HasOne(o => o.Facility)
+    //             .WithOne(p => p.Owner)
+    //             .HasForeignKey<Owner>(o => o.FacilityId);
 
     modelBuilder.Entity<Customer>()
                 .HasOne(c => c.User)

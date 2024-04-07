@@ -20,16 +20,20 @@ public class FacilityService
     }
 
     public async Task<Facility> CreateAsync(long userId, FacilityCreateDto dto){
-        Person? person = await _personRepository.GetByIdAsync(userId);
-        if(person == null){
-            throw new Exception("User not found");
-        }
-        Owner? owner = person.Owner;
-        if(owner == null){
-            throw new Exception("user is not an owner");
-        }
-        Adress adress = new Adress(dto.Country, dto.City, dto.Street, dto.HouseNumber);
-        Facility facility = await _facilityRepository.CreateAsync(dto.MapToEntity(owner, adress), owner);
+        Person? person = await _personRepository.GetByIdAsync(userId) ??  throw new Exception("User not found");
+        Owner? owner = person.Owner ?? throw new Exception("user is not an owner");
+
+        Adress Adress = new Adress(dto.Country, dto.City, dto.Street, dto.HouseNumber);
+        
+        Facility facility = new()
+        {
+            Name = dto.Name,
+            Adress = Adress,
+            Owner = owner
+        };
+        await _facilityRepository.CreateAsync(facility);
+        owner.Facilities.Add(facility);
+        await _dbContext.SaveChangesAsync();
         return facility;
     }
     public async Task<Facility> ChangeName(long facilityId, FacilityChangeNameDto facilityChangeNameDto){

@@ -8,12 +8,11 @@ public class FacilityRepository : IFacilityRepository
         _context = context;
     }
 
-    public async Task<Facility> CreateAsync(Facility facility, Owner owner)
+    public async Task<Facility> CreateAsync(Facility facility)
     {
         Adress adress = facility.Adress;
         await _context.AddAsync(facility);
         await _context.AddAsync(adress);
-        owner.Facility = facility;
         await _context.SaveChangesAsync();
         return facility;
     }

@@ -15,4 +15,10 @@ public class EmployemntController : ControllerBase
     {
         return Ok(await _employmentService.SendEmploymentRequest(employmentRequestDto));
     }
+    [HttpPost("answere")]
+    public async Task<IActionResult> AnswereEmploymentRequest([FromQuery] long requestId, [FromQuery] bool decision)
+    {
+        return Ok(await _employmentService.AnswereEmploymentRequest(requestId, decision));
+    }
+
 }
