@@ -57,6 +57,8 @@ public class EmploymentService
     public async void AcceptRequest(EmploymentRequest employmentRequest){
         Facility facility = employmentRequest.Facility;
         Employee employee = employmentRequest.Receiver;
+        employee.StartTime = facility.StartTime;
+        employee.EndTime = facility.EndTime;
         facility.Employees.Add(employee);
         employee.Workplace = facility;
 

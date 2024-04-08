@@ -29,7 +29,10 @@ public class FacilityService
         {
             Name = dto.Name,
             Adress = Adress,
-            Owner = owner
+            Owner = owner,
+            StartTime = new TimeOnly(9,0),
+            EndTime = new TimeOnly(17,0)
+            
         };
         await _facilityRepository.CreateAsync(facility);
         owner.Facilities.Add(facility);

@@ -53,8 +53,11 @@ public class RoleController : ControllerBase
         }
         Employee employee = new (){
             UserId = Id,
-            User = person
+            User = person,
+            StartTime = new TimeOnly(9,0),
+            EndTime = new TimeOnly(17,0),
         };
+
         _dbContext.Employees.Add(employee);
         _dbContext.SaveChanges();
 
