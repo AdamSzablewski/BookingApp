@@ -45,7 +45,7 @@ public class AppointmentService
     }
 
     public async Task<bool> CheckIfTimeSlotAvailable(DateTime slotStartTime, DateTime slotEndTime, Employee employee, DateOnly date){
-        List<Appointment> appointments = employee.appointments;
+        List<Appointment> appointments = employee.Appointments;
         DateTime employeeStartTime = new DateTime(date.Year, date.Month, date.Day, employee.StartTime.Hour, employee.StartTime.Minute,  employee.StartTime.Second);
         DateTime employeeEndTime = new DateTime(date.Year, date.Month, date.Day, employee.StartTime.Hour, employee.StartTime.Minute,  employee.StartTime.Second);
 

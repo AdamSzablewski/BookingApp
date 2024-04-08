@@ -30,6 +30,7 @@ public class PersonRepository : IPersonRepository
     {
         return await _context.Persons
             .Include(p => p.Owner)
+                .ThenInclude(e => e.Facilities)
             .Include(p => p.Employee)
             .Include(p => p.Customer)
             .FirstOrDefaultAsync(p => p.Id == id);

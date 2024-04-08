@@ -21,6 +21,8 @@ builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
 builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
 builder.Services.AddScoped<IEmploymentRepository, EmploymentRepository>();
 builder.Services.AddScoped<IEmploymentRequestRepository, EmploymentRequestRepository>();
+builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+
 builder.Services.AddScoped<ServiceService>();
 builder.Services.AddScoped<AppointmentService>();
 builder.Services.AddScoped<EmployeeService>();

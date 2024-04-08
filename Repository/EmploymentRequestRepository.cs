@@ -1,4 +1,6 @@
 ﻿
+using Microsoft.EntityFrameworkCore;
+
 namespace BookingApp;
 
 public class EmploymentRequestRepository : IEmploymentRequestRepository
@@ -21,11 +23,17 @@ public class EmploymentRequestRepository : IEmploymentRequestRepository
 
     public async Task<EmploymentRequest?> GetById(long Id)
     {
-        return await _dbContext.EmploymentRequests.FindAsync(Id);
+        return await _dbContext.EmploymentRequests
+        .Include(e => e.Sender)
+        .Include(e => e.Receiver)
+        .Include(e => e.Facility)
+        .FirstOrDefaultAsync(e => e.Id == Id);
+
     }
 
-    public Task<EmploymentRequest?> Update(EmploymentRequest employmentRequest)
+    public async Task<EmploymentRequest?> Update(EmploymentRequest employmentRequest)
     {
-        throw new NotImplementedException();
+        await _dbContext.SaveChangesAsync();
+        return employmentRequest;
     }
 }
