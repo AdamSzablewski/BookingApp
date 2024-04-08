@@ -30,5 +30,9 @@ public class ServiceController : ControllerBase
     public async Task<IActionResult> ChangePrice([FromRoute] long Id, [FromQuery] decimal newPrice){
         return Ok(await _serviceService.ChangePriceAsync(Id, newPrice));
     }
+    [HttpPut("employee")]
+    public async Task<IActionResult> AddEmployeeToService([FromQuery] long employeeId, [FromQuery] long serviceId){
+        return Ok(await _serviceService.AddEmployeeToService(employeeId, serviceId));
+    }
 
 }

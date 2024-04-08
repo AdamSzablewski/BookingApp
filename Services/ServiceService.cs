@@ -13,10 +13,8 @@ public class ServiceService
         _employeeRepository = employeeRepository;
     }
      public async Task<ServiceDto> GetByIdAsync(long serviceId){
-        Service service =  await _serviceRepository.GetByIdAsync(serviceId);
-        if(service == null){
-            throw new Exception("Service Not found");
-        }
+        Service service =  await _serviceRepository.GetByIdAsync(serviceId) ?? throw new Exception("Service Not found");
+      
         return service.MapToDto();
         
     }

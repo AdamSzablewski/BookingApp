@@ -1,25 +1,36 @@
 ﻿
+using System.Reflection.Metadata.Ecma335;
+
 namespace BookingApp;
 
 public class EmployeeRepository : IEmployeeRepository
 {
-    public Task<Employee> Create(Employee employee)
+    private BookingAppContext _dbContext;
+    public EmployeeRepository(BookingAppContext dbContext){
+        _dbContext = dbContext;
+    }
+    public async Task<Employee> Create(Employee employee)
     {
-        throw new NotImplementedException();
+        await _dbContext.Employees.AddAsync(employee);
+        await _dbContext.SaveChangesAsync();
+        return employee;
     }
 
-    public Task<Employee> Delete(Employee employee)
+    public async Task<Employee> Delete(Employee employee)
     {
-        throw new NotImplementedException();
+        _dbContext.Remove(employee);
+        await _dbContext.SaveChangesAsync();
+        return employee;
     }
 
-    public Task<Employee> GetById(long Id)
+    public async Task<Employee?> GetById(long Id)
     {
-        throw new NotImplementedException();
+        return await _dbContext.Employees.FindAsync(Id);
     }
 
-    public Task<Employee> Update(Employee employee)
+    public async Task<Employee> Update(Employee employee)
     {
-        throw new NotImplementedException();
+        await _dbContext.SaveChangesAsync();
+        return employee;
     }
 }

@@ -12,8 +12,10 @@ public static class PersonMapper
             }; 
         return user;     
     }
-     public static Person MapToEntity (this PersonDto personDto){
-       Person user = new(){
+     public static Person MapToEntity (this PersonDto personDto)
+     {
+        if(personDto == null) return null;
+        Person user = new(){
                 FirstName = personDto.FirstName,
                 LastName = personDto.LastName,
                 Email = personDto.Email,
@@ -21,8 +23,10 @@ public static class PersonMapper
             }; 
         return user;     
     }
-    public static PersonDto MapToDto(this Person person, long id){
-       PersonDto dto = new PersonDto(
+    public static PersonDto? MapToDto(this Person person, long id)
+    {
+        if(person == null) return null;
+        PersonDto dto = new PersonDto(
                 id,
                 person.FirstName,
                 person.LastName,
@@ -31,8 +35,10 @@ public static class PersonMapper
        ); 
         return dto;     
     }
-    public static PersonDto MapToDto(this Person person){
-       PersonDto dto = new PersonDto(
+    public static PersonDto? MapToDto(this Person person)
+    {
+        if(person == null) return null;
+        PersonDto dto = new PersonDto(
                 person.Id,
                 person.FirstName,
                 person.LastName,

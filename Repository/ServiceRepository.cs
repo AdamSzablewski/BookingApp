@@ -29,7 +29,10 @@ public class ServiceRepository : IServiceRepository
 
     public async Task<Service?> GetByIdAsync(long Id)
     {
-        return await _dbContext.Services.FirstOrDefaultAsync(s => s.Id == Id);
+        return await _dbContext.Services
+        .Include(e => e.Employees)
+        .Include(e => e.Facility)
+        .FirstOrDefaultAsync(s => s.Id == Id);
     }
     public async Task<Service?> UpdateAsync(Service service)
     {

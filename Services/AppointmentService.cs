@@ -39,6 +39,7 @@ public class AppointmentService
                
                 currentTime.AddMinutes(MINUTE_INCREMENT);
                 bufferedTime.AddMinutes(MINUTE_INCREMENT);
+                Console.WriteLine("Writing line    ");
             }
         }
         return timeSlots;
