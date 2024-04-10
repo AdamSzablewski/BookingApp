@@ -3,22 +3,19 @@ using System.Data.Common;
 
 namespace BookingApp;
 
-public class EmploymentRepository : IEmploymentRepository
+public class EmploymentRepository : Repository<EmploymentRequest>
 {
-    private readonly BookingAppContext _dbContext;
-    public EmploymentRepository(BookingAppContext dbContext){
-        _dbContext = dbContext;
-    }
-    public async Task<EmploymentRequest> CreateAsync(EmploymentRequest employmentRequest)
+    public EmploymentRepository(BookingAppContext dbContext) : base(dbContext)
     {
-        await _dbContext.AddAsync(employmentRequest);
-        await _dbContext.SaveChangesAsync();
-        return employmentRequest;
     }
 
-    public async Task<EmploymentRequest> SaveAsync(EmploymentRequest employmentRequest)
+    public override EmploymentRequest? GetById(long Id)
     {
-        await _dbContext.SaveChangesAsync();
-        return employmentRequest;
+        return _dbContext.EmploymentRequests.Find(Id);
+    }
+
+    public override async Task<EmploymentRequest?> GetByIdAsync(long Id)
+    {
+        return await _dbContext.EmploymentRequests.FindAsync(Id);
     }
 }

@@ -11,7 +11,7 @@ public class Service
     public List<Employee> Employees {get; set;}
     public long FacilityId {get; set;}
     public required Facility Facility {get; set;}
-    public TimeSpan Length {get; set;}
+    public required TimeSpan Length {get; set;}
 
 }
 

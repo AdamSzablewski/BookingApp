@@ -3,37 +3,27 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookingApp;
 
-public class EmploymentRequestRepository : IEmploymentRequestRepository
+public class EmploymentRequestRepository : Repository<EmploymentRequest>
 {
-    private readonly BookingAppContext _dbContext;
-    public EmploymentRequestRepository(BookingAppContext dbContext){
-        _dbContext = dbContext;
-    }
-    public async Task<EmploymentRequest> Create(EmploymentRequest employmentRequest)
+    public EmploymentRequestRepository(BookingAppContext dbContext) : base(dbContext)
     {
-        await _dbContext.AddAsync(employmentRequest);
-        await _dbContext.SaveChangesAsync();
-        return employmentRequest;
     }
 
-    public Task<EmploymentRequest?> Delete(long Id)
+    public override EmploymentRequest? GetById(long Id)
     {
-        throw new NotImplementedException();
+         return _dbContext.EmploymentRequests
+        .Include(e => e.Sender)
+        .Include(e => e.Receiver)
+        .Include(e => e.Facility)
+        .FirstOrDefault(e => e.Id == Id);
     }
 
-    public async Task<EmploymentRequest?> GetById(long Id)
+    public async override Task<EmploymentRequest?> GetByIdAsync(long Id)
     {
-        return await _dbContext.EmploymentRequests
+         return await _dbContext.EmploymentRequests
         .Include(e => e.Sender)
         .Include(e => e.Receiver)
         .Include(e => e.Facility)
         .FirstOrDefaultAsync(e => e.Id == Id);
-
-    }
-
-    public async Task<EmploymentRequest?> Update(EmploymentRequest employmentRequest)
-    {
-        await _dbContext.SaveChangesAsync();
-        return employmentRequest;
     }
 }

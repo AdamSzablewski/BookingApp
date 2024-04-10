@@ -1,45 +1,30 @@
 ﻿namespace BookingApp;
 using Microsoft.EntityFrameworkCore;
 
-public class PersonRepository : IPersonRepository
+public class PersonRepository : Repository<Person>
 {
-    private readonly BookingAppContext _context;
-    public PersonRepository(BookingAppContext context)
+    public PersonRepository(BookingAppContext dbContext) : base(dbContext)
     {
-        _context = context;
-    }
-
-    public async Task<Person> CreatePersonAsync(Person person)
-    {
-        await _context.AddAsync(person);
-        await _context.SaveChangesAsync();
-        return person;
-    }
-
-    public Task<Person?> DeletePersonAsync(long id)
-    {
-        throw new NotImplementedException();
     }
 
     public async Task<Person?> GetByEmailAsync(string email)
     {
-        return await _context.Persons.FirstOrDefaultAsync(p => p.Email == email);
+        return await _dbContext.Persons.FirstOrDefaultAsync(p => p.Email == email);
     }
 
-    public async Task<Person?> GetByIdAsync(long id)
+    public override Person? GetById(long Id)
     {
-        return await _context.Persons
+        return _dbContext.Persons.Find(Id);
+    }
+
+    public async override Task<Person?> GetByIdAsync(long Id)
+    {
+        return await _dbContext.Persons
             .Include(p => p.Owner)
                 .ThenInclude(e => e.Facilities)
             .Include(p => p.Employee)
             .Include(p => p.Customer)
-            .FirstOrDefaultAsync(p => p.Id == id);
+            .FirstOrDefaultAsync(p => p.Id == Id);
     }
-
-    public Task<Person?> UpdatePersonAsync(long id, Person person)
-    {
-        throw new NotImplementedException();
-    }
-
 
 }

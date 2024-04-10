@@ -2,10 +2,10 @@
 
 public class FacilityService
 {
-    private readonly IFacilityRepository _facilityRepository;
-    private readonly IPersonRepository _personRepository;
+    private readonly FacilityRepository _facilityRepository;
+    private readonly PersonRepository _personRepository;
     private readonly BookingAppContext _dbContext;
-    public FacilityService(IFacilityRepository facilityRepository, IPersonRepository personRepository, BookingAppContext dbContext){
+    public FacilityService(FacilityRepository facilityRepository, PersonRepository personRepository, BookingAppContext dbContext){
         _facilityRepository = facilityRepository;
         _personRepository = personRepository;
         _dbContext = dbContext;
@@ -45,7 +45,7 @@ public class FacilityService
             throw new Exception("Facility not found");
         }
         facility.Name = facilityChangeNameDto.Name;
-        await _facilityRepository.SaveAsync(facility);
+        _facilityRepository.UpdateAsync();
         return facility;
     }
 }

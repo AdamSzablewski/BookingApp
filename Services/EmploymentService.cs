@@ -2,15 +2,15 @@
 
 public class EmploymentService
 {
-    private readonly IPersonRepository _personRepository;
-    private readonly IEmploymentRequestRepository _employmentRequestRepository;
-    private readonly IEmploymentRepository _employmentRepository;
+    private readonly PersonRepository _personRepository;
+    private readonly EmploymentRequestRepository _employmentRequestRepository;
+    private readonly EmploymentRepository _employmentRepository;
     private readonly BookingAppContext _dbContext;
 
     public EmploymentService(
-        IPersonRepository personRepository,
-        IEmploymentRepository employmentRepository,
-        IEmploymentRequestRepository employmentRequestRepository,
+        PersonRepository personRepository,
+        EmploymentRepository employmentRepository,
+        EmploymentRequestRepository employmentRequestRepository,
         BookingAppContext dbContext)
     {
         _personRepository = personRepository;
@@ -33,12 +33,12 @@ public class EmploymentService
         };
         employee.EmploymentRequests.Add(employmentRequest);
         owner.ActiveRequests.Add(employmentRequest);
-        await _employmentRepository.SaveAsync(employmentRequest);
+        _employmentRepository.UpdateAsync();
         return employmentRequest;
     }
 
     public async Task<EmploymentRequest> AnswereEmploymentRequest(long requestId, bool decision){
-        EmploymentRequest? employmentRequest = await _employmentRequestRepository.GetById(requestId) ?? throw new Exception("No such employment request exist");
+        EmploymentRequest? employmentRequest = await _employmentRequestRepository.GetByIdAsync(requestId) ?? throw new Exception("No such employment request exist");
         if(decision){
             AcceptRequest(employmentRequest);
         }else{
@@ -51,7 +51,7 @@ public class EmploymentService
     {
         employmentRequest.Closed = true;
         employmentRequest.Decision = false;
-        await _employmentRequestRepository.Update(employmentRequest);
+        _employmentRequestRepository.UpdateAsync();
     }
 
     public async void AcceptRequest(EmploymentRequest employmentRequest){
@@ -64,7 +64,7 @@ public class EmploymentService
 
         employmentRequest.Closed = true;
         employmentRequest.Decision = true;
-        await _employmentRequestRepository.Update(employmentRequest);
+        _employmentRequestRepository.UpdateAsync();
     
     }
 

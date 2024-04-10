@@ -3,32 +3,19 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookingApp;
 
-public class AppointmentRepository : IAppointmentRepository
+public class AppointmentRepository : Repository<Appointment>
 {
-    private readonly BookingAppContext _dbContext;
-    public AppointmentRepository(BookingAppContext dbContext){
-        _dbContext = dbContext;
-    }
-    public async Task<Appointment> CreateAsync(Appointment appointment)
+    public AppointmentRepository(BookingAppContext dbContext) : base(dbContext)
     {
-        await _dbContext.AddAsync(appointment);
-        await _dbContext.SaveChangesAsync();
-        return appointment;
     }
 
-    public async Task<Appointment?> DeleteAsync(long Id)
+    public override Appointment? GetById(long Id)
     {
-        throw new NotImplementedException();
+        return _dbContext.Appointments.Find(Id);
     }
 
-    public async Task<Appointment?> GetByIdAsync(long Id)
+    public override async Task<Appointment?> GetByIdAsync(long Id)
     {
-        return await _dbContext.Appointments.FirstOrDefaultAsync(e => e.Id == Id);
-    }
-
-    public async Task<Appointment?> UpdateAsync(Appointment appointment)
-    {
-        await _dbContext.SaveChangesAsync();
-        return appointment;
+        return await _dbContext.Appointments.FindAsync(Id);
     }
 }

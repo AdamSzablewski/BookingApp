@@ -4,10 +4,10 @@ namespace BookingApp;
 
 public class ServiceService
 {
-    private readonly IServiceRepository _serviceRepository;
-    private readonly IFacilityRepository _facilityRepository;
-    private readonly IEmployeeRepository _employeeRepository;
-    public ServiceService(IServiceRepository serviceRepository, IFacilityRepository facilityRepository, IEmployeeRepository employeeRepository){
+    private readonly ServiceRepository _serviceRepository;
+    private readonly FacilityRepository _facilityRepository;
+    private readonly EmployeeRepository _employeeRepository;
+    public ServiceService(ServiceRepository serviceRepository, FacilityRepository facilityRepository, EmployeeRepository employeeRepository){
         _serviceRepository = serviceRepository;
         _facilityRepository = facilityRepository;
         _employeeRepository = employeeRepository;
@@ -25,14 +25,16 @@ public class ServiceService
     }
     public async Task<Service> CreateAsync(long FacilityId, ServiceCreateDto serviceCreateDto){
         Facility facility = await _facilityRepository.GetByIdAsync(FacilityId);
-    
+        TimeSpan serviceLength = new TimeSpan(serviceCreateDto.Hours, serviceCreateDto.Minutes, 0);
         if(facility == null){
             throw new Exception("Facility Not found");
         }
         Service service = new(){
             Name = serviceCreateDto.Name,
             Price = serviceCreateDto.Price,
-            Facility = facility
+            Facility = facility,
+            Length = serviceLength
+
         };
         return await _serviceRepository.CreateAsync(service);
     }
@@ -43,7 +45,8 @@ public class ServiceService
         }
         service.Name = serviceDto.Name;
         service.Price = serviceDto.Price;
-        return await _serviceRepository.UpdateAsync(service);
+        _serviceRepository.UpdateAsync();
+        return service;
     }
     public async Task<Service> ChangePriceAsync(long ServiceId, decimal NewPrice){
         Service service = await _serviceRepository.GetByIdAsync(ServiceId);
@@ -51,19 +54,21 @@ public class ServiceService
             throw new Exception("Service Not Found");
         }
         service.Price = NewPrice;
-        return await _serviceRepository.UpdateAsync(service);
+        _serviceRepository.UpdateAsync();
+        return service;
     }
     public async Task<Service> ChangeNameAsync(long ServiceId, string NewName){
         Service service = await _serviceRepository.GetByIdAsync(ServiceId) ?? throw new Exception("Service Not Found");
         service.Name = NewName;
-        return await _serviceRepository.UpdateAsync(service);
+        _serviceRepository.UpdateAsync();
+        return service;
     }
         
     public async Task<Service> AddEmployeeToService(long employeeId, long serviceId){
         Service service = await _serviceRepository.GetByIdAsync(serviceId) ?? throw new Exception("Service Not Found");
-        Employee employee = await _employeeRepository.GetById(employeeId) ?? throw new Exception("Employee Not Found"); 
+        Employee employee = await _employeeRepository.GetByIdAsync(employeeId) ?? throw new Exception("Employee Not Found"); 
         service.Employees.Add(employee);
-        await _serviceRepository.UpdateAsync(service);
+        _serviceRepository.UpdateAsync();
         return service;
     }
 

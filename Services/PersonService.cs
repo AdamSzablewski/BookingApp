@@ -4,9 +4,9 @@ namespace BookingApp;
 public class PersonService
 
 {
-    private readonly IPersonRepository _personRepository;
+    private readonly PersonRepository _personRepository;
 
-    public PersonService(IPersonRepository repository)
+    public PersonService(PersonRepository repository)
     {
         _personRepository = repository;
     }
@@ -19,12 +19,12 @@ public class PersonService
      return await _personRepository.GetByEmailAsync(email);
     }
     public async Task<bool> DeletePerson(long id){
-        await _personRepository.DeletePersonAsync(id);
+        _personRepository.Delete(id);
         return true;
     }
     public void CreatePerson(PersonCreateDto personCreateDto){
         Person user = personCreateDto.MapToEntity();
-        _personRepository.CreatePersonAsync(user);
+        _personRepository.Create(user);
     }
     
 }

@@ -3,21 +3,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookingApp;
 
-public class ServiceRepository : IServiceRepository
+public class ServiceRepository : Repository<Service>
 {
-    private readonly BookingAppContext _dbContext;
-    public ServiceRepository(BookingAppContext dbContext){
-        _dbContext = dbContext;
-    }
-    public async Task<Service> CreateAsync(Service service)
+    public ServiceRepository(BookingAppContext dbContext) : base(dbContext)
     {
-        await _dbContext.AddAsync(service);
-        await _dbContext.SaveChangesAsync();
-        return service;
-    }
-    public Task<Service> DeleteAsync(long Id)
-    {
-        throw new NotImplementedException();
     }
 
     public async Task<List<Service>> GetAllForFacility(long FacilityId)
@@ -27,16 +16,19 @@ public class ServiceRepository : IServiceRepository
                     .ToListAsync();
     }
 
-    public async Task<Service?> GetByIdAsync(long Id)
+    public override Service? GetById(long Id)
+    {
+        return _dbContext.Services
+        .Include(e => e.Employees)
+        .Include(e => e.Facility)
+        .FirstOrDefault(s => s.Id == Id);
+    }
+
+    public async override Task<Service?> GetByIdAsync(long Id)
     {
         return await _dbContext.Services
         .Include(e => e.Employees)
         .Include(e => e.Facility)
         .FirstOrDefaultAsync(s => s.Id == Id);
-    }
-    public async Task<Service?> UpdateAsync(Service service)
-    {
-        await _dbContext.SaveChangesAsync();
-        return service;
     }
 }

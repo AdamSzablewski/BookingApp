@@ -3,34 +3,19 @@ using System.Reflection.Metadata.Ecma335;
 
 namespace BookingApp;
 
-public class EmployeeRepository : IEmployeeRepository
+public class EmployeeRepository : Repository<Employee>
 {
-    private BookingAppContext _dbContext;
-    public EmployeeRepository(BookingAppContext dbContext){
-        _dbContext = dbContext;
-    }
-    public async Task<Employee> Create(Employee employee)
+    public EmployeeRepository(BookingAppContext dbContext) : base(dbContext)
     {
-        await _dbContext.Employees.AddAsync(employee);
-        await _dbContext.SaveChangesAsync();
-        return employee;
     }
 
-    public async Task<Employee> Delete(Employee employee)
+    public override Employee? GetById(long Id)
     {
-        _dbContext.Remove(employee);
-        await _dbContext.SaveChangesAsync();
-        return employee;
+        return _dbContext.Employees.Find(Id);
     }
 
-    public async Task<Employee?> GetById(long Id)
+    public override async Task<Employee?> GetByIdAsync(long Id)
     {
         return await _dbContext.Employees.FindAsync(Id);
-    }
-
-    public async Task<Employee> Update(Employee employee)
-    {
-        await _dbContext.SaveChangesAsync();
-        return employee;
     }
 }
