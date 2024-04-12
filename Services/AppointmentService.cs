@@ -54,14 +54,25 @@ public class AppointmentService
     public async Task<bool> CheckIfTimeSlotAvailable(DateTime slotStartTime, DateTime slotEndTime, Employee employee, DateOnly date){
         List<Appointment> appointments = employee.Appointments;
         DateTime employeeStartTime = new DateTime(date.Year, date.Month, date.Day, employee.StartTime.Hour, employee.StartTime.Minute,  employee.StartTime.Second);
-        DateTime employeeEndTime = new DateTime(date.Year, date.Month, date.Day, employee.StartTime.Hour, employee.StartTime.Minute,  employee.StartTime.Second);
-
+        DateTime employeeEndTime = new DateTime(date.Year, date.Month, date.Day, employee.EndTime.Hour, employee.EndTime.Minute,  employee.EndTime.Second);
+        bool withinWorkingHours = WithinWorkingHours(slotStartTime, slotEndTime, employeeStartTime, employeeEndTime);
         foreach(Appointment appointment in appointments){
-            if(slotStartTime < employeeStartTime || slotEndTime > employeeEndTime){
+            bool appointmentOverlaps = AppointmentOverlaps(appointment, slotStartTime, slotEndTime);
+            //Console.WriteLine(appointment.ToString());
+            Console.WriteLine("slot start "+slotStartTime+" slot endtime "+slotEndTime);
+            Console.WriteLine();
+            if(!withinWorkingHours || appointmentOverlaps){
                 return false;
             }
         }
         return true;
+    }
+    public bool AppointmentOverlaps(Appointment appointment, DateTime slotStartTime, DateTime slotEndTime){
+        return (slotStartTime < appointment.EndTime) && (slotEndTime > appointment.StartTime);
+    }
+    public bool WithinWorkingHours(DateTime slotStartTime, DateTime slotEndTime, DateTime employeeStartTime, DateTime employeeEndTime)
+    {
+        return slotStartTime >= employeeStartTime && slotEndTime <= employeeEndTime;
     }
 
     public async Task<Appointment> BookAppointment(AppointmentCreateDto appointmentDto)
@@ -83,6 +94,5 @@ public class AppointmentService
         _appointmentRepository.UpdateAsync();
         return appointment;
         
-
     }
 }

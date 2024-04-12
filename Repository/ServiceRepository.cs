@@ -28,6 +28,7 @@ public class ServiceRepository : Repository<Service>
     {
         return await _dbContext.Services
         .Include(e => e.Employees)
+            .ThenInclude(e => e.Appointments)
         .Include(e => e.Facility)
         .FirstOrDefaultAsync(s => s.Id == Id);
     }

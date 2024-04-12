@@ -2,7 +2,7 @@
 
 public record class PersonDto
 (
-    long Id,
+    string Id,
     string FirstName,
     string LastName,
     string Email,

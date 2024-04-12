@@ -4,7 +4,7 @@ namespace BookingApp;
 
 public record class AppointmentCreateDto
 (
-     [Required(ErrorMessage = "ServiceId is required.")]
+    [Required(ErrorMessage = "ServiceId is required.")]
     long ServiceId,
     [Required(ErrorMessage = "EmployeeId is required.")]
     long EmployeeId,

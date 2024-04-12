@@ -1,5 +1,8 @@
 using BookingApp;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 var conString = builder.Configuration.GetConnectionString("BookingApp");
@@ -17,6 +20,7 @@ builder.Services.AddScoped<PersonRepository>();
 builder.Services.AddScoped<PersonService>();
 builder.Services.AddScoped<FacilityService>();
 builder.Services.AddScoped<FacilityRepository>();
+builder.Services.AddScoped<TokenService>();
 // builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
 // builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
 // builder.Services.AddScoped<IEmploymentRepository, EmploymentRepository>();
@@ -35,12 +39,39 @@ builder.Services.AddScoped<AppointmentService>();
 builder.Services.AddScoped<EmployeeService>();
 builder.Services.AddScoped<EmploymentService>();
 
+builder.Services.AddIdentity<Person, IdentityRole>(options => {
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireNonAlphanumeric = true;
+    options.Password.RequiredLength = 4;
 
+}).AddEntityFrameworkStores<BookingAppContext>();
+builder.Services.AddAuthentication(options => {
+    options.DefaultAuthenticateScheme = 
+    options.DefaultChallengeScheme = 
+    options.DefaultForbidScheme = 
+    options.DefaultScheme = 
+    options.DefaultSignInScheme = 
+    options.DefaultSignOutScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>{
+    options.TokenValidationParameters = new TokenValidationParameters()
+    {
+        ValidateIssuer = true,
+        ValidIssuer = builder.Configuration["JWT:Issuer"],
+        ValidateAudience = true,
+        ValidAudience = builder.Configuration["JWT:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(
+            System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigningKey"])
+        )
+    };
+});
 
 var app = builder.Build();
 
 
-// app.MapPersonEndpoints();
-app.MigrateDB();
+app.UseAuthentication();
+app.UseAuthentication();
+//app.MigrateDB();
 app.MapControllers();
 app.Run();

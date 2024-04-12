@@ -1,10 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookingApp;
 
-public class BookingAppContext(DbContextOptions<BookingAppContext> options) 
-: DbContext(options)
+public class BookingAppContext : IdentityDbContext<Person>
 {
+    public BookingAppContext(DbContextOptions options) : base(options)
+    {
+
+    }
     public DbSet<Person> Persons => Set<Person>();
     public DbSet<Customer> Customers => Set<Customer>();
     public DbSet<Owner> Owners => Set<Owner>();
@@ -20,6 +25,18 @@ public class BookingAppContext(DbContextOptions<BookingAppContext> options)
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
 {
+    base.OnModelCreating(modelBuilder);
+    List<IdentityRole> roles = new List<IdentityRole>{
+        new IdentityRole{
+            Name = "Admin",
+            NormalizedName = "ADMIN"
+        },
+         new IdentityRole{
+            Name = "User",
+            NormalizedName = "USER"
+        }
+    };
+    modelBuilder.Entity<IdentityRole>().HasData(roles);
     modelBuilder.Entity<Employee>()
                 .HasOne(e => e.User)
                 .WithOne(p => p.Employee)

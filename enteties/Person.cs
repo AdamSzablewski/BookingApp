@@ -1,15 +1,16 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Identity;
 
 namespace BookingApp;
 
-public class Person
+public class Person : IdentityUser
 {
-    public long Id {get; set;}
+    //public override long Id {get; set;}
     public required string FirstName {get; set;}
     public required string LastName {get; set;}
-    public required string Email {get; set;}
-    public string PhoneNumber {get; set;}
-    public string Password {get; set;}
+    //public required string Email {get; set;}
+    //public string PhoneNumber {get; set;}
+    //public string Password {get; set;}
     public long? OwnerId {get; set;}
     public Owner? Owner {get; set;}
     public long? CustomerId {get; set;}

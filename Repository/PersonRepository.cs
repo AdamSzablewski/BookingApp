@@ -24,7 +24,7 @@ public class PersonRepository : Repository<Person>
                 .ThenInclude(e => e.Facilities)
             .Include(p => p.Employee)
             .Include(p => p.Customer)
-            .FirstOrDefaultAsync(p => p.Id == Id);
+            .FirstOrDefaultAsync(p => p.Id.Equals( Id));
     }
 
 }

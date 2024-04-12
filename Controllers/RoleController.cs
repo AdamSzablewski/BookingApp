@@ -28,7 +28,7 @@ public class RoleController : ControllerBase
         return Ok();
     }
 
-    [HttpGet("client/{Id}")]
+    [HttpGet("customer/{Id}")]
     public IActionResult AddCustomerFunctionality([FromRoute] long Id){
         Person? person = _dbContext.Persons.Find(Id);
         if(person == null){

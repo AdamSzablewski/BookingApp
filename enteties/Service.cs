@@ -1,4 +1,6 @@
-﻿namespace BookingApp;
+﻿using System.Text;
+
+namespace BookingApp;
 
 public class Service
 {
@@ -13,5 +15,26 @@ public class Service
     public required Facility Facility {get; set;}
     public required TimeSpan Length {get; set;}
 
-}
+    public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine($"Service ID: {Id}");
+            sb.AppendLine($"Name: {Name}");
+            sb.AppendLine($"Price: {Price}");
+            sb.AppendLine("Employees:");
+            foreach (var employee in Employees)
+            {
+                sb.AppendLine($"- Employee: {employee.Id}");
+                sb.AppendLine($"  Appointments:");
+                foreach (var appointment in employee.Appointments)
+                {
+                    sb.AppendLine($"    - {appointment.StartTime} - {appointment.EndTime}");
+                }
+            }
+            sb.AppendLine($"Facility ID: {FacilityId}");
+            sb.AppendLine($"Length: {Length}");
+            return sb.ToString();
+        }
+    }
+
 

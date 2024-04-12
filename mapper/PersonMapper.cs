@@ -8,7 +8,6 @@ public static class PersonMapper
                 LastName = personDto.LastName,
                 Email = personDto.Email,
                 PhoneNumber = personDto.PhoneNumber,
-                Password = personDto.Password
             }; 
         return user;     
     }
@@ -23,7 +22,7 @@ public static class PersonMapper
             }; 
         return user;     
     }
-    public static PersonDto? MapToDto(this Person person, long id)
+    public static PersonDto? MapToDto(this Person person, string id)
     {
         if(person == null) return null;
         PersonDto dto = new PersonDto(

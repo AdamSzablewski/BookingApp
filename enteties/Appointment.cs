@@ -13,7 +13,15 @@ public class Appointment
     public required Customer Customer {get; set;}
     public long EmployeeId {get; set;}
     public required Employee Employee {get; set;}
-
+   public override string ToString()
+        {
+            return $"Appointment ID: {Id}" + Environment.NewLine +
+                   $"Service: {Service?.Name}" + Environment.NewLine +
+                   $"Start Time: {StartTime}" + Environment.NewLine +
+                   $"End Time: {EndTime}" + Environment.NewLine +
+                   $"Customer: {Customer?.Id}" + Environment.NewLine +
+                   $"Employee: {Employee?.Id}";
+        }
 
 
 

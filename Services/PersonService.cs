@@ -22,9 +22,11 @@ public class PersonService
         _personRepository.Delete(id);
         return true;
     }
-    public void CreatePerson(PersonCreateDto personCreateDto){
+    public Person CreatePerson(PersonCreateDto personCreateDto){
         Person user = personCreateDto.MapToEntity();
         _personRepository.Create(user);
+        return user;
     }
+
     
 }
