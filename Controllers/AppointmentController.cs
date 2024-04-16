@@ -20,4 +20,9 @@ public class AppointmentController : ControllerBase
     {
         return Ok(await _appointmentService.BookAppointment(appointment));
     }
+    [HttpGet("cancel")]
+    public async Task<IActionResult> CancelAppointment([FromQuery] long appointmentId)
+    {
+        return Ok(await _appointmentService.CancelAppointment(appointmentId));
+    }
 }

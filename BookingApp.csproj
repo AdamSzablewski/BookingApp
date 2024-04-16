@@ -8,8 +8,10 @@
 
   <ItemGroup>
     <Folder Include="Data/Migrations/" />
+    <Folder Include="enteties/conversations/" />
     <Folder Include="enteties/users/" />
     <Folder Include="Migrations/" />
+    <Folder Include="Repository/implementations/" />
   </ItemGroup>
 
   <ItemGroup>
@@ -23,6 +25,7 @@
   <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.3" />
   <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="8.0.3" />
   <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 
 </Project>

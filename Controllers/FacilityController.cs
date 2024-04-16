@@ -15,7 +15,7 @@ public class FacilityController : ControllerBase
         return Ok(await _facilityService.GetById(Id));
     }
     [HttpPost("{Id}")]
-    public async Task<IActionResult> Create([FromRoute]long Id, [FromBody]FacilityCreateDto dto){
+    public async Task<IActionResult> Create([FromRoute]string Id, [FromBody]FacilityCreateDto dto){
         await _facilityService.CreateAsync(Id, dto);
         return Ok();
     }

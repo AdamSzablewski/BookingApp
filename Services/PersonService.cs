@@ -10,7 +10,7 @@ public class PersonService
     {
         _personRepository = repository;
     }
-    public async Task<Person?> GetUserById(long id)
+    public async Task<Person?> GetUserById(string id)
     {
      return await _personRepository.GetByIdAsync(id);
     }
@@ -18,8 +18,9 @@ public class PersonService
     {
      return await _personRepository.GetByEmailAsync(email);
     }
-    public async Task<bool> DeletePerson(long id){
-        _personRepository.Delete(id);
+    public async Task<bool> DeletePerson(string id){
+        Person user = await _personRepository.GetByIdAsync(id) ?? throw new Exception("User not found");
+        _personRepository.Delete(user);
         return true;
     }
     public Person CreatePerson(PersonCreateDto personCreateDto){

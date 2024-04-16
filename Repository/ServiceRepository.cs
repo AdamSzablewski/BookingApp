@@ -3,12 +3,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookingApp;
 
-public class ServiceRepository : Repository<Service>
+public class ServiceRepository(BookingAppContext dbContext) : Repository<Service, long>(dbContext)
 {
-    public ServiceRepository(BookingAppContext dbContext) : base(dbContext)
-    {
-    }
-
     public async Task<List<Service>> GetAllForFacility(long FacilityId)
     {
         return await _dbContext.Services

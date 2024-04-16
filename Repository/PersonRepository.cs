@@ -1,10 +1,14 @@
 ﻿namespace BookingApp;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
-public class PersonRepository : Repository<Person>
+public class PersonRepository(BookingAppContext dbContext) : Repository<Person, string>(dbContext)
 {
-    public PersonRepository(BookingAppContext dbContext) : base(dbContext)
+    public async Task<List<Person>> GetPeople(List<string> Ids)
     {
+        return await _dbContext.Persons
+        .Where(person => Ids.Contains(person.Id))
+        .ToListAsync();
     }
 
     public async Task<Person?> GetByEmailAsync(string email)
@@ -12,12 +16,12 @@ public class PersonRepository : Repository<Person>
         return await _dbContext.Persons.FirstOrDefaultAsync(p => p.Email == email);
     }
 
-    public override Person? GetById(long Id)
+    public override Person? GetById(string Id)
     {
         return _dbContext.Persons.Find(Id);
     }
 
-    public async override Task<Person?> GetByIdAsync(long Id)
+    public async override Task<Person?> GetByIdAsync(string Id)
     {
         return await _dbContext.Persons
             .Include(p => p.Owner)

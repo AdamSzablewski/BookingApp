@@ -19,7 +19,7 @@ public class FacilityService
         return facility.MapToDto();
     }
 
-    public async Task<Facility> CreateAsync(long userId, FacilityCreateDto dto){
+    public async Task<Facility> CreateAsync(string userId, FacilityCreateDto dto){
         Person? person = await _personRepository.GetByIdAsync(userId) ??  throw new Exception("User not found");
         Owner? owner = person.Owner ?? throw new Exception("user is not an owner");
 

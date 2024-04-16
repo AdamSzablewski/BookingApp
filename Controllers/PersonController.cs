@@ -20,7 +20,7 @@ public class PersonController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public IActionResult getPersonById([FromRoute] long id)
+    public IActionResult getPersonById([FromRoute] string id)
     {
        return Ok( _personService.GetUserById(id)); 
     }
@@ -31,7 +31,7 @@ public class PersonController : ControllerBase
         return Ok();
     }
     [HttpDelete("{id}")]
-    public async Task<IActionResult> deletePerson([FromRoute] long id)
+    public async Task<IActionResult> deletePerson([FromRoute] string id)
     {
        bool success = await _personService.DeletePerson(id); 
        if(success){

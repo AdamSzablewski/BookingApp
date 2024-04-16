@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+
 
 var builder = WebApplication.CreateBuilder(args);
 var conString = builder.Configuration.GetConnectionString("BookingApp");
@@ -32,12 +34,20 @@ builder.Services.AddScoped<ServiceRepository>();
 builder.Services.AddScoped<EmploymentRepository>();
 builder.Services.AddScoped<EmploymentRequestRepository>();
 builder.Services.AddScoped<EmployeeRepository>();
+builder.Services.AddScoped<MessageRepository>();
+builder.Services.AddScoped<ConversationRepository>();
+
+
 //builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<CustomerRepository>();
 builder.Services.AddScoped<ServiceService>();
 builder.Services.AddScoped<AppointmentService>();
 builder.Services.AddScoped<EmployeeService>();
 builder.Services.AddScoped<EmploymentService>();
+builder.Services.AddScoped<MessagingService>();
+builder.Services.AddScoped<ConversationService>();
+
+
 
 builder.Services.AddIdentity<Person, IdentityRole>(options => {
     options.Password.RequireDigit = true;
@@ -72,6 +82,7 @@ var app = builder.Build();
 
 app.UseAuthentication();
 app.UseAuthentication();
+//app.UseSwagger();
 //app.MigrateDB();
 app.MapControllers();
 app.Run();

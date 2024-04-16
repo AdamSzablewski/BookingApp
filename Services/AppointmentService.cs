@@ -16,20 +16,17 @@ public class AppointmentService
         _customerRepository = customerRepository;
     }
     public async Task<List<TimeSlot>> GetAvailableTimeSlotsForService(long serviceId, DateOnly date){
-        Service service = await _serviceRepository.GetByIdAsync(serviceId);
+        Service service = await _serviceRepository.GetByIdAsync(serviceId) ?? throw new Exception("Service not found");
         List<Employee> employeesForTask = service.Employees;
-        if(employeesForTask == null){
-            return new List<TimeSlot>();
-        }
         TimeSpan serviceDuration = service.Length;
        
         List<TimeSlot> timeSlots = [];
         foreach(Employee employee in employeesForTask){
         
-            DateTime currentTime = new DateTime(date.Year, date.Month, date.Day, service.Facility.StartTime.Hour, service.Facility.StartTime.Minute,  service.Facility.StartTime.Second);
+            DateTime currentTime = new(date.Year, date.Month, date.Day, service.Facility.StartTime.Hour, service.Facility.StartTime.Minute,  service.Facility.StartTime.Second);
             DateTime bufferedTime = currentTime.AddHours(serviceDuration.Hours).AddMinutes(serviceDuration.Minutes);
-            DateTime employeeStartTime = new DateTime(date.Year, date.Month, date.Day, employee.StartTime.Hour, employee.StartTime.Minute,  employee.StartTime.Second);
-            DateTime employeeEndTime = new DateTime(date.Year, date.Month, date.Day, employee.EndTime.Hour, employee.EndTime.Minute,  employee.EndTime.Second);
+            DateTime employeeStartTime = new(date.Year, date.Month, date.Day, employee.StartTime.Hour, employee.StartTime.Minute,  employee.StartTime.Second);
+            DateTime employeeEndTime = new(date.Year, date.Month, date.Day, employee.EndTime.Hour, employee.EndTime.Minute,  employee.EndTime.Second);
 
             while(employeeStartTime <= currentTime && bufferedTime <= employeeEndTime){
                 bool available = await CheckIfTimeSlotAvailable(currentTime, bufferedTime, employee, date);
@@ -53,14 +50,11 @@ public class AppointmentService
 
     public async Task<bool> CheckIfTimeSlotAvailable(DateTime slotStartTime, DateTime slotEndTime, Employee employee, DateOnly date){
         List<Appointment> appointments = employee.Appointments;
-        DateTime employeeStartTime = new DateTime(date.Year, date.Month, date.Day, employee.StartTime.Hour, employee.StartTime.Minute,  employee.StartTime.Second);
-        DateTime employeeEndTime = new DateTime(date.Year, date.Month, date.Day, employee.EndTime.Hour, employee.EndTime.Minute,  employee.EndTime.Second);
+        DateTime employeeStartTime = new(date.Year, date.Month, date.Day, employee.StartTime.Hour, employee.StartTime.Minute,  employee.StartTime.Second);
+        DateTime employeeEndTime = new(date.Year, date.Month, date.Day, employee.EndTime.Hour, employee.EndTime.Minute,  employee.EndTime.Second);
         bool withinWorkingHours = WithinWorkingHours(slotStartTime, slotEndTime, employeeStartTime, employeeEndTime);
         foreach(Appointment appointment in appointments){
             bool appointmentOverlaps = AppointmentOverlaps(appointment, slotStartTime, slotEndTime);
-            //Console.WriteLine(appointment.ToString());
-            Console.WriteLine("slot start "+slotStartTime+" slot endtime "+slotEndTime);
-            Console.WriteLine();
             if(!withinWorkingHours || appointmentOverlaps){
                 return false;
             }
@@ -94,5 +88,17 @@ public class AppointmentService
         _appointmentRepository.UpdateAsync();
         return appointment;
         
+    }
+    public async Task<Appointment> CancelAppointment(long appointmentId)
+    {
+        Appointment appointment = await _appointmentRepository.GetByIdAsync(appointmentId) ?? throw new Exception("No such appointment found");
+        
+        Employee employee = appointment.Employee;
+        Customer customer = appointment.Customer;
+        employee.Appointments.Remove(appointment);
+        customer.Appointments.Remove(appointment);
+        _appointmentRepository.Delete(appointment.Id);
+        return appointment;
+        //todo send mail with info
     }
 }

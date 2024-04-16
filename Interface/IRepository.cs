@@ -1,12 +1,12 @@
 ﻿namespace BookingApp;
 
-public interface IRepository<T>
+public interface IRepository<T, R>
 {
-    T? GetById(long Id);
+    T? GetById(R Id);
     T Create(T obj);
-    bool Delete(long obj);
+    bool Delete(T obj);
     bool Update();
-    Task<T?> GetByIdAsync(long Id);
+    Task<T?> GetByIdAsync(R Id);
     Task<T> CreateAsync(T obj);
     bool UpdateAsync();
 

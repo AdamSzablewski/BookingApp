@@ -1,7 +1,7 @@
 ﻿
 namespace BookingApp;
 
-public abstract class Repository<T> : IRepository<T>
+public abstract class Repository<T, R> : IRepository<T, R>
 {
     protected readonly BookingAppContext _dbContext;
     public Repository(BookingAppContext dbContext)
@@ -21,7 +21,7 @@ public abstract class Repository<T> : IRepository<T>
         UpdateAsync();
         return obj;
     }
-    public bool Delete(long obj)
+    public bool Delete(T obj)
     {
         _dbContext.Remove(obj);
         Update();
@@ -39,7 +39,7 @@ public abstract class Repository<T> : IRepository<T>
         return true;
     }
 
-    public abstract T? GetById(long Id);
+    public abstract T? GetById(R Id);
 
-    public abstract Task<T?> GetByIdAsync(long Id);
+    public abstract Task<T?> GetByIdAsync(R Id);
 }

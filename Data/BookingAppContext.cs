@@ -19,6 +19,9 @@ public class BookingAppContext : IdentityDbContext<Person>
     public DbSet<Service> Services => Set<Service>();
     public DbSet<Adress> Adresses => Set<Adress>();
     public DbSet<EmploymentRequest> EmploymentRequests => Set<EmploymentRequest>();
+    public DbSet<Message> Messages => Set<Message>();
+    public DbSet<Conversation> Conversations => Set<Conversation>();
+
 
 
 

@@ -139,3 +139,8 @@
 /Users/adamszablewski/Documents/c#/BookingApp/BookingApp/bin/Debug/net8.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 /Users/adamszablewski/Documents/c#/BookingApp/BookingApp/bin/Debug/net8.0/Microsoft.IdentityModel.Tokens.dll
 /Users/adamszablewski/Documents/c#/BookingApp/BookingApp/bin/Debug/net8.0/System.IdentityModel.Tokens.Jwt.dll
+/Users/adamszablewski/Documents/c#/BookingApp/BookingApp/bin/Debug/net8.0/Microsoft.OpenApi.dll
+/Users/adamszablewski/Documents/c#/BookingApp/BookingApp/bin/Debug/net8.0/Swashbuckle.AspNetCore.Swagger.dll
+/Users/adamszablewski/Documents/c#/BookingApp/BookingApp/bin/Debug/net8.0/Swashbuckle.AspNetCore.SwaggerGen.dll
+/Users/adamszablewski/Documents/c#/BookingApp/BookingApp/bin/Debug/net8.0/Swashbuckle.AspNetCore.SwaggerUI.dll
+/Users/adamszablewski/Documents/c#/BookingApp/BookingApp/obj/Debug/net8.0/BookingApp.MvcApplicationPartsAssemblyInfo.cs

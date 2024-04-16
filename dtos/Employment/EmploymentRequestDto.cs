@@ -2,7 +2,7 @@
 
 public record class EmploymentRequestDto
 (
-    long SenderId,
-    long ReceiverId,
+    string SenderId,
+    string ReceiverId,
     long FacilityId
 );

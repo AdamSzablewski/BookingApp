@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookingApp;
 
-public class AppointmentRepository : Repository<Appointment>
+public class AppointmentRepository : Repository<Appointment, long>
 {
     public AppointmentRepository(BookingAppContext dbContext) : base(dbContext)
     {

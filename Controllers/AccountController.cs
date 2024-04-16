@@ -40,18 +40,19 @@ public class AccountController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] PersonCreateDto registerDto)
     {
+        if(!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
         try
         {
-            if(!ModelState.IsValid){
-                return BadRequest(ModelState);
-            }
-            Person user = new(){
+            Person user = new()
+            {
                 UserName = registerDto.Email,
                 FirstName = registerDto.FirstName,
                 LastName = registerDto.LastName,
                 PhoneNumber = registerDto.PhoneNumber,
                 Email = registerDto.Email
-
             };
             var createdUser = await _userManager.CreateAsync(user, registerDto.Password);
             if(createdUser.Succeeded)
