@@ -23,9 +23,9 @@ public abstract class Repository<T, R> : IRepository<T, R>
     }
     public bool Delete(T obj)
     {
-        _dbContext.Remove(obj);
+        var removed = _dbContext.Remove(obj);
         Update();
-        return true;
+        return removed != null;
     }
     public bool Update()
     {

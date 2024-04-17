@@ -1,15 +1,12 @@
 ﻿
 namespace BookingApp;
 
-public class PersonService
+public class PersonService(PersonRepository repository)
+
 
 {
-    private readonly PersonRepository _personRepository;
+    private readonly PersonRepository _personRepository = repository;
 
-    public PersonService(PersonRepository repository)
-    {
-        _personRepository = repository;
-    }
     public async Task<Person?> GetUserById(string id)
     {
      return await _personRepository.GetByIdAsync(id);

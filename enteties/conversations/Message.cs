@@ -2,9 +2,13 @@
 
 public class Message
 {
+    public Message()
+    {
+        Viewers = [];
+    }
     public long Id {get; set;}
-    public required string SenderId {get; set;}
-    public string Text {get; set;}
+    public string SenderId {get; set;}
+    public required string Text {get; set;}
     public List<Person> Viewers {get; set;}
 
 }

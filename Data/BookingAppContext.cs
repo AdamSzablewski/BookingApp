@@ -29,7 +29,8 @@ public class BookingAppContext : IdentityDbContext<Person>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
 {
     base.OnModelCreating(modelBuilder);
-    List<IdentityRole> roles = new List<IdentityRole>{
+    List<IdentityRole> roles =
+    [
         new IdentityRole{
             Name = "Admin",
             NormalizedName = "ADMIN"
@@ -38,7 +39,7 @@ public class BookingAppContext : IdentityDbContext<Person>
             Name = "User",
             NormalizedName = "USER"
         }
-    };
+    ];
     modelBuilder.Entity<IdentityRole>().HasData(roles);
     modelBuilder.Entity<Employee>()
                 .HasOne(e => e.User)
@@ -77,6 +78,6 @@ public class BookingAppContext : IdentityDbContext<Person>
                 .WithOne(p => p.User)
                 .HasForeignKey<Person>(e => e.CustomerId);
 
-
+// "BookingApp":  "Data Source=BookingApp.db"
 }
 }

@@ -54,7 +54,9 @@ public class AccountController : ControllerBase
                 PhoneNumber = registerDto.PhoneNumber,
                 Email = registerDto.Email
             };
+
             var createdUser = await _userManager.CreateAsync(user, registerDto.Password);
+            Console.WriteLine("User adddddddeeeeedddd");
             if(createdUser.Succeeded)
             {
                 var roleResult = await _userManager.AddToRoleAsync(user, "User");

@@ -97,7 +97,7 @@ public class AppointmentService
         Customer customer = appointment.Customer;
         employee.Appointments.Remove(appointment);
         customer.Appointments.Remove(appointment);
-        _appointmentRepository.Delete(appointment.Id);
+        _appointmentRepository.Delete(appointment);
         return appointment;
         //todo send mail with info
     }

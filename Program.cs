@@ -3,17 +3,15 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
-
+using MySql.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 var conString = builder.Configuration.GetConnectionString("BookingApp");
-
-builder.Services.AddSqlite<BookingAppContext>(conString);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddControllers();
+//builder.Services.AddMySql<BookingAppContext>(conString);
 builder.Services.AddDbContext<BookingAppContext>(options =>{
-    options.UseSqlite(conString);
+    options.UseMySql(conString, new MySqlServerVersion(new Version(8, 0, 23)));
 });
 builder.Services.AddControllers().AddNewtonsoftJson(options => {
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -81,7 +79,7 @@ var app = builder.Build();
 
 
 app.UseAuthentication();
-app.UseAuthentication();
+//app.UseAuthentication();
 //app.UseSwagger();
 //app.MigrateDB();
 app.MapControllers();

@@ -19,18 +19,20 @@ public class ConversationRepository(BookingAppContext dbContext) : Repository<Co
     }
     public async Task<List<Conversation>> GetAllForUser(string Id)
     {
-        var conversations = from conv in _dbContext.Conversations
-                            where conv.Participants.Any(p => p.Id.Equals(Id))
-                            select conv;
+        // var conversations = from conv in _dbContext.Conversations
+        //                     where conv.Participants.Any(p => p.Id.Equals(Id))
+        //                     select conv;
 
-        return await conversations.ToListAsync();
+        // return await conversations.ToListAsync();
+        return null;
     }
     public async Task<Conversation> GetConversationByMessageId(long Id)
     {
-        var conversation = from conv in _dbContext.Conversations
-                            where conv.Messages.Any(m => m.Id.Equals(Id))
-                            select conv;
+        // var conversation = from conv in _dbContext.Conversations
+        //                     where conv.Messages.Any(m => m.Id.Equals(Id))
+        //                     select conv;
 
-        return  (Conversation) conversation;
+        // return  (Conversation) conversation;
+        return null;
     }
 }
