@@ -29,7 +29,7 @@ public class AppointmentService
             DateTime employeeEndTime = new(date.Year, date.Month, date.Day, employee.EndTime.Hour, employee.EndTime.Minute,  employee.EndTime.Second);
 
             while(employeeStartTime <= currentTime && bufferedTime <= employeeEndTime){
-                bool available = await CheckIfTimeSlotAvailable(currentTime, bufferedTime, employee, date);
+                bool available = CheckIfTimeSlotAvailable(currentTime, bufferedTime, employee, date);
                 if(available){
                     TimeSlot timeSlot = new TimeSlot
                     (
@@ -48,7 +48,7 @@ public class AppointmentService
         return timeSlots;
     }
 
-    public async Task<bool> CheckIfTimeSlotAvailable(DateTime slotStartTime, DateTime slotEndTime, Employee employee, DateOnly date){
+    public bool CheckIfTimeSlotAvailable(DateTime slotStartTime, DateTime slotEndTime, Employee employee, DateOnly date){
         List<Appointment> appointments = employee.Appointments;
         DateTime employeeStartTime = new(date.Year, date.Month, date.Day, employee.StartTime.Hour, employee.StartTime.Minute,  employee.StartTime.Second);
         DateTime employeeEndTime = new(date.Year, date.Month, date.Day, employee.EndTime.Hour, employee.EndTime.Minute,  employee.EndTime.Second);

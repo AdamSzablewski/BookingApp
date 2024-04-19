@@ -98,6 +98,30 @@ namespace BookingApp.Migrations
                     b.ToTable("Conversations");
                 });
 
+            modelBuilder.Entity("BookingApp.ConversationPerson", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("ConversationId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("PersonId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ConversationId");
+
+                    b.HasIndex("PersonId");
+
+                    b.ToTable("ConversationPerson");
+                });
+
             modelBuilder.Entity("BookingApp.Customer", b =>
                 {
                     b.Property<long>("Id")
@@ -106,8 +130,9 @@ namespace BookingApp.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -131,8 +156,9 @@ namespace BookingApp.Migrations
                     b.Property<TimeOnly>("StartTime")
                         .HasColumnType("time(6)");
 
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<long?>("WorkplaceId")
                         .HasColumnType("bigint");
@@ -249,7 +275,7 @@ namespace BookingApp.Migrations
 
                     b.Property<string>("SenderId")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("Text")
                         .IsRequired()
@@ -259,7 +285,33 @@ namespace BookingApp.Migrations
 
                     b.HasIndex("ConversationId");
 
+                    b.HasIndex("SenderId");
+
                     b.ToTable("Messages");
+                });
+
+            modelBuilder.Entity("BookingApp.MessagePerson", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("MessageId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("PersonId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MessageId");
+
+                    b.HasIndex("PersonId");
+
+                    b.ToTable("MessagePerson");
                 });
 
             modelBuilder.Entity("BookingApp.Owner", b =>
@@ -270,8 +322,9 @@ namespace BookingApp.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<long?>("UserId")
-                        .HasColumnType("bigint");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -289,9 +342,6 @@ namespace BookingApp.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("longtext");
-
-                    b.Property<long?>("ConversationId")
-                        .HasColumnType("bigint");
 
                     b.Property<long?>("CustomerId")
                         .HasColumnType("bigint");
@@ -319,9 +369,6 @@ namespace BookingApp.Migrations
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetime(6)");
-
-                    b.Property<long?>("MessageId")
-                        .HasColumnType("bigint");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -355,15 +402,11 @@ namespace BookingApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ConversationId");
-
                     b.HasIndex("CustomerId")
                         .IsUnique();
 
                     b.HasIndex("EmployeeId")
                         .IsUnique();
-
-                    b.HasIndex("MessageId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -434,13 +477,13 @@ namespace BookingApp.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "acd6308f-d809-4be5-b795-f65668ddc53b",
+                            Id = "79e550cf-4f38-442d-92c8-ba8e99fec5bf",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "2a436149-e6c3-4c95-940e-99088a6097dc",
+                            Id = "cce890ba-4096-45c8-b42a-418069af46f1",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -579,6 +622,25 @@ namespace BookingApp.Migrations
                     b.Navigation("Service");
                 });
 
+            modelBuilder.Entity("BookingApp.ConversationPerson", b =>
+                {
+                    b.HasOne("BookingApp.Conversation", "Conversation")
+                        .WithMany("Participants")
+                        .HasForeignKey("ConversationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BookingApp.Person", "Person")
+                        .WithMany()
+                        .HasForeignKey("PersonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Conversation");
+
+                    b.Navigation("Person");
+                });
+
             modelBuilder.Entity("BookingApp.Employee", b =>
                 {
                     b.HasOne("BookingApp.Service", null)
@@ -662,14 +724,37 @@ namespace BookingApp.Migrations
                     b.HasOne("BookingApp.Conversation", null)
                         .WithMany("Messages")
                         .HasForeignKey("ConversationId");
+
+                    b.HasOne("BookingApp.Person", "Sender")
+                        .WithMany()
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Sender");
+                });
+
+            modelBuilder.Entity("BookingApp.MessagePerson", b =>
+                {
+                    b.HasOne("BookingApp.Message", "Message")
+                        .WithMany("Viewers")
+                        .HasForeignKey("MessageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BookingApp.Person", "Person")
+                        .WithMany()
+                        .HasForeignKey("PersonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Message");
+
+                    b.Navigation("Person");
                 });
 
             modelBuilder.Entity("BookingApp.Person", b =>
                 {
-                    b.HasOne("BookingApp.Conversation", null)
-                        .WithMany("Participants")
-                        .HasForeignKey("ConversationId");
-
                     b.HasOne("BookingApp.Customer", "Customer")
                         .WithOne("User")
                         .HasForeignKey("BookingApp.Person", "CustomerId");
@@ -677,10 +762,6 @@ namespace BookingApp.Migrations
                     b.HasOne("BookingApp.Employee", "Employee")
                         .WithOne("User")
                         .HasForeignKey("BookingApp.Person", "EmployeeId");
-
-                    b.HasOne("BookingApp.Message", null)
-                        .WithMany("Viewers")
-                        .HasForeignKey("MessageId");
 
                     b.HasOne("BookingApp.Owner", "Owner")
                         .WithOne("User")

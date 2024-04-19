@@ -4,11 +4,17 @@ using System.Linq;
 
 public class PersonRepository(BookingAppContext dbContext) : Repository<Person, string>(dbContext)
 {
-    public async Task<List<Person>> GetPeople(List<string> Ids)
+    public async Task<List<Person>> GetPeopleAsync(List<string> Ids)
     {
         return await _dbContext.Persons
         .Where(person => Ids.Contains(person.Id))
         .ToListAsync();
+    }
+    public List<Person> GetPeople(List<string> Ids)
+    {
+        return _dbContext.Persons
+        .Where(person => Ids.Contains(person.Id))
+        .ToList();
     }
 
     public async Task<Person?> GetByEmailAsync(string email)

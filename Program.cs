@@ -34,6 +34,8 @@ builder.Services.AddScoped<EmploymentRequestRepository>();
 builder.Services.AddScoped<EmployeeRepository>();
 builder.Services.AddScoped<MessageRepository>();
 builder.Services.AddScoped<ConversationRepository>();
+builder.Services.AddScoped<ConversationPersonRepository>();
+
 
 
 //builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
@@ -44,6 +46,7 @@ builder.Services.AddScoped<EmployeeService>();
 builder.Services.AddScoped<EmploymentService>();
 builder.Services.AddScoped<MessagingService>();
 builder.Services.AddScoped<ConversationService>();
+
 
 
 

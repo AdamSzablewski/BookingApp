@@ -1,13 +1,9 @@
 ﻿
 namespace BookingApp;
 
-public abstract class Repository<T, R> : IRepository<T, R>
+public abstract class Repository<T, R>(BookingAppContext dbContext) : IRepository<T, R>
 {
-    protected readonly BookingAppContext _dbContext;
-    public Repository(BookingAppContext dbContext)
-    {
-        _dbContext = dbContext;
-    }
+    protected readonly BookingAppContext _dbContext = dbContext;
 
     public T Create(T obj)
     {
@@ -20,6 +16,12 @@ public abstract class Repository<T, R> : IRepository<T, R>
         await _dbContext.AddAsync(obj);
         UpdateAsync();
         return obj;
+    }
+    public ICollection<T> CreateAll(ICollection<T> values)
+    {
+        _dbContext.AddRange(values);
+        Update();
+        return  values;
     }
     public bool Delete(T obj)
     {
@@ -42,4 +44,11 @@ public abstract class Repository<T, R> : IRepository<T, R>
     public abstract T? GetById(R Id);
 
     public abstract Task<T?> GetByIdAsync(R Id);
+
+    public async Task<ICollection<T>> CreateAllAsync(ICollection<T> values)
+    {
+        await _dbContext.AddRangeAsync(values);
+        UpdateAsync();
+        return  values;
+    }
 }

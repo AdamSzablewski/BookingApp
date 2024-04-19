@@ -8,7 +8,7 @@ public class MessagingService(MessageRepository messageRepository, ConversationR
 
     public async Task<Message> CreateMessage(MessageCreateDto messageCreateDto)
     {
-        Conversation conversation = await _conversationRepository.GetByIdAsync(messageCreateDto.ConversationId) ?? throw new Exception("Conversation not found");
+        Conversation conversation = _conversationRepository.GetById(messageCreateDto.ConversationId) ?? throw new Exception("Conversation not found");
         bool isMember = conversation.CheckIfMember(messageCreateDto.SenderId);
         if(!isMember)
         {
@@ -19,8 +19,9 @@ public class MessagingService(MessageRepository messageRepository, ConversationR
             Text = messageCreateDto.Message,
             SenderId = messageCreateDto.SenderId
         };
+        _messageRepository.Create(message);
         conversation.Messages.Add(message);
-        await _messageRepository.CreateAsync(message);
+        _conversationRepository.Update();
         return message;
     }
      public async Task<Message> DeleteMessage(long messageId, string userId)

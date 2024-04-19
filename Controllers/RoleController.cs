@@ -10,14 +10,14 @@ public class RoleController : ControllerBase
     public RoleController(BookingAppContext dbContext){
         _dbContext = dbContext;
     }
-    [HttpGet("owner/{Id}")]
-    public IActionResult AddOwnerFunctionality([FromRoute] long Id){
-        Person? person = _dbContext.Persons.Find(Id);
+    [HttpGet("owner/{userId}")]
+    public IActionResult AddOwnerFunctionality([FromRoute] string userId){
+        Person? person = _dbContext.Persons.Find(userId);
         if(person == null){
             return NotFound();
         }
         Owner owner = new (){
-            UserId = Id,
+            UserId = userId,
             User = person
         };
         _dbContext.Owners.Add(owner);
@@ -28,14 +28,14 @@ public class RoleController : ControllerBase
         return Ok();
     }
 
-    [HttpGet("customer/{Id}")]
-    public IActionResult AddCustomerFunctionality([FromRoute] long Id){
-        Person? person = _dbContext.Persons.Find(Id);
+    [HttpGet("customer/{userId}")]
+    public IActionResult AddCustomerFunctionality([FromRoute] string userId){
+        Person? person = _dbContext.Persons.Find(userId);
         if(person == null){
             return NotFound();
         }
         Customer customer = new (){
-            UserId = Id,
+            UserId = userId,
             User = person
         };
         _dbContext.Add(customer);
@@ -45,14 +45,14 @@ public class RoleController : ControllerBase
         _dbContext.SaveChanges();
         return Ok();
     }
-    [HttpGet("employee/{Id}")]
-    public IActionResult AddEmployeeFunctionality([FromRoute] long Id){
-        Person? person = _dbContext.Persons.Find(Id);
+    [HttpGet("employee/{userId}")]
+    public IActionResult AddEmployeeFunctionality([FromRoute] string userId){
+        Person? person = _dbContext.Persons.Find(userId);
         if(person == null){
             return NotFound();
         }
         Employee employee = new (){
-            UserId = Id,
+            UserId = userId,
             User = person,
             StartTime = new TimeOnly(9,0),
             EndTime = new TimeOnly(17,0),

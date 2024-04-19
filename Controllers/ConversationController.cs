@@ -10,10 +10,10 @@ public class ConversationController : ControllerBase
     {
         _conversationService = conversationService;
     }
-    [HttpGet]
-    public async Task<IActionResult> GetConversationById([FromQuery]long Id)
+    [HttpGet("{conversationId}")]
+    public async Task<IActionResult> GetConversationById([FromRoute]long conversationId)
     {
-        return Ok(await _conversationService.GetConversationById(Id));
+        return Ok(await _conversationService.GetConversationById(conversationId));
     }
     [HttpGet]
     public async Task<IActionResult> GetAllConversationsForUser([FromQuery]string Id)
@@ -21,9 +21,9 @@ public class ConversationController : ControllerBase
         return Ok(await _conversationService.GetConversationsForUser(Id));
     }
     [HttpPost]
-    public async Task<IActionResult> CreateConversation([FromBody]ConversationCreateDto conversationCreateDto)
+    public Task<IActionResult> CreateConversation([FromBody]ConversationCreateDto conversationCreateDto)
     {
-        return Ok( await _conversationService.CreateConversation(conversationCreateDto));
+        return Ok(  _conversationService.CreateConversation(conversationCreateDto));
     }
     [HttpGet("{conversationId}/add")]
     public async Task<IActionResult> AddUserToConversation([FromQuery]string participantId, [FromQuery]string newParticipantId, [FromRoute] long conversationId)
