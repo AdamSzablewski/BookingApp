@@ -14,7 +14,7 @@ public abstract class Repository<T, R>(BookingAppContext dbContext) : IRepositor
     public async Task<T> CreateAsync(T obj)
     {
         await _dbContext.AddAsync(obj);
-        UpdateAsync();
+        await UpdateAsync();
         return obj;
     }
     public ICollection<T> CreateAll(ICollection<T> values)
@@ -35,9 +35,9 @@ public abstract class Repository<T, R>(BookingAppContext dbContext) : IRepositor
         return true;
     }
 
-    public bool UpdateAsync()
+    public async Task<bool> UpdateAsync()
     {
-        _dbContext.SaveChangesAsync();
+        await _dbContext.SaveChangesAsync();
         return true;
     }
 

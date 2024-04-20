@@ -10,6 +10,6 @@ public interface IRepository<T, R>
     ICollection<T> CreateAll(ICollection<T> values);
     Task<T?> GetByIdAsync(R Id);
     Task<T> CreateAsync(T obj);
-    bool UpdateAsync();
+    Task<bool> UpdateAsync();
 
 }

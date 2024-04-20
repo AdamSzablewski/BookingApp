@@ -1,16 +1,16 @@
 ﻿namespace BookingApp;
 
-public class FacilityService
+public class FacilityService(
+    FacilityRepository facilityRepository,
+    PersonRepository personRepository,
+    BookingAppContext dbContext,
+    AdressRepository adressRepository)
 {
-    private readonly FacilityRepository _facilityRepository;
-    private readonly PersonRepository _personRepository;
-    private readonly BookingAppContext _dbContext;
-    public FacilityService(FacilityRepository facilityRepository, PersonRepository personRepository, BookingAppContext dbContext){
-        _facilityRepository = facilityRepository;
-        _personRepository = personRepository;
-        _dbContext = dbContext;
+    private readonly FacilityRepository _facilityRepository = facilityRepository;
+    private readonly PersonRepository _personRepository = personRepository;
+    private readonly BookingAppContext _dbContext = dbContext;
+    private readonly AdressRepository _adressRepository = adressRepository;
 
-    }
     public async Task<FacilityDto> GetById(long id){
         Facility? facility = await _facilityRepository.GetByIdAsync(id);
         if(facility == null){
@@ -20,21 +20,28 @@ public class FacilityService
     }
 
     public async Task<Facility> CreateAsync(string userId, FacilityCreateDto dto){
-        Person? person = await _personRepository.GetByIdAsync(userId) ??  throw new Exception("User not found");
-        Owner? owner = person.Owner ?? throw new Exception("user is not an owner");
+        Person person = await _personRepository.GetByIdAsync(userId) ??  throw new Exception("User not found");
+        Owner owner = person.Owner ?? throw new Exception("user is not an owner");
 
-        Adress Adress = new Adress(dto.Country, dto.City, dto.Street, dto.HouseNumber);
+        Adress adress = new Adress(dto.Country, dto.City, dto.Street, dto.HouseNumber);
         
+        await _adressRepository.CreateAsync(adress);
         Facility facility = new()
         {
             Name = dto.Name,
-            Adress = Adress,
+            Adress = adress,
             Owner = owner,
             StartTime = new TimeOnly(9,0),
             EndTime = new TimeOnly(17,0)
             
         };
-        await _facilityRepository.CreateAsync(facility);
+        try{
+           await _facilityRepository.CreateAsync(facility); 
+           Console.WriteLine("Saved    asdfgfdsasdfgfds");
+        }catch(Exception e){
+            Console.WriteLine(e.StackTrace);
+        }
+        
         owner.Facilities.Add(facility);
         await _dbContext.SaveChangesAsync();
         return facility;

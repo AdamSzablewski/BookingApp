@@ -13,7 +13,7 @@ public class Employee
     public TimeOnly EndTime {get; set;}
     public long? WorkplaceId {get; set;}
     public Facility? Workplace {get; set;}
-    public string UserId {get; set;}
+    public string? UserId {get; set;}
     public required Person User {get; set;}
     public List<Appointment> Appointments {get; set;}
     public List<EmployeeService> Services {get; set;}

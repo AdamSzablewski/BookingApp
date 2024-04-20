@@ -21,9 +21,9 @@ public class ConversationController : ControllerBase
         return Ok(await _conversationService.GetConversationsForUser(Id));
     }
     [HttpPost]
-    public Task<IActionResult> CreateConversation([FromBody]ConversationCreateDto conversationCreateDto)
+    public async Task<IActionResult> CreateConversation([FromBody]ConversationCreateDto conversationCreateDto)
     {
-        return Ok(  _conversationService.CreateConversation(conversationCreateDto));
+        return Ok( await _conversationService.CreateConversation(conversationCreateDto));
     }
     [HttpGet("{conversationId}/add")]
     public async Task<IActionResult> AddUserToConversation([FromQuery]string participantId, [FromQuery]string newParticipantId, [FromRoute] long conversationId)

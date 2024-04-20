@@ -13,6 +13,7 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<BookingAppContext>(options =>{
     options.UseMySql(conString, new MySqlServerVersion(new Version(8, 0, 23)));
 });
+// }, ServiceLifetime.Transient);
 builder.Services.AddControllers().AddNewtonsoftJson(options => {
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
 });
@@ -21,6 +22,8 @@ builder.Services.AddScoped<PersonService>();
 builder.Services.AddScoped<FacilityService>();
 builder.Services.AddScoped<FacilityRepository>();
 builder.Services.AddScoped<TokenService>();
+builder.Services.AddScoped<CustomerService>();
+
 // builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
 // builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
 // builder.Services.AddScoped<IEmploymentRepository, EmploymentRepository>();
@@ -35,6 +38,8 @@ builder.Services.AddScoped<EmployeeRepository>();
 builder.Services.AddScoped<MessageRepository>();
 builder.Services.AddScoped<ConversationRepository>();
 builder.Services.AddScoped<ConversationPersonRepository>();
+builder.Services.AddScoped<AdressRepository>();
+
 
 
 

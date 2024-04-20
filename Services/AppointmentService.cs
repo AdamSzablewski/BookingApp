@@ -16,7 +16,7 @@ public class AppointmentService
         _customerRepository = customerRepository;
     }
     public async Task<List<TimeSlot>> GetAvailableTimeSlotsForService(long serviceId, DateOnly date){
-        Service service = await _serviceRepository.GetByIdAsync(serviceId) ?? throw new Exception("Service not found");
+        Service service = await _serviceRepository.GetByIdAsync(serviceId) ?? throw new ServiceNotFoundException();
         List<Employee> employeesForTask = service.Employees;
         TimeSpan serviceDuration = service.Length;
        
@@ -71,9 +71,9 @@ public class AppointmentService
 
     public async Task<Appointment> BookAppointment(AppointmentCreateDto appointmentDto)
     {
-        Employee employee = await _employeeRepository.GetByIdAsync(appointmentDto.EmployeeId) ?? throw new Exception("Employee not found");
-        Customer customer = await _customerRepository.GetByIdAsync(appointmentDto.EmployeeId) ?? throw new Exception("Customer not found");
-        Service service = await _serviceRepository.GetByIdAsync(appointmentDto.ServiceId) ?? throw new Exception("Service not found");
+        Employee employee = await _employeeRepository.GetByIdAsync(appointmentDto.EmployeeId) ?? throw new EmployeeNotFoundException();
+        Customer customer = await _customerRepository.GetByIdAsync(appointmentDto.CustomerId) ?? throw new CustomerNotFoundException();
+        Service service = await _serviceRepository.GetByIdAsync(appointmentDto.ServiceId) ?? throw new ServiceNotFoundException();
         Appointment appointment = new(){
             ServiceId = appointmentDto.ServiceId,
             Employee = employee,

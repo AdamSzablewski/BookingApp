@@ -11,6 +11,7 @@
     <Folder Include="enteties/conversations/" />
     <Folder Include="enteties/users/" />
     <Folder Include="Migrations/" />
+    <Folder Include="utils/mappers/" />
   </ItemGroup>
 
   <ItemGroup>

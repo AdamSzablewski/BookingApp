@@ -6,9 +6,12 @@ namespace BookingApp;
 public class RoleController : ControllerBase
 {
     private readonly BookingAppContext _dbContext;
+    private readonly CustomerService _customerService;
 
-    public RoleController(BookingAppContext dbContext){
+
+    public RoleController(BookingAppContext dbContext, CustomerService customerService){
         _dbContext = dbContext;
+        _customerService = customerService;
     }
     [HttpGet("owner/{userId}")]
     public IActionResult AddOwnerFunctionality([FromRoute] string userId){
@@ -46,7 +49,7 @@ public class RoleController : ControllerBase
         return Ok();
     }
     [HttpGet("employee/{userId}")]
-    public IActionResult AddEmployeeFunctionality([FromRoute] string userId){
+    public async Task<IActionResult> AddEmployeeFunctionality([FromRoute] string userId){
         Person? person = _dbContext.Persons.Find(userId);
         if(person == null){
             return NotFound();

@@ -13,12 +13,14 @@ public class EmployemntController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> SendEmploymentRequest([FromBody] EmploymentRequestDto employmentRequestDto)
     {
-        return Ok(await _employmentService.SendEmploymentRequest(employmentRequestDto));
+        await _employmentService.SendEmploymentRequest(employmentRequestDto)
+        return Ok();
     }
     [HttpPost("answere")]
     public async Task<IActionResult> AnswereEmploymentRequest([FromQuery] long requestId, [FromQuery] bool decision)
-    {
-        return Ok(await _employmentService.AnswereEmploymentRequest(requestId, decision));
+    {   
+        await _employmentService.AnswereEmploymentRequest(requestId, decision)
+        return Ok();
     }
 
 }

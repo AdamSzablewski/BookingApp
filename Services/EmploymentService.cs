@@ -1,23 +1,15 @@
 ﻿namespace BookingApp;
 
-public class EmploymentService
+public class EmploymentService(
+    PersonRepository personRepository,
+    EmployeeRepository employeeRepository,
+    EmploymentRequestRepository employmentRequestRepository,
+    BookingAppContext dbContext)
 {
-    private readonly PersonRepository _personRepository;
-    private readonly EmploymentRequestRepository _employmentRequestRepository;
-    private readonly EmploymentRepository _employmentRepository;
-    private readonly BookingAppContext _dbContext;
-
-    public EmploymentService(
-        PersonRepository personRepository,
-        EmploymentRepository employmentRepository,
-        EmploymentRequestRepository employmentRequestRepository,
-        BookingAppContext dbContext)
-    {
-        _personRepository = personRepository;
-        _employmentRepository = employmentRepository;
-        _employmentRequestRepository = employmentRequestRepository;
-        _dbContext = dbContext;
-    }
+    private readonly PersonRepository _personRepository = personRepository;
+    private readonly EmploymentRequestRepository _employmentRequestRepository = employmentRequestRepository;
+    private readonly EmployeeRepository _employeeRepository = employeeRepository;
+    private readonly BookingAppContext _dbContext = dbContext;
 
     public async Task<EmploymentRequest> SendEmploymentRequest(EmploymentRequestDto employmentRequestDto){
         Person? receiverPerson = await _personRepository.GetByIdAsync(employmentRequestDto.ReceiverId) ?? throw new Exception("User not found");
@@ -33,7 +25,7 @@ public class EmploymentService
         };
         employee.EmploymentRequests.Add(employmentRequest);
         owner.ActiveRequests.Add(employmentRequest);
-        _employmentRepository.UpdateAsync();
+        _employmentRequestRepository.UpdateAsync();
         return employmentRequest;
     }
 
@@ -66,6 +58,21 @@ public class EmploymentService
         employmentRequest.Decision = true;
         _employmentRequestRepository.UpdateAsync();
     
+    }
+    public async Task<Employee> CreateEmployee(string userId)
+    {
+        Person user = await _personRepository.GetByIdAsync(userId) ?? throw new UserNotFoundException();
+        Employee employee = new (){
+            User = user,
+            StartTime = new TimeOnly(9,0),
+            EndTime = new TimeOnly(17,0),
+        };
+        
+        await _employeeRepository.CreateAsync(employee);
+
+        user.Employee = employee;
+        await _personRepository.UpdateAsync();
+        return employee;
     }
 
 }
