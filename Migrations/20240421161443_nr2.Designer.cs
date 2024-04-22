@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookingApp.Migrations
 {
     [DbContext(typeof(BookingAppContext))]
-    [Migration("20240419191224_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20240421161443_nr2")]
+    partial class nr2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -160,7 +160,6 @@ namespace BookingApp.Migrations
                         .HasColumnType("time(6)");
 
                     b.Property<string>("UserId")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<long?>("WorkplaceId")
@@ -480,13 +479,13 @@ namespace BookingApp.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "79e550cf-4f38-442d-92c8-ba8e99fec5bf",
+                            Id = "f416483f-f4bc-4d4a-a2ec-2587e9390829",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "cce890ba-4096-45c8-b42a-418069af46f1",
+                            Id = "08b8e300-ec55-478d-8213-da0a29d1bba6",
                             Name = "User",
                             NormalizedName = "USER"
                         });

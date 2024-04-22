@@ -9,10 +9,10 @@ public class AccountController : ControllerBase
 {
     private readonly UserManager<Person> _userManager;
     private readonly PersonService _personService;
-    private readonly TokenService _tokenService;
+    private readonly SecurityService _tokenService;
     private readonly SignInManager<Person> _signInManager;
 
-    public AccountController(UserManager<Person> userManager, PersonService personService, TokenService tokenService, SignInManager<Person> signInManager)
+    public AccountController(UserManager<Person> userManager, PersonService personService, SecurityService tokenService, SignInManager<Person> signInManager)
     {
         _userManager = userManager;
         _personService = personService;
@@ -22,6 +22,8 @@ public class AccountController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
     {
+        if(!ModelState.IsValid){ return BadRequest(ModelState);};
+
         var user = _userManager.Users.FirstOrDefault(u => u.UserName.Equals(loginDto.Username));
         if(user == null) return Unauthorized();
         var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
@@ -40,10 +42,7 @@ public class AccountController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] PersonCreateDto registerDto)
     {
-        if(!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
+        if(!ModelState.IsValid){return BadRequest(ModelState);};
         try
         {
             Person user = new()
@@ -56,7 +55,6 @@ public class AccountController : ControllerBase
             };
 
             var createdUser = await _userManager.CreateAsync(user, registerDto.Password);
-            Console.WriteLine("User adddddddeeeeedddd");
             if(createdUser.Succeeded)
             {
                 var roleResult = await _userManager.AddToRoleAsync(user, "User");

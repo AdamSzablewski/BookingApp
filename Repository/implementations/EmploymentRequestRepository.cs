@@ -18,7 +18,9 @@ public class EmploymentRequestRepository(BookingAppContext dbContext) : Reposito
     {
          return await _dbContext.EmploymentRequests
         .Include(e => e.Sender)
+            .ThenInclude(e => e.User)
         .Include(e => e.Receiver)
+            .ThenInclude(e => e.User)
         .Include(e => e.Facility)
         .FirstOrDefaultAsync(e => e.Id == Id);
     }

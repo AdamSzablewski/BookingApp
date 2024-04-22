@@ -10,6 +10,8 @@ public record class AppointmentCreateDto
     long EmployeeId,
     [Required(ErrorMessage = "CustomerId is required.")]
     long CustomerId,
+    [Required(ErrorMessage = "UserId is required.")]
+    string UserId,
     [Required(ErrorMessage = "StartTime is required.")]
     DateTime StartTime,
     [Required(ErrorMessage = "EndTime is required.")]

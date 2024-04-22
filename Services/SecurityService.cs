@@ -6,11 +6,11 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace BookingApp;
 
-public class TokenService
+public class SecurityService
 {
     private readonly IConfiguration _configuration;
     private readonly SymmetricSecurityKey _symmetricSecurityKey;
-    public TokenService(IConfiguration configuration)
+    public SecurityService(IConfiguration configuration)
     {
         _configuration = configuration;
         _symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:SigningKey"]));
@@ -20,8 +20,8 @@ public class TokenService
     {
         List<Claim> claims = new List<Claim>
         {
-            new Claim(JwtRegisteredClaimNames.Email, user.Email),
-            new Claim(JwtRegisteredClaimNames.GivenName, user.UserName),
+            new Claim("Email", user.Email),
+            new Claim("UserId", user.Id),
         };
         var signingCredentials = new SigningCredentials(_symmetricSecurityKey, SecurityAlgorithms.HmacSha512Signature);
         var tokenDescriptor = new SecurityTokenDescriptor
@@ -35,6 +35,29 @@ public class TokenService
         var tokenHandler = new JwtSecurityTokenHandler();
         var token = tokenHandler.CreateToken(tokenDescriptor);
         return tokenHandler.WriteToken(token);
+    }
+    public bool IsUser(HttpContext http, string userId)
+    {
+        string token = http.Request.Headers.Authorization.FirstOrDefault()?.Split(" ").Last();
+        string userIdFromToken = GetAuthorizationClaims(token);
+        Console.WriteLine("From token --- "+userIdFromToken+"   from dt --- "+userId);
+        if(!userIdFromToken.Equals(userId))
+        {
+            throw new NotAuthorizedException();
+        }
+        return true;
+
+    }
+    public string GetAuthorizationClaims(string token)
+    {
+        var handler = new JwtSecurityTokenHandler();
+        var parsedJwt = handler.ReadJwtToken(token);
+        var userIdClaim = parsedJwt.Claims.FirstOrDefault(c => c.Type == "UserId");
+        if(userIdClaim != null)
+        {
+            return userIdClaim.Value;
+        }
+        throw new NotAuthorizedException();
     }
 
 }

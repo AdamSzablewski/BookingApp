@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BookingApp;
 [ApiController]
+[Authorize]
 [Route("message")]
 public class MessagingController(MessagingService messagingService) : ControllerBase
 {

@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BookingApp.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration : Migration
+    public partial class nr2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -189,7 +189,7 @@ namespace BookingApp.Migrations
                     StartTime = table.Column<TimeOnly>(type: "time(6)", nullable: false),
                     EndTime = table.Column<TimeOnly>(type: "time(6)", nullable: false),
                     WorkplaceId = table.Column<long>(type: "bigint", nullable: true),
-                    UserId = table.Column<string>(type: "longtext", nullable: false)
+                    UserId = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ServiceId = table.Column<long>(type: "bigint", nullable: true)
                 },
@@ -557,8 +557,8 @@ namespace BookingApp.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "79e550cf-4f38-442d-92c8-ba8e99fec5bf", null, "Admin", "ADMIN" },
-                    { "cce890ba-4096-45c8-b42a-418069af46f1", null, "User", "USER" }
+                    { "08b8e300-ec55-478d-8213-da0a29d1bba6", null, "User", "USER" },
+                    { "f416483f-f4bc-4d4a-a2ec-2587e9390829", null, "Admin", "ADMIN" }
                 });
 
             migrationBuilder.CreateIndex(

@@ -29,6 +29,12 @@ public abstract class Repository<T, R>(BookingAppContext dbContext) : IRepositor
         Update();
         return removed != null;
     }
+    public async Task<bool> DeleteAsync(T obj)
+    {
+        var removed = _dbContext.Remove(obj);
+        await UpdateAsync();
+        return removed != null;
+    }
     public bool Update()
     {
         _dbContext.SaveChanges();

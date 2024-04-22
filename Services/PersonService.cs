@@ -7,23 +7,40 @@ public class PersonService(PersonRepository repository)
 {
     private readonly PersonRepository _personRepository = repository;
 
-    public async Task<Person?> GetUserById(string id)
+    public async Task<PersonDto> GetUserDtoById(string id)
     {
-     return await _personRepository.GetByIdAsync(id);
+     Person person =  await _personRepository.GetByIdAsync(id) ?? throw new UserNotFoundException();
+     return person.MapToDto();
     }
-    public async Task<Person?> GetUserByEmail(string email)
+    public async Task<PersonDto> GetUserByEmail(string email)
     {
-     return await _personRepository.GetByEmailAsync(email);
+     Person person =  await _personRepository.GetByEmailAsync(email) ?? throw new UserNotFoundException();
+     return person.MapToDto();
     }
     public async Task<bool> DeletePerson(string id){
         Person user = await _personRepository.GetByIdAsync(id) ?? throw new Exception("User not found");
-        _personRepository.Delete(user);
+        bool success = await _personRepository.DeleteAsync(user);
+        if(!success) throw new Exception("User not deleted");
         return true;
     }
-    public Person CreatePerson(PersonCreateDto personCreateDto){
-        Person user = personCreateDto.MapToEntity();
-        _personRepository.Create(user);
-        return user;
+    public async Task<PersonDto> UpdatePerson(PersonCreateDto personCreateDto, string userId)
+    {
+        Person user = await _personRepository.GetByIdAsync(userId) ?? throw new Exception("User not found");
+        user.Email = personCreateDto.Email;
+        user.PhoneNumber = personCreateDto.PhoneNumber;
+        user.FirstName = personCreateDto.FirstName;
+        user.LastName = personCreateDto.LastName;
+        
+        await _personRepository.UpdateAsync();
+        return user.MapToDto();
+    }
+    public async Task<PersonDto> UpdateEmail(PersonUpdateEmailDto personUpdateEmailDto, string userId)
+    {
+        Person user = await _personRepository.GetByIdAsync(userId) ?? throw new Exception("User not found");
+        user.Email = personUpdateEmailDto.Email;
+        
+        await _personRepository.UpdateAsync();
+        return user.MapToDto();
     }
 
     

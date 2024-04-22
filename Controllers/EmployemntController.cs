@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BookingApp;
 
 [ApiController]
+[Authorize]
 [Route("employment")]
 public class EmployemntController : ControllerBase
 {
@@ -13,13 +15,14 @@ public class EmployemntController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> SendEmploymentRequest([FromBody] EmploymentRequestDto employmentRequestDto)
     {
-        await _employmentService.SendEmploymentRequest(employmentRequestDto)
+        if(!ModelState.IsValid){return BadRequest(ModelState);};
+        await _employmentService.SendEmploymentRequest(employmentRequestDto);
         return Ok();
     }
     [HttpPost("answere")]
-    public async Task<IActionResult> AnswereEmploymentRequest([FromQuery] long requestId, [FromQuery] bool decision)
+    public async Task<IActionResult> AnswereEmploymentRequest([FromQuery] long requestId, [FromQuery] bool decision, [FromQuery] string userId)
     {   
-        await _employmentService.AnswereEmploymentRequest(requestId, decision)
+        await _employmentService.AnswereEmploymentRequest(requestId, userId, decision);
         return Ok();
     }
 

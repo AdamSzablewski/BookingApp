@@ -1,3 +1,4 @@
+using System.Text;
 using BookingApp;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -7,6 +8,25 @@ using MySql.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 var conString = builder.Configuration.GetConnectionString("BookingApp");
+
+
+// builder.Services.AddAuthentication(options => {
+//     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+// })
+//     .AddJwtBearer(options => {
+//         options.TokenValidationParameters = new TokenValidationParameters
+//         {
+//             ValidateIssuer = true,
+//             ValidateAudience = true,
+//             ValidIssuer = builder.Configuration["JWT:Issuer"],
+//             ValidAudience = builder.Configuration["JWT:Audience"],
+//             IssuerSigningKey = new SymmetricSecurityKey(
+//                 Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigningKey"])
+//             )
+//         };
+//     });
+
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddControllers();
 //builder.Services.AddMySql<BookingAppContext>(conString);
@@ -21,7 +41,7 @@ builder.Services.AddScoped<PersonRepository>();
 builder.Services.AddScoped<PersonService>();
 builder.Services.AddScoped<FacilityService>();
 builder.Services.AddScoped<FacilityRepository>();
-builder.Services.AddScoped<TokenService>();
+builder.Services.AddScoped<SecurityService>();
 builder.Services.AddScoped<CustomerService>();
 
 // builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
@@ -62,7 +82,11 @@ builder.Services.AddIdentity<Person, IdentityRole>(options => {
     options.Password.RequireNonAlphanumeric = true;
     options.Password.RequiredLength = 4;
 
-}).AddEntityFrameworkStores<BookingAppContext>();
+}).AddEntityFrameworkStores<BookingAppContext>(); 
+
+builder.Logging.AddConsole();
+builder.Logging.AddDebug();
+
 builder.Services.AddAuthentication(options => {
     options.DefaultAuthenticateScheme = 
     options.DefaultChallengeScheme = 
@@ -78,17 +102,16 @@ builder.Services.AddAuthentication(options => {
         ValidateAudience = true,
         ValidAudience = builder.Configuration["JWT:Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(
-            System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigningKey"])
+            Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigningKey"])
         )
     };
 });
+
 
 var app = builder.Build();
 
 
 app.UseAuthentication();
-//app.UseAuthentication();
-//app.UseSwagger();
-//app.MigrateDB();
+app.UseAuthorization();
 app.MapControllers();
 app.Run();

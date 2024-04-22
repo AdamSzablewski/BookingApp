@@ -23,14 +23,20 @@ public class EmploymentService(
             Receiver = employee,
             Facility = facility
         };
+        await _employmentRequestRepository.CreateAsync(employmentRequest);
         employee.EmploymentRequests.Add(employmentRequest);
         owner.ActiveRequests.Add(employmentRequest);
-        _employmentRequestRepository.UpdateAsync();
+        await _employmentRequestRepository.UpdateAsync();
         return employmentRequest;
     }
 
-    public async Task<EmploymentRequest> AnswereEmploymentRequest(long requestId, bool decision){
+    public async Task<EmploymentRequest> AnswereEmploymentRequest(long requestId, string userId, bool decision){
         EmploymentRequest? employmentRequest = await _employmentRequestRepository.GetByIdAsync(requestId) ?? throw new Exception("No such employment request exist");
+        Person receiverUser = employmentRequest.Receiver.User;
+        if(!receiverUser.Id.Equals(userId))
+        {
+            throw new NotAuthorizedException();
+        }
         if(decision){
             AcceptRequest(employmentRequest);
         }else{

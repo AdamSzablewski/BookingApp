@@ -1,44 +1,50 @@
 ﻿using System.Data.Common;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookingApp;
 [ApiController]
+[Authorize]
 [Route("user")]
 public class PersonController : ControllerBase
 {
     private readonly BookingAppContext _context;
     private readonly PersonService _personService;
-    public PersonController(BookingAppContext dbContext, PersonService personService)
+    private readonly SecurityService _securityService;
+    public PersonController(
+        BookingAppContext dbContext,
+        PersonService personService,
+        SecurityService securityService)
     {
         _context = dbContext;
         _personService = personService;
+        _securityService = securityService;
     }
-    [HttpGet]
-    public IActionResult getAll()
-    {
-       return Ok( _context.Persons.ToList()); 
-    }
-
     [HttpGet("{id}")]
-    public IActionResult getPersonById([FromRoute] string id)
+    public async Task<IActionResult> GetUser([FromRoute] string id)
     {
-       return Ok( _personService.GetUserById(id)); 
+       return Ok(await _personService.GetUserDtoById(id)); 
     }
-    [HttpPost]
-    public IActionResult createPerson([FromBody] PersonCreateDto personCreateDto)
+    [HttpPut("{userId}")]
+    public async Task<IActionResult> UpdateUser([FromRoute] string userId, [FromBody] PersonCreateDto personCreateDto)
     {
-        _personService.CreatePerson(personCreateDto);
-        return Ok();
+         _securityService.IsUser(HttpContext, userId);
+        return Ok(await _personService.UpdatePerson(personCreateDto, userId)); 
     }
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> deletePerson([FromRoute] string id)
+    [HttpPatch("{userId}/email")]
+    public async Task<IActionResult> UpdateUserEmail([FromRoute] string userId, [FromBody] PersonUpdateEmailDto personUpdateEmailDto)
     {
-       bool success = await _personService.DeletePerson(id); 
-       if(success){
-            return Ok();
-       }else{
-            return NotFound();
-       }
+        if(!ModelState.IsValid){ return BadRequest(ModelState);};
+        _securityService.IsUser(HttpContext, userId);
+        return Ok( _personService.UpdateEmail(personUpdateEmailDto, userId));
+        
+    }
+    
+    [HttpDelete("{userId}")]
+    public async Task<IActionResult> DeleteUser([FromRoute] string userId)
+    {
+        _securityService.IsUser(HttpContext, userId);
+        return Ok( await _personService.DeletePerson(userId));
        
     }
 }
