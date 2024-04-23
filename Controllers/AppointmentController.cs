@@ -24,7 +24,7 @@ public class AppointmentController : ControllerBase
     public async Task<IActionResult> BookAppointment([FromBody] AppointmentCreateDto appointment, [FromQuery] string userId)
     {
         if(!ModelState.IsValid){ return BadRequest(ModelState);};
-        _securityService.IsUser(HttpContext, appointment.UserId);
+        _securityService.IsUser(HttpContext, userId);
         return Ok(await _appointmentService.BookAppointment(appointment));
     }
     [HttpGet("cancel")]
