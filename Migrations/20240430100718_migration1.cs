@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BookingApp.Migrations
 {
     /// <inheritdoc />
-    public partial class nr2 : Migration
+    public partial class migration1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -27,9 +27,9 @@ namespace BookingApp.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     City = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Street = table.Column<string>(type: "longtext", nullable: false)
+                    Street = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    HouseNumber = table.Column<string>(type: "longtext", nullable: false)
+                    HouseNumber = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
@@ -258,6 +258,7 @@ namespace BookingApp.Migrations
                     OwnerId = table.Column<long>(type: "bigint", nullable: true),
                     CustomerId = table.Column<long>(type: "bigint", nullable: true),
                     EmployeeId = table.Column<long>(type: "bigint", nullable: true),
+                    AdressId = table.Column<long>(type: "bigint", nullable: true),
                     UserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     NormalizedUserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
@@ -284,6 +285,11 @@ namespace BookingApp.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetUsers_Adresses_AdressId",
+                        column: x => x.AdressId,
+                        principalTable: "Adresses",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_AspNetUsers_Customers_CustomerId",
                         column: x => x.CustomerId,
@@ -557,8 +563,8 @@ namespace BookingApp.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "08b8e300-ec55-478d-8213-da0a29d1bba6", null, "User", "USER" },
-                    { "f416483f-f4bc-4d4a-a2ec-2587e9390829", null, "Admin", "ADMIN" }
+                    { "10d9bf03-b94e-41a7-9793-56024d1c4136", null, "Admin", "ADMIN" },
+                    { "1a3b83d6-2df4-4331-9dcd-9d3b7dc5f314", null, "User", "USER" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -606,6 +612,11 @@ namespace BookingApp.Migrations
                 name: "EmailIndex",
                 table: "AspNetUsers",
                 column: "NormalizedEmail");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_AdressId",
+                table: "AspNetUsers",
+                column: "AdressId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUsers_CustomerId",

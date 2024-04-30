@@ -10,10 +10,12 @@ public class SecurityService
 {
     private readonly IConfiguration _configuration;
     private readonly SymmetricSecurityKey _symmetricSecurityKey;
-    public SecurityService(IConfiguration configuration)
+    private readonly FacilityRepository _facilityRepository;
+    public SecurityService(IConfiguration configuration, FacilityRepository facilityRepository)
     {
         _configuration = configuration;
         _symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:SigningKey"]));
+        _facilityRepository = facilityRepository;
     }
 
     public string CreateToken(Person user)
@@ -40,13 +42,22 @@ public class SecurityService
     {
         string token = http.Request.Headers.Authorization.FirstOrDefault()?.Split(" ").Last();
         string userIdFromToken = GetAuthorizationClaims(token);
-        Console.WriteLine("From token --- "+userIdFromToken+"   from dt --- "+userId);
         if(!userIdFromToken.Equals(userId))
         {
             throw new NotAuthorizedException();
         }
         return true;
 
+    }
+    public async Task<bool> IsOwner(HttpContext http, long facilityId, string userId)
+    {   
+        if(!IsUser(http, userId))
+        {
+            throw new NotAuthorizedException();
+        }
+        Facility facility = await _facilityRepository.GetByIdAsync(facilityId) ?? throw new FacilityNotFoundException();
+        Owner owner = facility.Owner;
+        return owner.UserId.Equals(userId);
     }
     public string GetAuthorizationClaims(string token)
     {

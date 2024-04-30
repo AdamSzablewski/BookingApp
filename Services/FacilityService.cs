@@ -23,7 +23,12 @@ public class FacilityService(
         Person person = await _personRepository.GetByIdAsync(userId) ??  throw new Exception("User not found");
         Owner owner = person.Owner ?? throw new Exception("user is not an owner");
 
-        Adress adress = new Adress(dto.Country, dto.City, dto.Street, dto.HouseNumber);
+        Adress adress = new(){
+            Country = dto.Country,
+            City = dto.City,
+            Street = dto.Street,
+            HouseNumber =  dto.HouseNumber
+        };
         
         await _adressRepository.CreateAsync(adress);
         Facility facility = new()
@@ -33,11 +38,9 @@ public class FacilityService(
             Owner = owner,
             StartTime = new TimeOnly(9,0),
             EndTime = new TimeOnly(17,0)
-            
         };
         try{
            await _facilityRepository.CreateAsync(facility); 
-           Console.WriteLine("Saved    asdfgfdsasdfgfds");
         }catch(Exception e){
             Console.WriteLine(e.StackTrace);
         }
@@ -47,12 +50,10 @@ public class FacilityService(
         return facility;
     }
     public async Task<Facility> ChangeName(long facilityId, FacilityChangeNameDto facilityChangeNameDto){
-        Facility? facility = await _facilityRepository.GetByIdAsync(facilityId);
-        if(facility == null){
-            throw new Exception("Facility not found");
-        }
+        Facility facility = await _facilityRepository.GetByIdAsync(facilityId) ?? throw new Exception("Facility not found");
         facility.Name = facilityChangeNameDto.Name;
-        _facilityRepository.UpdateAsync();
+        await _facilityRepository.UpdateAsync();
         return facility;
     }
+
 }

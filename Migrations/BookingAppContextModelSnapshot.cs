@@ -39,11 +39,9 @@ namespace BookingApp.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("HouseNumber")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("Street")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
@@ -338,6 +336,9 @@ namespace BookingApp.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
+                    b.Property<long?>("AdressId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("longtext");
@@ -400,6 +401,8 @@ namespace BookingApp.Migrations
                         .HasColumnType("varchar(256)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AdressId");
 
                     b.HasIndex("CustomerId")
                         .IsUnique();
@@ -476,13 +479,13 @@ namespace BookingApp.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "f416483f-f4bc-4d4a-a2ec-2587e9390829",
+                            Id = "10d9bf03-b94e-41a7-9793-56024d1c4136",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "08b8e300-ec55-478d-8213-da0a29d1bba6",
+                            Id = "1a3b83d6-2df4-4331-9dcd-9d3b7dc5f314",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -754,6 +757,10 @@ namespace BookingApp.Migrations
 
             modelBuilder.Entity("BookingApp.Person", b =>
                 {
+                    b.HasOne("BookingApp.Adress", "Adress")
+                        .WithMany()
+                        .HasForeignKey("AdressId");
+
                     b.HasOne("BookingApp.Customer", "Customer")
                         .WithOne("User")
                         .HasForeignKey("BookingApp.Person", "CustomerId");
@@ -765,6 +772,8 @@ namespace BookingApp.Migrations
                     b.HasOne("BookingApp.Owner", "Owner")
                         .WithOne("User")
                         .HasForeignKey("BookingApp.Person", "OwnerId");
+
+                    b.Navigation("Adress");
 
                     b.Navigation("Customer");
 

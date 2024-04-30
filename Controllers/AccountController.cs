@@ -11,13 +11,15 @@ public class AccountController : ControllerBase
     private readonly PersonService _personService;
     private readonly SecurityService _tokenService;
     private readonly SignInManager<Person> _signInManager;
+    private readonly BookingAppContext _dbContext;
 
-    public AccountController(UserManager<Person> userManager, PersonService personService, SecurityService tokenService, SignInManager<Person> signInManager)
+    public AccountController(UserManager<Person> userManager, PersonService personService, SecurityService tokenService, SignInManager<Person> signInManager, BookingAppContext dbContext)
     {
         _userManager = userManager;
         _personService = personService;
         _tokenService = tokenService;
         _signInManager = signInManager;
+        _dbContext = dbContext;
     }
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
@@ -40,7 +42,7 @@ public class AccountController : ControllerBase
 
 
     [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] PersonCreateDto registerDto)
+    public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
     {
         if(!ModelState.IsValid){return BadRequest(ModelState);};
         try
@@ -55,6 +57,13 @@ public class AccountController : ControllerBase
             };
 
             var createdUser = await _userManager.CreateAsync(user, registerDto.Password);
+            Adress adress = new(){
+                Country = registerDto.Country,
+                City = registerDto.City
+            };
+            await _dbContext.Adresses.AddAsync(adress);
+            user.Adress = adress;
+            await _dbContext.SaveChangesAsync();
             if(createdUser.Succeeded)
             {
                 var roleResult = await _userManager.AddToRoleAsync(user, "User");

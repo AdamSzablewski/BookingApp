@@ -2,15 +2,7 @@
 
 public static class PersonMapper
 {
-    public static Person MapToEntity (this PersonCreateDto personDto){
-       Person user = new(){
-                FirstName = personDto.FirstName,
-                LastName = personDto.LastName,
-                Email = personDto.Email,
-                PhoneNumber = personDto.PhoneNumber,
-            }; 
-        return user;     
-    }
+   
      public static Person MapToEntity (this PersonDto personDto)
      {
         if(personDto == null) return null;

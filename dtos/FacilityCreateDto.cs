@@ -1,12 +1,20 @@
-﻿namespace BookingApp;
+﻿using System.ComponentModel.DataAnnotations;
 
-public record class FacilityCreateDto
-(
-    string Name,
-    long OwnerId,
-    string Country,
-    string City,
-    string Street,
-    string HouseNumber
+namespace BookingApp;
 
-);
+public class FacilityCreateDto
+{
+    [Required(ErrorMessage = "Name is required.")]
+    public required string Name {get; set;}
+    [Required(ErrorMessage = "OwnerId is required.")]
+    public required long OwnerId {get; set;}
+    [Required(ErrorMessage = "Country is required.")]
+    public required string Country {get; set;}
+    [Required(ErrorMessage = "City is required.")]
+    public required string City {get; set;}
+    [Required(ErrorMessage = "Street is required.")]
+    public required string Street {get; set;}
+    [Required(ErrorMessage = "HouseNumber is required.")]
+    public required string HouseNumber {get; set;}
+
+}

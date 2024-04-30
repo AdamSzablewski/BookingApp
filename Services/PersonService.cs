@@ -23,13 +23,13 @@ public class PersonService(PersonRepository repository)
         if(!success) throw new Exception("User not deleted");
         return true;
     }
-    public async Task<PersonDto> UpdatePerson(PersonCreateDto personCreateDto, string userId)
+    public async Task<PersonDto> UpdatePerson(PersonUpdateDto updateDto, string userId)
     {
         Person user = await _personRepository.GetByIdAsync(userId) ?? throw new Exception("User not found");
-        user.Email = personCreateDto.Email;
-        user.PhoneNumber = personCreateDto.PhoneNumber;
-        user.FirstName = personCreateDto.FirstName;
-        user.LastName = personCreateDto.LastName;
+        user.Email = updateDto.Email;
+        user.PhoneNumber = updateDto.PhoneNumber;
+        user.FirstName = updateDto.FirstName;
+        user.LastName = updateDto.LastName;
         
         await _personRepository.UpdateAsync();
         return user.MapToDto();

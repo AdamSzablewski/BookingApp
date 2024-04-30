@@ -1,7 +1,11 @@
-﻿namespace BookingApp;
+﻿
 
-public record class FacilityDto
-(
-    long Id,
-    string Name
-);
+
+namespace BookingApp;
+
+public class FacilityDto
+{
+    public long Id {get; set;}
+    public required string Name {get; set;}
+    public required List<ServiceDto> Services {get; set;} = [];
+}

@@ -26,10 +26,10 @@ public class PersonController : ControllerBase
        return Ok(await _personService.GetUserDtoById(id)); 
     }
     [HttpPut("{userId}")]
-    public async Task<IActionResult> UpdateUser([FromRoute] string userId, [FromBody] PersonCreateDto personCreateDto)
+    public async Task<IActionResult> UpdateUser([FromRoute] string userId, [FromBody] PersonUpdateDto updateDto)
     {
          _securityService.IsUser(HttpContext, userId);
-        return Ok(await _personService.UpdatePerson(personCreateDto, userId)); 
+        return Ok(await _personService.UpdatePerson(updateDto, userId)); 
     }
     [HttpPatch("{userId}/email")]
     public async Task<IActionResult> UpdateUserEmail([FromRoute] string userId, [FromBody] PersonUpdateEmailDto personUpdateEmailDto)

@@ -17,6 +17,8 @@ public class Person : IdentityUser
     public Customer? Customer {get; set;}
     public long? EmployeeId {get; set;}
     public Employee? Employee {get; set;}
+    public long? AdressId {get; set;}
+    public Adress? Adress {get; set;}
     public override string ToString()
     {
         return $"FirstName: {FirstName}, LastName: {LastName}, Employee: {Employee}";
