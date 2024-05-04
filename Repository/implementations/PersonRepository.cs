@@ -2,19 +2,20 @@
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
-public class PersonRepository(BookingAppContext dbContext) : Repository<Person, string>(dbContext)
+public class PersonRepository(BookingAppContext dbContext) : Repository<Person, string>(dbContext), IPersonRepository
 {
+   
     public async Task<List<Person>> GetPeopleAsync(List<string> Ids)
     {
         return await _dbContext.Persons
         .Where(person => Ids.Contains(person.Id))
         .ToListAsync();
     }
-    public List<Person> GetPeople(List<string> Ids)
+    public async Task<List<Person>> GetPeople(List<string> Ids)
     {
-        return _dbContext.Persons
+        return await _dbContext.Persons
         .Where(person => Ids.Contains(person.Id))
-        .ToList();
+        .ToListAsync();
     }
 
     public async Task<Person?> GetByEmailAsync(string email)
@@ -34,6 +35,7 @@ public class PersonRepository(BookingAppContext dbContext) : Repository<Person, 
                 .ThenInclude(e => e.Facilities)
             .Include(p => p.Employee)
             .Include(p => p.Customer)
+            .Include(p => p.Adress)
             .FirstOrDefaultAsync(p => p.Id.Equals( Id));
     }
 

@@ -10,6 +10,10 @@ public class BookingAppContext : IdentityDbContext<Person>
     {
 
     }
+    public BookingAppContext()
+    {
+        
+    }
     public DbSet<Person> Persons => Set<Person>();
     public DbSet<Customer> Customers => Set<Customer>();
     public DbSet<Owner> Owners => Set<Owner>();

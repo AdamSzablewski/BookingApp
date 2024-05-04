@@ -1,11 +1,11 @@
 ﻿
 namespace BookingApp;
 
-public class PersonService(PersonRepository repository)
+public class PersonService(IPersonRepository repository)
 
 
 {
-    private readonly PersonRepository _personRepository = repository;
+    private readonly IPersonRepository _personRepository = repository;
 
     public async Task<PersonDto> GetUserDtoById(string id)
     {
@@ -18,18 +18,20 @@ public class PersonService(PersonRepository repository)
      return person.MapToDto();
     }
     public async Task<bool> DeletePerson(string id){
-        Person user = await _personRepository.GetByIdAsync(id) ?? throw new Exception("User not found");
+        Person user = await _personRepository.GetByIdAsync(id) ?? throw new UserNotFoundException();
         bool success = await _personRepository.DeleteAsync(user);
         if(!success) throw new Exception("User not deleted");
         return true;
     }
     public async Task<PersonDto> UpdatePerson(PersonUpdateDto updateDto, string userId)
     {
-        Person user = await _personRepository.GetByIdAsync(userId) ?? throw new Exception("User not found");
+        Person user = await _personRepository.GetByIdAsync(userId) ?? throw new UserNotFoundException();
         user.Email = updateDto.Email;
         user.PhoneNumber = updateDto.PhoneNumber;
         user.FirstName = updateDto.FirstName;
         user.LastName = updateDto.LastName;
+        user.Adress.Country = updateDto.Country;
+        user.Adress.City = updateDto.City;
         
         await _personRepository.UpdateAsync();
         return user.MapToDto();

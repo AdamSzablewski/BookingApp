@@ -11,6 +11,13 @@ public class ServiceRepository(BookingAppContext dbContext) : Repository<Service
                     .Where(e => e.FacilityId == FacilityId)
                     .ToListAsync();
     }
+    public async Task<List<Service>> GetInArea(string country, string city, int FEED_AMOUNT)
+    {
+        return await _dbContext.Services
+            .Where(service => service.Facility.Adress.Country.Equals(country) && service.Facility.Adress.City.Equals(city))
+            .Take(FEED_AMOUNT)
+            .ToListAsync();
+    }
 
     public override Service? GetById(long Id)
     {
