@@ -1,20 +1,14 @@
 ﻿namespace BookingApp;
 
-public class AppointmentService
+public class AppointmentService(IAppointmentRepository appointmentRepository,
+IServiceRepository serviceRepository, IEmployeeRepository employeeRepository, ICustomerRepository customerRepository)
 {
-    private readonly AppointmentRepository _appointmentRepository;
-    private readonly ServiceRepository _serviceRepository;
-    private readonly EmployeeRepository _employeeRepository;
-    private readonly CustomerRepository _customerRepository;
+    private readonly IAppointmentRepository _appointmentRepository = appointmentRepository;
+    private readonly IServiceRepository _serviceRepository = serviceRepository;
+    private readonly IEmployeeRepository _employeeRepository = employeeRepository;
+    private readonly ICustomerRepository _customerRepository = customerRepository;
     private readonly int MINUTE_INCREMENT = 15;
-    public AppointmentService(AppointmentRepository appointmentRepository, 
-    ServiceRepository serviceRepository, EmployeeRepository employeeRepository, CustomerRepository customerRepository)
-    {
-        _appointmentRepository = appointmentRepository;
-        _serviceRepository = serviceRepository;
-        _employeeRepository = employeeRepository;
-        _customerRepository = customerRepository;
-    }
+
     public async Task<List<TimeSlot>> GetAvailableTimeSlotsForService(long serviceId, DateOnly date){
         Service service = await _serviceRepository.GetByIdAsync(serviceId) ?? throw new ServiceNotFoundException();
         List<Employee> employeesForTask = service.Employees;
@@ -52,7 +46,7 @@ public class AppointmentService
         List<Appointment> appointments = employee.Appointments;
         DateTime employeeStartTime = new(date.Year, date.Month, date.Day, employee.StartTime.Hour, employee.StartTime.Minute,  employee.StartTime.Second);
         DateTime employeeEndTime = new(date.Year, date.Month, date.Day, employee.EndTime.Hour, employee.EndTime.Minute,  employee.EndTime.Second);
-        bool withinWorkingHours = WithinWorkingHours(slotStartTime, slotEndTime, employeeStartTime, employeeEndTime);
+        bool withinWorkingHours = IsWithinWorkingHours(slotStartTime, slotEndTime, employeeStartTime, employeeEndTime);
         foreach(Appointment appointment in appointments){
             bool appointmentOverlaps = AppointmentOverlaps(appointment, slotStartTime, slotEndTime);
             if(!withinWorkingHours || appointmentOverlaps){
@@ -64,7 +58,7 @@ public class AppointmentService
     public bool AppointmentOverlaps(Appointment appointment, DateTime slotStartTime, DateTime slotEndTime){
         return (slotStartTime < appointment.EndTime) && (slotEndTime > appointment.StartTime);
     }
-    public bool WithinWorkingHours(DateTime slotStartTime, DateTime slotEndTime, DateTime employeeStartTime, DateTime employeeEndTime)
+    public bool IsWithinWorkingHours(DateTime slotStartTime, DateTime slotEndTime, DateTime employeeStartTime, DateTime employeeEndTime)
     {
         return slotStartTime >= employeeStartTime && slotEndTime <= employeeEndTime;
     }

@@ -37,7 +37,6 @@ builder.Services.AddDbContext<BookingAppContext>(options =>{
 builder.Services.AddControllers().AddNewtonsoftJson(options => {
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
 });
-builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 builder.Services.AddScoped<PersonService>();
 builder.Services.AddScoped<FacilityService>();
 builder.Services.AddScoped<FacilityRepository>();
@@ -45,11 +44,12 @@ builder.Services.AddScoped<SecurityService>();
 builder.Services.AddScoped<CustomerService>();
 builder.Services.AddScoped<FeedService>();
 
-builder.Services.AddScoped<AppointmentRepository>();
-builder.Services.AddScoped<ServiceRepository>();
+builder.Services.AddScoped<IPersonRepository, PersonRepository>();
+builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
+builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
 builder.Services.AddScoped<EmploymentRepository>();
 builder.Services.AddScoped<EmploymentRequestRepository>();
-builder.Services.AddScoped<EmployeeRepository>();
+builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 builder.Services.AddScoped<MessageRepository>();
 builder.Services.AddScoped<ConversationRepository>();
 builder.Services.AddScoped<ConversationPersonRepository>();
@@ -59,7 +59,7 @@ builder.Services.AddScoped<AdressRepository>();
 
 
 //builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-builder.Services.AddScoped<CustomerRepository>();
+builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<ServiceService>();
 builder.Services.AddScoped<AppointmentService>();
 builder.Services.AddScoped<EmployeeService>();
