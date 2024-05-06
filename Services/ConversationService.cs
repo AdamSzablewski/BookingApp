@@ -1,9 +1,9 @@
 ﻿namespace BookingApp;
 
-public class ConversationService(ConversationRepository conversationRepository, PersonRepository personRepository, ConversationPersonRepository conversationPersonRepository, BookingAppContext dbContext)
+public class ConversationService(IConversationRepository conversationRepository, IPersonRepository personRepository, ConversationPersonRepository conversationPersonRepository, BookingAppContext dbContext)
 {
-    private readonly ConversationRepository _conversationRepository = conversationRepository;
-    private readonly PersonRepository _personRepository = personRepository;
+    private readonly IConversationRepository _conversationRepository = conversationRepository;
+    private readonly IPersonRepository _personRepository = personRepository;
     private readonly ConversationPersonRepository _conversationPersonRepository = conversationPersonRepository;
     private readonly BookingAppContext _dbContext = dbContext;
     public async Task<Conversation> GetConversationById(long id)

@@ -1,9 +1,9 @@
 ﻿namespace BookingApp;
 
-public class MessagingService(MessageRepository messageRepository, ConversationRepository conversationRepository)
+public class MessagingService(IMessageRepository messageRepository, IConversationRepository conversationRepository)
 {
-    private readonly MessageRepository _messageRepository = messageRepository;
-    private readonly ConversationRepository _conversationRepository = conversationRepository;
+    private readonly IMessageRepository _messageRepository = messageRepository;
+    private readonly IConversationRepository _conversationRepository = conversationRepository;
 
 
     public async Task<Message> CreateMessage(MessageCreateDto messageCreateDto)

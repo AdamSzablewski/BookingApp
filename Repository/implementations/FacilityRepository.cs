@@ -2,7 +2,7 @@
 
 namespace BookingApp;
 
-public class FacilityRepository(BookingAppContext dbContext) : Repository<Facility, long>(dbContext)
+public class FacilityRepository(BookingAppContext dbContext) : Repository<Facility, long>(dbContext), IFacilityRepository
 {
     public override Facility? GetById(long Id)
     {

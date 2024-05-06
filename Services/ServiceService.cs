@@ -2,17 +2,13 @@
 
 namespace BookingApp;
 
-public class ServiceService
+public class ServiceService(IServiceRepository serviceRepository, IFacilityRepository facilityRepository, IEmployeeRepository employeeRepository)
 {
-    private readonly ServiceRepository _serviceRepository;
-    private readonly FacilityRepository _facilityRepository;
-    private readonly EmployeeRepository _employeeRepository;
-    public ServiceService(ServiceRepository serviceRepository, FacilityRepository facilityRepository, EmployeeRepository employeeRepository){
-        _serviceRepository = serviceRepository;
-        _facilityRepository = facilityRepository;
-        _employeeRepository = employeeRepository;
-    }
-     public async Task<ServiceDto> GetByIdAsync(long serviceId){
+    private readonly IServiceRepository _serviceRepository = serviceRepository;
+    private readonly IFacilityRepository _facilityRepository = facilityRepository;
+    private readonly IEmployeeRepository _employeeRepository = employeeRepository;
+
+    public async Task<ServiceDto> GetByIdAsync(long serviceId){
         Service service =  await _serviceRepository.GetByIdAsync(serviceId) ?? throw new Exception("Service Not found");
       
         return service.MapToDto();

@@ -1,15 +1,15 @@
 ﻿namespace BookingApp;
 
 public class FacilityService(
-    FacilityRepository facilityRepository,
-    PersonRepository personRepository,
+    IFacilityRepository facilityRepository,
+    IPersonRepository personRepository,
     BookingAppContext dbContext,
-    AdressRepository adressRepository)
+    IAdressRepository adressRepository)
 {
-    private readonly FacilityRepository _facilityRepository = facilityRepository;
-    private readonly PersonRepository _personRepository = personRepository;
+    private readonly IFacilityRepository _facilityRepository = facilityRepository;
+    private readonly IPersonRepository _personRepository = personRepository;
     private readonly BookingAppContext _dbContext = dbContext;
-    private readonly AdressRepository _adressRepository = adressRepository;
+    private readonly IAdressRepository _adressRepository = adressRepository;
 
     public async Task<FacilityDto> GetById(long id){
         Facility? facility = await _facilityRepository.GetByIdAsync(id);

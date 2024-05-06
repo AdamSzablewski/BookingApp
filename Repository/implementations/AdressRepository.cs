@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookingApp;
 
-public class AdressRepository(BookingAppContext dbContext) : Repository<Adress, long>(dbContext)
+public class AdressRepository(BookingAppContext dbContext) : Repository<Adress, long>(dbContext), IAdressRepository
 {
     private readonly BookingAppContext _dbContext = dbContext;
     public override Adress? GetById(long Id)

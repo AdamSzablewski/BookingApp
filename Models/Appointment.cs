@@ -2,6 +2,7 @@
 
 public class Appointment
 {
+    
     public long Id {get; set;}
     public long ServiceId {get; set;}
     public required Service Service {get; set;}

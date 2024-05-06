@@ -6,4 +6,3 @@ public record class EmployeeDto
     PersonDto User
 );
 
-   

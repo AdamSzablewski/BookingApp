@@ -10,8 +10,8 @@ public class SecurityService
 {
     private readonly IConfiguration _configuration;
     private readonly SymmetricSecurityKey _symmetricSecurityKey;
-    private readonly FacilityRepository _facilityRepository;
-    public SecurityService(IConfiguration configuration, FacilityRepository facilityRepository)
+    private readonly IFacilityRepository _facilityRepository;
+    public SecurityService(IConfiguration configuration, IFacilityRepository facilityRepository)
     {
         _configuration = configuration;
         _symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:SigningKey"]));

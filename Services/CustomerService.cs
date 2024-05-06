@@ -1,9 +1,9 @@
 ﻿namespace BookingApp;
 
-public class CustomerService(CustomerRepository customerRepository, PersonRepository personRepository)
+public class CustomerService(ICustomerRepository customerRepository, IPersonRepository personRepository)
 {
-    private readonly CustomerRepository _customerRepository = customerRepository;
-    private readonly PersonRepository _personRepository = personRepository;
+    private readonly ICustomerRepository _customerRepository = customerRepository;
+    private readonly IPersonRepository _personRepository = personRepository;
 
     public async Task<Customer> CreateCustomer(string userId)
     {

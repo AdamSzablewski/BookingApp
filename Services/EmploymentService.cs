@@ -1,14 +1,14 @@
 ﻿namespace BookingApp;
 
 public class EmploymentService(
-    PersonRepository personRepository,
-    EmployeeRepository employeeRepository,
-    EmploymentRequestRepository employmentRequestRepository,
+    IPersonRepository personRepository,
+    IEmployeeRepository employeeRepository,
+    IEmploymentRequestRepository employmentRequestRepository,
     BookingAppContext dbContext)
 {
-    private readonly PersonRepository _personRepository = personRepository;
-    private readonly EmploymentRequestRepository _employmentRequestRepository = employmentRequestRepository;
-    private readonly EmployeeRepository _employeeRepository = employeeRepository;
+    private readonly IPersonRepository _personRepository = personRepository;
+    private readonly IEmploymentRequestRepository _employmentRequestRepository = employmentRequestRepository;
+    private readonly IEmployeeRepository _employeeRepository = employeeRepository;
     private readonly BookingAppContext _dbContext = dbContext;
 
     public async Task<EmploymentRequest> SendEmploymentRequest(EmploymentRequestDto employmentRequestDto){

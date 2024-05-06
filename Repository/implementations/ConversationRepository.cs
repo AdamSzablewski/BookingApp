@@ -6,7 +6,7 @@ using Microsoft.VisualBasic;
 
 namespace BookingApp;
 
-public class ConversationRepository(BookingAppContext dbContext) : Repository<Conversation, long>(dbContext)
+public class ConversationRepository(BookingAppContext dbContext) : Repository<Conversation, long>(dbContext), IConversationRepository
 {
     public override Conversation? GetById(long Id)
     {

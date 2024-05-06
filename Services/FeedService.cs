@@ -3,12 +3,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookingApp;
 
-public class FeedService(PersonRepository personRepository, BookingAppContext dbContext, ServiceRepository serviceRepository)
+public class FeedService(IPersonRepository personRepository, BookingAppContext dbContext, IServiceRepository serviceRepository)
 {
     private static readonly int FEED_AMOUNT = 40;
-    private readonly PersonRepository _personRepository = personRepository;
+    private readonly IPersonRepository _personRepository = personRepository;
     private readonly BookingAppContext _dbContext = dbContext;
-    private readonly ServiceRepository _serviceRepositopry = serviceRepository;
+    private readonly IServiceRepository _serviceRepositopry = serviceRepository;
     internal async Task<Feed> GetFeed(string userId)
     {
         Person user = await _personRepository.GetByIdAsync(userId) ?? throw new UserNotFoundException();
