@@ -31,7 +31,8 @@ public class MessagingService(IMessageRepository messageRepository, IConversatio
             .FirstOrDefault(m => m.Id == messageId) ?? throw new Exception("Message Not found");
         message.IsOwner(userId);
         conversation.Messages.Remove(message);
-        _messageRepository.Delete(message);
+        await _messageRepository.DeleteAsync(message);
+        await _messageRepository.UpdateAsync();
         return message;
     }
 }

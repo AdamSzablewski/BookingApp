@@ -2,18 +2,18 @@
 
 namespace BookingApp;
 
-public record class AppointmentCreateDto
-(
+public  class AppointmentCreateDto
+{
     [Required(ErrorMessage = "ServiceId is required.")]
-    long ServiceId,
+    public long ServiceId {get; set;}
     [Required(ErrorMessage = "EmployeeId is required.")]
-    long EmployeeId,
+    public long EmployeeId {get; set;}
     [Required(ErrorMessage = "CustomerId is required.")]
-    long CustomerId,
+    public long CustomerId {get; set;}
     [Required(ErrorMessage = "UserId is required.")]
-    string UserId,
+    public string UserId {get; set;}
     [Required(ErrorMessage = "StartTime is required.")]
-    DateTime StartTime,
+    public DateTime StartTime {get; set;}
     [Required(ErrorMessage = "EndTime is required.")]
-    DateTime EndTime
-);
+    public DateTime EndTime {get; set;}
+};

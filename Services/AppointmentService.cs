@@ -79,19 +79,19 @@ IServiceRepository serviceRepository, IEmployeeRepository employeeRepository, IC
         await _appointmentRepository.CreateAsync(appointment);
         employee.Appointments.Add(appointment);
         customer.Appointments.Add(appointment);
-        _appointmentRepository.UpdateAsync();
+        await _appointmentRepository.UpdateAsync();
         return appointment;
         
     }
     public async Task<Appointment> CancelAppointment(long appointmentId)
     {
-        Appointment appointment = await _appointmentRepository.GetByIdAsync(appointmentId) ?? throw new Exception("No such appointment found");
-        
+        Appointment appointment = await _appointmentRepository.GetByIdAsync(appointmentId) ?? throw new AppointmentNotFoundException();
         Employee employee = appointment.Employee;
         Customer customer = appointment.Customer;
         employee.Appointments.Remove(appointment);
         customer.Appointments.Remove(appointment);
-        _appointmentRepository.Delete(appointment);
+        await _appointmentRepository.DeleteAsync(appointment);
+        await _appointmentRepository.UpdateAsync();
         return appointment;
         //todo send mail with info
     }

@@ -1,14 +1,13 @@
 ﻿namespace BookingApp;
 
-public class ConversationService(IConversationRepository conversationRepository, IPersonRepository personRepository, ConversationPersonRepository conversationPersonRepository, BookingAppContext dbContext)
+public class ConversationService(IConversationRepository conversationRepository, IPersonRepository personRepository, ConversationPersonRepository conversationPersonRepository)
 {
     private readonly IConversationRepository _conversationRepository = conversationRepository;
     private readonly IPersonRepository _personRepository = personRepository;
     private readonly ConversationPersonRepository _conversationPersonRepository = conversationPersonRepository;
-    private readonly BookingAppContext _dbContext = dbContext;
     public async Task<Conversation> GetConversationById(long id)
     {
-        return await _conversationRepository.GetByIdAsync(id) ?? throw new Exception("Conversation not found");
+        return await _conversationRepository.GetByIdAsync(id) ?? throw new ConversationNotFoundException();
     }
     public async Task<List<Conversation>> GetConversationsForUser(string id)
     {
@@ -48,21 +47,23 @@ public class ConversationService(IConversationRepository conversationRepository,
         
         return conversation;
     }
-    public void RemoveUserFromConversation(Person person, Conversation conversation)
+    public async void RemoveUserFromConversation(Person person, Conversation conversation)
     {
         ConversationPerson conversationPerson = conversation.Participants.FirstOrDefault(e => e.PersonId.Equals(person.Id)) ?? throw new UserNotFoundException();
-        _conversationPersonRepository.Delete(conversationPerson);
-    
+        await _conversationPersonRepository.DeleteAsync(conversationPerson);
+        await _conversationPersonRepository.UpdateAsync();
     }
-    public void RemoveUserFromConversation(ConversationPerson person)
+    public async void RemoveUserFromConversation(ConversationPerson person)
     {
-        _conversationPersonRepository.Delete(person);
+        await _conversationPersonRepository.DeleteAsync(person);
+        await _conversationPersonRepository.UpdateAsync();
     }
-    public void DeleteConversation(Conversation conversation)
+    public async void DeleteConversation(Conversation conversation)
     {
         if(conversation.Participants.Count > 0)
         {
-            _conversationRepository.Delete(conversation);
+            await _conversationRepository.DeleteAsync(conversation);
+            await _conversationRepository.UpdateAsync();
         }
         else
         {
@@ -87,7 +88,7 @@ public class ConversationService(IConversationRepository conversationRepository,
                 Conversation = conversation
             };
         await _conversationPersonRepository.CreateAsync(conversationPerson);
-        _conversationPersonRepository.UpdateAsync();
+        await _conversationPersonRepository.UpdateAsync();
         return conversation;
     }
 }

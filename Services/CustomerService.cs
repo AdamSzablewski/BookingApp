@@ -13,6 +13,7 @@ public class CustomerService(ICustomerRepository customerRepository, IPersonRepo
             User = user,
         };
         await _customerRepository.CreateAsync(customer);
+        await _customerRepository.UpdateAsync();
         return customer;
     }
 

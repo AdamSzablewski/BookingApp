@@ -12,10 +12,7 @@ public class FacilityService(
     private readonly IAdressRepository _adressRepository = adressRepository;
 
     public async Task<FacilityDto> GetById(long id){
-        Facility? facility = await _facilityRepository.GetByIdAsync(id);
-        if(facility == null){
-            throw new Exception("No such facility found");
-        }
+        Facility facility = await _facilityRepository.GetByIdAsync(id) ?? throw new FacilityNotFoundException();
         return facility.MapToDto();
     }
 
@@ -39,14 +36,9 @@ public class FacilityService(
             StartTime = new TimeOnly(9,0),
             EndTime = new TimeOnly(17,0)
         };
-        try{
-           await _facilityRepository.CreateAsync(facility); 
-        }catch(Exception e){
-            Console.WriteLine(e.StackTrace);
-        }
-        
+        await _facilityRepository.CreateAsync(facility); 
         owner.Facilities.Add(facility);
-        await _dbContext.SaveChangesAsync();
+        await _facilityRepository.UpdateAsync();
         return facility;
     }
     public async Task<Facility> ChangeName(long facilityId, FacilityChangeNameDto facilityChangeNameDto){

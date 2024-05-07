@@ -19,8 +19,8 @@ public class PersonService(IPersonRepository repository)
     }
     public async Task<bool> DeletePerson(string id){
         Person user = await _personRepository.GetByIdAsync(id) ?? throw new UserNotFoundException();
-        bool success = await _personRepository.DeleteAsync(user);
-        if(!success) throw new Exception("User not deleted");
+        await _personRepository.DeleteAsync(user);
+        await _personRepository.UpdateAsync();
         return true;
     }
     public async Task<PersonDto> UpdatePerson(PersonUpdateDto updateDto, string userId)
@@ -40,7 +40,6 @@ public class PersonService(IPersonRepository repository)
     {
         Person user = await _personRepository.GetByIdAsync(userId) ?? throw new Exception("User not found");
         user.Email = personUpdateEmailDto.Email;
-        
         await _personRepository.UpdateAsync();
         return user.MapToDto();
     }

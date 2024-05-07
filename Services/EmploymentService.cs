@@ -3,22 +3,21 @@
 public class EmploymentService(
     IPersonRepository personRepository,
     IEmployeeRepository employeeRepository,
-    IEmploymentRequestRepository employmentRequestRepository,
-    BookingAppContext dbContext)
+    IEmploymentRequestRepository employmentRequestRepository)
 {
     private readonly IPersonRepository _personRepository = personRepository;
     private readonly IEmploymentRequestRepository _employmentRequestRepository = employmentRequestRepository;
     private readonly IEmployeeRepository _employeeRepository = employeeRepository;
-    private readonly BookingAppContext _dbContext = dbContext;
 
     public async Task<EmploymentRequest> SendEmploymentRequest(EmploymentRequestDto employmentRequestDto){
-        Person? receiverPerson = await _personRepository.GetByIdAsync(employmentRequestDto.ReceiverId) ?? throw new Exception("User not found");
-        Person? senderPerson = await _personRepository.GetByIdAsync(employmentRequestDto.SenderId) ?? throw new Exception("User not found");
+        Person receiverPerson = await _personRepository.GetByIdAsync(employmentRequestDto.ReceiverId) ?? throw new UserNotFoundException();
+        Person senderPerson = await _personRepository.GetByIdAsync(employmentRequestDto.SenderId) ?? throw new UserNotFoundException();
 
-        Employee employee = receiverPerson.Employee ?? throw new Exception("User is not an Employee");
-        Owner owner = senderPerson.Owner ?? throw new Exception("User is not an Owner");
-        Facility facility = owner.Facilities.FirstOrDefault(f => f.Id == employmentRequestDto.FacilityId) ?? throw new Exception("Facility not found");
-        EmploymentRequest employmentRequest = new EmploymentRequest{
+        Employee employee = receiverPerson.Employee ?? throw new EmployeeNotFoundException("User is not an Employee");
+        Owner owner = senderPerson.Owner ?? throw new OwnerNotFoundException("User is not an Owner");
+        Facility facility = owner.Facilities.FirstOrDefault(f => f.Id == employmentRequestDto.FacilityId) ?? throw new FacilityNotFoundException();
+        EmploymentRequest employmentRequest = new()
+        {
             Sender = owner,
             Receiver = employee,
             Facility = facility
@@ -49,7 +48,7 @@ public class EmploymentService(
     {
         employmentRequest.Closed = true;
         employmentRequest.Decision = false;
-        _employmentRequestRepository.UpdateAsync();
+        await _employmentRequestRepository.UpdateAsync();
     }
 
     public async void AcceptRequest(EmploymentRequest employmentRequest){
@@ -62,7 +61,7 @@ public class EmploymentService(
 
         employmentRequest.Closed = true;
         employmentRequest.Decision = true;
-        _employmentRequestRepository.UpdateAsync();
+        await _employmentRequestRepository.UpdateAsync();
     
     }
     public async Task<Employee> CreateEmployee(string userId)
@@ -73,9 +72,7 @@ public class EmploymentService(
             StartTime = new TimeOnly(9,0),
             EndTime = new TimeOnly(17,0),
         };
-        
         await _employeeRepository.CreateAsync(employee);
-
         user.Employee = employee;
         await _personRepository.UpdateAsync();
         return employee;
