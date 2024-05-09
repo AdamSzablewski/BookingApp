@@ -5,15 +5,11 @@ namespace BookingApp;
 [ApiController]
 [Authorize]
 [Route("appointment")]
-public class AppointmentController : ControllerBase
+public class AppointmentController(AppointmentService appointmentService, SecurityService securityService) : ControllerBase
 {
-    private readonly AppointmentService _appointmentService;
-    private readonly SecurityService _securityService;
-    public AppointmentController(AppointmentService appointmentService, SecurityService securityService)
-    {
-        _appointmentService = appointmentService;
-        _securityService = securityService;
-    }
+    private readonly AppointmentService _appointmentService = appointmentService;
+    private readonly SecurityService _securityService = securityService;
+
     [HttpGet]
     public async Task<IActionResult> GetTimesoltsForDay([FromQuery] long serviceId, [FromQuery] string date)
     {

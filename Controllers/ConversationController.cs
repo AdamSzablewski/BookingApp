@@ -5,13 +5,10 @@ namespace BookingApp;
 [ApiController]
 [Authorize]
 [Route("conversation")]
-public class ConversationController : ControllerBase
+public class ConversationController(ConversationService conversationService) : ControllerBase
 {
-    private readonly ConversationService _conversationService;
-    public ConversationController(ConversationService conversationService)
-    {
-        _conversationService = conversationService;
-    }
+    private readonly ConversationService _conversationService = conversationService;
+
     [HttpGet("{conversationId}")]
     public async Task<IActionResult> GetConversationById([FromRoute]long conversationId)
     {
@@ -33,7 +30,7 @@ public class ConversationController : ControllerBase
         return Ok(await _conversationService.AddUserToConversation(participantId, newParticipantId, conversationId));
     }
     [HttpGet("{conversationId}/leave")]
-    public async Task<IActionResult> LeaveConversation([FromQuery]string participantId, [FromQuery]long conversationId)
+    public async Task<IActionResult> LeaveConversation([FromQuery]string participantId, [FromRoute]long conversationId)
     {
         return Ok(await _conversationService.LeaveConversation(participantId, conversationId));
     }

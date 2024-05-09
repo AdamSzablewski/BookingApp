@@ -14,6 +14,8 @@ public class ServiceRepository(BookingAppContext dbContext) : Repository<Service
     public async Task<List<Service>> GetInArea(string country, string city, int FEED_AMOUNT)
     {
         return await _dbContext.Services
+            .Include(service => service.Facility)
+            .ThenInclude(facility => facility.Adress)
             .Where(service => service.Facility.Adress.Country.Equals(country) && service.Facility.Adress.City.Equals(city))
             .Take(FEED_AMOUNT)
             .ToListAsync();
@@ -34,5 +36,15 @@ public class ServiceRepository(BookingAppContext dbContext) : Repository<Service
             .ThenInclude(e => e.Appointments)
         .Include(e => e.Facility)
         .FirstOrDefaultAsync(s => s.Id == Id);
+    }
+
+    public async Task<List<Service>> GetInCountry(string country, int amount)
+    {
+        return await _dbContext.Services
+            .Include(service => service.Facility)
+            .ThenInclude(facility => facility.Adress)
+            .Where(service => service.Facility.Adress.Country.Equals(country))
+            .Take(amount)
+            .ToListAsync();
     }
 }

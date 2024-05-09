@@ -15,11 +15,11 @@ public class FeedService(IPersonRepository personRepository, BookingAppContext d
         string Country = user.Adress.Country;
         string City = user.Adress.City;
         List<Service> servicesInArea = await _serviceRepositopry.GetInArea(Country, City, FEED_AMOUNT);
-         await _dbContext.Services
-            .Where(service => service.Facility.Adress.Country.Equals(Country) && service.Facility.Adress.City.Equals(City))
-            .Take(FEED_AMOUNT)
-            .ToListAsync();
-            
+        if(servicesInArea.Count < FEED_AMOUNT)
+        {
+            int amount = FEED_AMOUNT - servicesInArea.Count;
+            await _serviceRepositopry.GetInCountry(Country, amount);
+        }
         List<ServiceDto> serviceDtos = servicesInArea.Select(s => s.MapToDto()).ToList();
         Feed feed = new(){
             UserId = userId,
