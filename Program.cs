@@ -13,7 +13,7 @@ var conString = builder.Configuration.GetConnectionString("BookingApp");
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddControllers();
-builder.Services.AddDbContext<BookingAppContext>(options =>{
+builder.Services.AddDbContext<BookingApp.DbContext>(options =>{
     options.UseMySql(conString, new MySqlServerVersion(new Version(8, 0, 23)));
 });
 builder.Services.AddControllers().AddNewtonsoftJson(options => {
@@ -37,6 +37,9 @@ builder.Services.AddScoped<ConversationPersonRepository>();
 builder.Services.AddScoped<IAdressRepository, AdressRepository>();
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<IFacilityRepository, FacilityRepository>();
+builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
+
+
 
 builder.Services.AddScoped<ServiceService>();
 builder.Services.AddScoped<AppointmentService>();
@@ -55,7 +58,7 @@ builder.Services.AddIdentity<Person, IdentityRole>(options => {
     options.Password.RequireNonAlphanumeric = true;
     options.Password.RequiredLength = 4;
 
-}).AddEntityFrameworkStores<BookingAppContext>(); 
+}).AddEntityFrameworkStores<BookingApp.DbContext>(); 
 
 builder.Logging.AddConsole();
 builder.Logging.AddDebug();

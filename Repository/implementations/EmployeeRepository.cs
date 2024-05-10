@@ -3,7 +3,7 @@ using System.Reflection.Metadata.Ecma335;
 
 namespace BookingApp;
 
-public class EmployeeRepository(BookingAppContext dbContext) : Repository<Employee, long>(dbContext), IEmployeeRepository
+public class EmployeeRepository(DbContext dbContext) : Repository<Employee, long>(dbContext), IEmployeeRepository
 {
     public override Employee? GetById(long Id)
     {

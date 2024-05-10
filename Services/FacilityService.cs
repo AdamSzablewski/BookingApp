@@ -3,12 +3,12 @@
 public class FacilityService(
     IFacilityRepository facilityRepository,
     IPersonRepository personRepository,
-    BookingAppContext dbContext,
+    DbContext dbContext,
     IAdressRepository adressRepository)
 {
     private readonly IFacilityRepository _facilityRepository = facilityRepository;
     private readonly IPersonRepository _personRepository = personRepository;
-    private readonly BookingAppContext _dbContext = dbContext;
+    private readonly DbContext _dbContext = dbContext;
     private readonly IAdressRepository _adressRepository = adressRepository;
 
     public async Task<FacilityDto> GetById(long id){

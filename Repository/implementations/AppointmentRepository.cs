@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookingApp;
 
-public class AppointmentRepository(BookingAppContext dbContext) : Repository<Appointment, long>(dbContext), IAppointmentRepository
+public class AppointmentRepository(DbContext dbContext) : Repository<Appointment, long>(dbContext), IAppointmentRepository
 {
     public override Appointment? GetById(long Id)
     {

@@ -1,7 +1,7 @@
 ﻿
 namespace BookingApp;
 
-public class ConversationPersonRepository(BookingAppContext dbContext) : Repository<ConversationPerson, long>(dbContext)
+public class ConversationPersonRepository(DbContext dbContext) : Repository<ConversationPerson, long>(dbContext)
 {
     public override ConversationPerson? GetById(long Id)
     {

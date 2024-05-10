@@ -1,12 +1,13 @@
 ﻿namespace BookingApp;
 
 public class AppointmentService(IAppointmentRepository appointmentRepository,
-IServiceRepository serviceRepository, IEmployeeRepository employeeRepository, ICustomerRepository customerRepository)
+IServiceRepository serviceRepository, IEmployeeRepository employeeRepository, ICustomerRepository customerRepository, IReviewRepository reviewRepository)
 {
     private readonly IAppointmentRepository _appointmentRepository = appointmentRepository;
     private readonly IServiceRepository _serviceRepository = serviceRepository;
     private readonly IEmployeeRepository _employeeRepository = employeeRepository;
     private readonly ICustomerRepository _customerRepository = customerRepository;
+    private readonly IReviewRepository _reviewRepository = reviewRepository;
     private readonly int MINUTE_INCREMENT = 15;
 
     public async Task<List<TimeSlot>> GetAvailableTimeSlotsForService(long serviceId, DateOnly date){
@@ -56,6 +57,10 @@ IServiceRepository serviceRepository, IEmployeeRepository employeeRepository, IC
         return true;
     }
     public bool AppointmentOverlaps(Appointment appointment, DateTime slotStartTime, DateTime slotEndTime){
+        if(appointment.Completed)
+        {
+            return false;
+        }
         return (slotStartTime < appointment.EndTime) && (slotEndTime > appointment.StartTime);
     }
     public bool IsWithinWorkingHours(DateTime slotStartTime, DateTime slotEndTime, DateTime employeeStartTime, DateTime employeeEndTime)
@@ -93,6 +98,20 @@ IServiceRepository serviceRepository, IEmployeeRepository employeeRepository, IC
         await _appointmentRepository.DeleteAsync(appointment);
         await _appointmentRepository.UpdateAsync();
         return appointment;
-        //todo send mail with info
+        
+    }
+    public async Task CloseAppointment(long appointmentId)
+    {
+        Appointment appointment = await _appointmentRepository.GetByIdAsync(appointmentId) ?? throw new AppointmentNotFoundException();
+        appointment.Completed = true;
+        Person user = appointment.Customer.User;
+        Customer customer = user.Customer ?? throw new CustomerNotFoundException();
+        Review review = new()
+        {
+            User = appointment.Customer.User,
+        };
+        await _reviewRepository.CreateAsync(review);
+        customer.ActiveReviews.Add(review);
+        await _reviewRepository.UpdateAsync();
     }
 }

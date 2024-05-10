@@ -11,9 +11,9 @@ public class AccountController : ControllerBase
     private readonly PersonService _personService;
     private readonly SecurityService _tokenService;
     private readonly SignInManager<Person> _signInManager;
-    private readonly BookingAppContext _dbContext;
+    private readonly DbContext _dbContext;
 
-    public AccountController(UserManager<Person> userManager, PersonService personService, SecurityService tokenService, SignInManager<Person> signInManager, BookingAppContext dbContext)
+    public AccountController(UserManager<Person> userManager, PersonService personService, SecurityService tokenService, SignInManager<Person> signInManager, DbContext dbContext)
     {
         _userManager = userManager;
         _personService = personService;

@@ -1,7 +1,7 @@
 ﻿
 namespace BookingApp;
 
-public class MessageRepository(BookingAppContext dbContext) : Repository<Message, long>(dbContext), IMessageRepository
+public class MessageRepository(DbContext dbContext) : Repository<Message, long>(dbContext), IMessageRepository
 {
     public override Message? GetById(long Id)
     {

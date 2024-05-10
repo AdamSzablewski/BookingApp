@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookingApp;
 
-public class AdressRepository(BookingAppContext dbContext) : Repository<Adress, long>(dbContext), IAdressRepository
+public class AdressRepository(DbContext dbContext) : Repository<Adress, long>(dbContext), IAdressRepository
 {
-    private readonly BookingAppContext _dbContext = dbContext;
+    private readonly DbContext _dbContext = dbContext;
     public override Adress? GetById(long Id)
     {
         return  _dbContext.Adresses.Find(Id);

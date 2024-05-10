@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookingApp;
 
-public class BookingAppContext : IdentityDbContext<Person>
+public class DbContext : IdentityDbContext<Person>
 {
-    public BookingAppContext(DbContextOptions options) : base(options)
+    public DbContext(DbContextOptions options) : base(options)
     {
 
     }
-    public BookingAppContext()
+    public DbContext()
     {
         
     }
@@ -25,7 +25,7 @@ public class BookingAppContext : IdentityDbContext<Person>
     public DbSet<EmploymentRequest> EmploymentRequests => Set<EmploymentRequest>();
     public DbSet<ConversationPerson> ConversationPerson => Set<ConversationPerson>();
     public DbSet<MessagePerson> MessagePerson => Set<MessagePerson>();
-
+    public DbSet<Review> Reviews => Set<Review>();
     public DbSet<Message> Messages => Set<Message>();
     public DbSet<Conversation> Conversations => Set<Conversation>();
 

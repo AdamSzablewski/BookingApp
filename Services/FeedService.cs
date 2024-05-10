@@ -3,11 +3,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookingApp;
 
-public class FeedService(IPersonRepository personRepository, BookingAppContext dbContext, IServiceRepository serviceRepository)
+public class FeedService(IPersonRepository personRepository, DbContext dbContext, IServiceRepository serviceRepository)
 {
     private static readonly int FEED_AMOUNT = 40;
     private readonly IPersonRepository _personRepository = personRepository;
-    private readonly BookingAppContext _dbContext = dbContext;
+    private readonly DbContext _dbContext = dbContext;
     private readonly IServiceRepository _serviceRepositopry = serviceRepository;
     internal async Task<Feed> GetFeed(string userId)
     {
@@ -18,7 +18,7 @@ public class FeedService(IPersonRepository personRepository, BookingAppContext d
         if(servicesInArea.Count < FEED_AMOUNT)
         {
             int amount = FEED_AMOUNT - servicesInArea.Count;
-            await _serviceRepositopry.GetInCountry(Country, amount);
+            servicesInArea.AddRange( await _serviceRepositopry.GetInCountry(Country, amount));
         }
         List<ServiceDto> serviceDtos = servicesInArea.Select(s => s.MapToDto()).ToList();
         Feed feed = new(){

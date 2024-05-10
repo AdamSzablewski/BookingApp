@@ -7,11 +7,11 @@ namespace BookingApp;
 [Route("role")]
 public class RoleController : ControllerBase
 {
-    private readonly BookingAppContext _dbContext;
+    private readonly DbContext _dbContext;
     private readonly CustomerService _customerService;
     private readonly SecurityService _securityService;
 
-    public RoleController(BookingAppContext dbContext, CustomerService customerService, SecurityService securityService)
+    public RoleController(DbContext dbContext, CustomerService customerService, SecurityService securityService)
     {
         _dbContext = dbContext;
         _customerService = customerService;

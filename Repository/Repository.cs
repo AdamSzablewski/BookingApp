@@ -1,9 +1,9 @@
 ﻿
 namespace BookingApp;
 
-public abstract class Repository<T, R>(BookingAppContext dbContext) : IRepository<T, R>
+public abstract class Repository<T, R>(DbContext dbContext) : IRepository<T, R>
 {
-    protected readonly BookingAppContext _dbContext = dbContext;
+    protected readonly DbContext _dbContext = dbContext;
 
     public T Create(T obj)
     {

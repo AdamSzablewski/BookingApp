@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
-public class PersonRepository(BookingAppContext dbContext) : Repository<Person, string>(dbContext), IPersonRepository
+public class PersonRepository(DbContext dbContext) : Repository<Person, string>(dbContext), IPersonRepository
 {
    
     public async Task<List<Person>> GetPeopleAsync(List<string> Ids)

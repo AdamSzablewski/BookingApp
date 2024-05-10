@@ -1,7 +1,7 @@
 ﻿
 namespace BookingApp;
 
-public class CustomerRepository(BookingAppContext dbContext) : Repository<Customer, long>(dbContext), ICustomerRepository
+public class CustomerRepository(DbContext dbContext) : Repository<Customer, long>(dbContext), ICustomerRepository
 {
     public override Customer? GetById(long Id)
     {

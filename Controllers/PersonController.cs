@@ -8,11 +8,11 @@ namespace BookingApp;
 [Route("user")]
 public class PersonController : ControllerBase
 {
-    private readonly BookingAppContext _context;
+    private readonly DbContext _context;
     private readonly PersonService _personService;
     private readonly SecurityService _securityService;
     public PersonController(
-        BookingAppContext dbContext,
+        DbContext dbContext,
         PersonService personService,
         SecurityService securityService)
     {

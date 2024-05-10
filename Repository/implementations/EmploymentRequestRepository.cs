@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookingApp;
 
-public class EmploymentRequestRepository(BookingAppContext dbContext) : Repository<EmploymentRequest, long>(dbContext), IEmploymentRequestRepository
+public class EmploymentRequestRepository(DbContext dbContext) : Repository<EmploymentRequest, long>(dbContext), IEmploymentRequestRepository
 {
     public override EmploymentRequest? GetById(long Id)
     {
