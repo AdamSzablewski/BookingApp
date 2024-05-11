@@ -104,14 +104,12 @@ IServiceRepository serviceRepository, IEmployeeRepository employeeRepository, IC
     {
         Appointment appointment = await _appointmentRepository.GetByIdAsync(appointmentId) ?? throw new AppointmentNotFoundException();
         appointment.Completed = true;
-        Person user = appointment.Customer.User;
-        Customer customer = user.Customer ?? throw new CustomerNotFoundException();
         Review review = new()
         {
             User = appointment.Customer.User,
+            IsActive = true
         };
         await _reviewRepository.CreateAsync(review);
-        customer.ActiveReviews.Add(review);
         await _reviewRepository.UpdateAsync();
     }
 }

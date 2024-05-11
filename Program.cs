@@ -40,7 +40,7 @@ builder.Services.AddScoped<IFacilityRepository, FacilityRepository>();
 builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 
 
-
+builder.Services.AddScoped<ReviewService>();
 builder.Services.AddScoped<ServiceService>();
 builder.Services.AddScoped<AppointmentService>();
 builder.Services.AddScoped<EmployeeService>();

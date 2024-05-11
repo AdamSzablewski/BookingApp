@@ -17,5 +17,7 @@ public class Facility
     public required Owner Owner {get; set;}
     public TimeOnly StartTime {get; set;}
     public TimeOnly EndTime {get; set;}
+    public List<Review> Reviews {get; set;}
+    public Dictionary<int, int> Points {get; set;}
 
 }
