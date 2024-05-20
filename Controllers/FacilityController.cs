@@ -10,20 +10,26 @@ public class FacilityController(FacilityService facilityService, SecurityService
     private readonly FacilityService _facilityService = facilityService;
     private readonly SecurityService _securityService = securityService;
 
-    [HttpGet("{Id}")]
-    public async Task<IActionResult> GetById([FromRoute]long Id){
-        return Ok(await _facilityService.GetById(Id));
+    [HttpGet("{facilityId:long}")]
+    public async Task<IActionResult> GetById([FromRoute]long facilityId)
+    {
+        var facility = await _facilityService.GetById(facilityId);
+        if(facility == null)
+        {
+            return NotFound();
+        }
+        return Ok(facility);
     }
-    // [HttpPut("{Id}")]
-    // public async Task<IActionResult> Update([FromRoute]long Id, [FromBody] FaciltyUpdateDto facilityUpdateDto,[FromQuery] string userId)
-    // {
-    //     if(!ModelState.IsValid){ return BadRequest(ModelState);};
-    //     _securityService.IsOwner(HttpContext, Id, userId);
-    //     return Ok(await _facilityService.Update(Id));
-    // }
-    [HttpPost("{Id}")]
-    public async Task<IActionResult> Create([FromRoute]string Id, [FromBody]FacilityCreateDto dto){
-        await _facilityService.CreateAsync(Id, dto);
-        return Ok();
+
+    [HttpPost("{facilityId}")]
+    public async Task<IActionResult> Create([FromRoute]string facilityId, [FromBody]FacilityCreateDto dto)
+    {
+        if(!ModelState.IsValid){ return BadRequest(ModelState);};
+        var facility = await _facilityService.CreateAsync(facilityId, dto);
+        if(facility == null)
+        {
+            return BadRequest("Failed to create the facility");
+        }
+        return CreatedAtAction(nameof(GetById), facility.Id, facility);
     }
 }

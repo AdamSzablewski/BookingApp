@@ -11,22 +11,33 @@ public class AppointmentController(AppointmentService appointmentService, Securi
     private readonly SecurityService _securityService = securityService;
 
     [HttpGet]
-    public async Task<IActionResult> GetTimesoltsForDay([FromQuery] long serviceId, [FromQuery] string date)
+    public async Task<IActionResult> GetTimeslotsForDay([FromQuery] long serviceId, [FromQuery] string date)
     {
-        if(!ModelState.IsValid){ return BadRequest(ModelState);};
         return Ok(await _appointmentService.GetAvailableTimeSlotsForService(serviceId, DateOnly.Parse(date)));
     }
+
     [HttpPost]
-    public async Task<IActionResult> BookAppointment([FromBody] AppointmentCreateDto appointment, [FromQuery] string userId)
-    {
+    public async Task<IActionResult> BookAppointment([FromBody] AppointmentCreateDto appointmentCreateDto)
+    {   
         if(!ModelState.IsValid){ return BadRequest(ModelState);};
-        _securityService.IsUser(HttpContext, userId);
-        return Ok(await _appointmentService.BookAppointment(appointment));
+        var userId = _securityService.GetUserIdFromRequest(HttpContext);
+        var appointment = await _appointmentService.BookAppointment(appointmentCreateDto);
+        if(appointment == null)
+        {
+            return BadRequest("Failed to book the appointment");
+        }
+        return Ok(appointment);
     }
+
     [HttpGet("cancel")]
     public async Task<IActionResult> CancelAppointment([FromQuery] long appointmentId, [FromQuery] string userId)
     {
         _securityService.IsUser(HttpContext, userId);
-        return Ok(await _appointmentService.CancelAppointment(appointmentId));
+        bool canceledAppointment = await _appointmentService.CancelAppointment(appointmentId);
+        if(!canceledAppointment)
+        {
+            return BadRequest("Failed to cancel the appointment");
+        }
+        return Ok();
     }
 }

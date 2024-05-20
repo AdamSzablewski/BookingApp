@@ -16,11 +16,6 @@ public class ServiceController : ControllerBase
         _securityService = securityService ?? throw new ArgumentNullException(nameof(serviceService));
     }
 
-    /// <summary>
-    /// Gets service by it's id.
-    /// </summary>
-    /// <param name="serviceId"></param>
-    /// <returns></returns>
     [HttpGet("{serviceId:long}")]
     public async Task<IActionResult> GetById([FromRoute] long serviceId){
         var service = await _serviceService.GetByIdAsync(serviceId);
@@ -30,12 +25,7 @@ public class ServiceController : ControllerBase
         }
         return Ok(service);
     }
-    /// <summary>
-    /// Creates a service
-    /// </summary>
-    /// <param name="facilityId"></param>
-    /// <param name="serviceCreateDto"></param>
-    /// <returns>Service</returns>
+
     [HttpPost]
     public async Task<IActionResult> Create([FromQuery] long facilityId,[FromBody] ServiceCreateDto serviceCreateDto)
     {
@@ -43,12 +33,6 @@ public class ServiceController : ControllerBase
         return CreatedAtAction(nameof(GetById), new {id = createdService.Id}, createdService);
     }
 
-    /// <summary>
-    /// Updates service
-    /// </summary>
-    /// <param name="serviceId"></param>
-    /// <param name="serviceDto"></param>
-    /// <returns></returns>
     [HttpPut("{serviceId:long}")]
     public async Task<IActionResult> Update([FromRoute] long serviceId, [FromBody] ServiceCreateDto serviceDto)
     {
@@ -65,12 +49,6 @@ public class ServiceController : ControllerBase
         return Ok(updatedService);
     }
 
-    /// <summary>
-    /// Changes name for facility
-    /// </summary>
-    /// <param name="serviceId"></param>
-    /// <param name="newName"></param>
-    /// <returns></returns>
     [HttpPatch("name/{serviceId:long}")]
     public async Task<IActionResult> ChangeName([FromRoute] long serviceId, [FromQuery] string newName)
     {
@@ -87,12 +65,6 @@ public class ServiceController : ControllerBase
         return Ok(service);
     }
 
-    /// <summary>
-    /// Change price for service
-    /// </summary>
-    /// <param name="serviceId"></param>
-    /// <param name="newPrice"></param>
-    /// <returns></returns>
     [HttpPatch("{serviceId:long}")]
     public async Task<IActionResult> ChangePrice([FromRoute] long serviceId, [FromQuery] decimal newPrice)
     {
@@ -104,12 +76,6 @@ public class ServiceController : ControllerBase
         return Ok(await _serviceService.ChangePriceAsync(serviceId, newPrice));
     }
 
-    /// <summary>
-    /// Assignes one of facilities employees to a service
-    /// </summary>
-    /// <param name="employeeId"></param>
-    /// <param name="serviceId"></param>
-    /// <returns></returns>
     [HttpPut("employee")]
     public async Task<IActionResult> AddEmployeeToService([FromQuery] long employeeId, [FromQuery] long serviceId)
     {

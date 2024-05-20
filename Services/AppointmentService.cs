@@ -88,21 +88,28 @@ IServiceRepository serviceRepository, IEmployeeRepository employeeRepository, IC
         return appointment;
         
     }
-    public async Task<Appointment> CancelAppointment(long appointmentId)
+    public async Task<bool> CancelAppointment(long appointmentId)
     {
-        Appointment appointment = await _appointmentRepository.GetByIdAsync(appointmentId) ?? throw new AppointmentNotFoundException();
+        Appointment appointment = await _appointmentRepository.GetByIdAsync(appointmentId);
+        if(appointment == null)
+        {
+            return false;
+        }
         Employee employee = appointment.Employee;
         Customer customer = appointment.Customer;
         employee.Appointments.Remove(appointment);
         customer.Appointments.Remove(appointment);
         await _appointmentRepository.DeleteAsync(appointment);
         await _appointmentRepository.UpdateAsync();
-        return appointment;
-        
+        return true;
     }
-    public async Task CloseAppointment(long appointmentId)
+    public async Task<bool> CloseAppointment(long appointmentId)
     {
-        Appointment appointment = await _appointmentRepository.GetByIdAsync(appointmentId) ?? throw new AppointmentNotFoundException();
+        Appointment appointment = await _appointmentRepository.GetByIdAsync(appointmentId);
+        if(appointment == null)
+        {
+            return false;
+        }
         appointment.Completed = true;
         Review review = new()
         {
@@ -111,5 +118,6 @@ IServiceRepository serviceRepository, IEmployeeRepository employeeRepository, IC
         };
         await _reviewRepository.CreateAsync(review);
         await _reviewRepository.UpdateAsync();
+        return true;
     }
 }

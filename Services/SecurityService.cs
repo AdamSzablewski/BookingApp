@@ -49,6 +49,7 @@ public class SecurityService
         return true;
 
     }
+    
     public async Task<bool> IsOwner(HttpContext http, long facilityId, string userId)
     {   
         if(!IsUser(http, userId))

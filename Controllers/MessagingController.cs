@@ -12,6 +12,11 @@ public class MessagingController(MessagingService messagingService) : Controller
     [HttpPost]
     public async Task<IActionResult> CreateMessage([FromBody] MessageCreateDto messageCreateDto)
     {
-        return Ok(await _messagingService.CreateMessage(messageCreateDto));
+        var message = await _messagingService.CreateMessage(messageCreateDto);
+        if(message == null)
+        {
+            return BadRequest("Message could not be created");
+        }
+        return Ok(message);
     }
 }
