@@ -59,6 +59,23 @@ public class SecurityService
         Owner owner = facility.Owner;
         return owner.UserId.Equals(userId);
     }
+    public async Task<bool> IsOwner(HttpContext http, long facilityId)
+    {   
+        string userId = GetUserIdFromRequest(http);
+        if(userId == null)
+        {
+            return false;
+        }
+        Facility facility = await _facilityRepository.GetByIdAsync(facilityId)
+                            ?? throw new FacilityNotFoundException();
+        Owner owner = facility.Owner;
+        return owner.UserId.Equals(userId);
+    }
+    public string GetUserIdFromRequest(HttpContext http)
+    {
+        string token = http.Request.Headers.Authorization.FirstOrDefault()?.Split(" ").Last();
+        return GetAuthorizationClaims(token);
+    }
     public string GetAuthorizationClaims(string token)
     {
         var handler = new JwtSecurityTokenHandler();

@@ -8,33 +8,122 @@ namespace BookingApp;
 public class ServiceController : ControllerBase
 {
     private readonly ServiceService _serviceService;
+    private readonly SecurityService _securityService;
 
-    public ServiceController(ServiceService serviceService){
-        _serviceService = serviceService;
+    public ServiceController(ServiceService serviceService, SecurityService securityService)
+    {
+        _serviceService = serviceService ?? throw new ArgumentNullException(nameof(serviceService));
+        _securityService = securityService ?? throw new ArgumentNullException(nameof(serviceService));
     }
-    [HttpGet("{Id}")]
-    public async Task<IActionResult> GetById([FromRoute] long Id){
-        return Ok(await _serviceService.GetByIdAsync(Id));
+
+    /// <summary>
+    /// Gets service by it's id.
+    /// </summary>
+    /// <param name="serviceId"></param>
+    /// <returns></returns>
+    [HttpGet("{serviceId:long}")]
+    public async Task<IActionResult> GetById([FromRoute] long serviceId){
+        var service = await _serviceService.GetByIdAsync(serviceId);
+        if(service == null)
+        {
+            return NotFound($"Service with id: {serviceId} was not found");
+        }
+        return Ok(service);
     }
+    /// <summary>
+    /// Creates a service
+    /// </summary>
+    /// <param name="facilityId"></param>
+    /// <param name="serviceCreateDto"></param>
+    /// <returns>Service</returns>
     [HttpPost]
-    public async Task<IActionResult> Create([FromQuery] long FacilityId,[FromBody] ServiceCreateDto serviceCreateDto){
-        return Ok( await _serviceService.CreateAsync(FacilityId, serviceCreateDto));
+    public async Task<IActionResult> Create([FromQuery] long facilityId,[FromBody] ServiceCreateDto serviceCreateDto)
+    {
+        var createdService = await _serviceService.CreateAsync(facilityId, serviceCreateDto);
+        return CreatedAtAction(nameof(GetById), new {id = createdService.Id}, createdService);
     }
-    [HttpPut("{Id}")]
-    public async Task<IActionResult> Update([FromRoute] long Id, [FromBody] ServiceCreateDto serviceDto){
-        return Ok( await _serviceService.UpdateAsync(Id, serviceDto));
+
+    /// <summary>
+    /// Updates service
+    /// </summary>
+    /// <param name="serviceId"></param>
+    /// <param name="serviceDto"></param>
+    /// <returns></returns>
+    [HttpPut("{serviceId:long}")]
+    public async Task<IActionResult> Update([FromRoute] long serviceId, [FromBody] ServiceCreateDto serviceDto)
+    {
+        bool authenticated = await _securityService.IsOwner(HttpContext, serviceId);
+        if(!authenticated)
+        {
+            return Unauthorized();
+        }
+        var updatedService = await _serviceService.UpdateAsync(serviceId, serviceDto);
+        if(updatedService == null)
+        {
+            return NotFound("Service not found");
+        }
+        return Ok(updatedService);
     }
-    [HttpPatch("name/{Id}")]
-    public async Task<IActionResult> ChangeName([FromRoute] long Id, [FromQuery] string newName){
-        return Ok(await _serviceService.ChangeNameAsync(Id, newName));
+
+    /// <summary>
+    /// Changes name for facility
+    /// </summary>
+    /// <param name="serviceId"></param>
+    /// <param name="newName"></param>
+    /// <returns></returns>
+    [HttpPatch("name/{serviceId:long}")]
+    public async Task<IActionResult> ChangeName([FromRoute] long serviceId, [FromQuery] string newName)
+    {
+        bool authenticated = await _securityService.IsOwner(HttpContext, serviceId);
+        if(!authenticated)
+        {
+            return Unauthorized();
+        }
+        var service = await _serviceService.ChangeNameAsync(serviceId, newName);
+        if(service == null)
+        {
+            return NotFound("Service was not found");
+        }
+        return Ok(service);
     }
-    [HttpPatch("price/{Id}")]
-    public async Task<IActionResult> ChangePrice([FromRoute] long Id, [FromQuery] decimal newPrice){
-        return Ok(await _serviceService.ChangePriceAsync(Id, newPrice));
+
+    /// <summary>
+    /// Change price for service
+    /// </summary>
+    /// <param name="serviceId"></param>
+    /// <param name="newPrice"></param>
+    /// <returns></returns>
+    [HttpPatch("{serviceId:long}")]
+    public async Task<IActionResult> ChangePrice([FromRoute] long serviceId, [FromQuery] decimal newPrice)
+    {
+        bool authenticated = await _securityService.IsOwner(HttpContext, serviceId);
+        if(!authenticated)
+        {
+            return Unauthorized();
+        }
+        return Ok(await _serviceService.ChangePriceAsync(serviceId, newPrice));
     }
+
+    /// <summary>
+    /// Assignes one of facilities employees to a service
+    /// </summary>
+    /// <param name="employeeId"></param>
+    /// <param name="serviceId"></param>
+    /// <returns></returns>
     [HttpPut("employee")]
-    public async Task<IActionResult> AddEmployeeToService([FromQuery] long employeeId, [FromQuery] long serviceId){
-        return Ok(await _serviceService.AddEmployeeToService(employeeId, serviceId));
+    public async Task<IActionResult> AddEmployeeToService([FromQuery] long employeeId, [FromQuery] long serviceId)
+    {
+        bool authenticated = await _securityService.IsOwner(HttpContext, serviceId);
+        if(!authenticated)
+        {
+            return Unauthorized();
+        }
+        var service = await _serviceService.AddEmployeeToService(employeeId, serviceId);
+        if(service == null)
+        {
+            return NotFound("Service was not found");
+        }
+        return Ok(service);
     }
 
 }

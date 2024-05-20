@@ -17,15 +17,17 @@ public class ReviewService(IReviewRepository reviewRepository, IFacilityReposito
     }
     public async Task PostReview(ReviewCreateDto reviewCreateDto)
     {
-        Review review = await _reviewRepository.GetByIdAsync(reviewCreateDto.Id) ?? throw new ReviewNotFoundException();
-        Facility facility = await _facilityRepository.GetByIdAsync(reviewCreateDto.FacilityId) ?? throw new FacilityNotFoundException();
+        Review review = await _reviewRepository.GetByIdAsync(reviewCreateDto.Id) 
+            ?? throw new ReviewNotFoundException();
+        Facility facility = await _facilityRepository.GetByIdAsync(reviewCreateDto.FacilityId)
+            ?? throw new FacilityNotFoundException();
+
         int pointsGiven = reviewCreateDto.Points;
-        if(reviewCreateDto.Text != null && reviewCreateDto.Text.Length > 0){
+        if(!string.IsNullOrEmpty(reviewCreateDto.Text) && !string.IsNullOrWhiteSpace(reviewCreateDto.Text)){
             review.Text = reviewCreateDto.Text;
             facility.Reviews.Add(review);   
         }
-        Dictionary<int, int> points = facility.Points;
-        points[pointsGiven]++;
+        facility.Points[pointsGiven]++;
         review.Points = pointsGiven;
         await _reviewRepository.UpdateAsync();
     }

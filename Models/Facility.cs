@@ -18,6 +18,15 @@ public class Facility
     public TimeOnly StartTime {get; set;}
     public TimeOnly EndTime {get; set;}
     public List<Review> Reviews {get; set;}
-    public Dictionary<int, int> Points {get; set;}
+    public Dictionary<int, int> Points {get; set;} = new Dictionary<int, int>
+    {
+        {1, 0},
+        {2, 0},
+        {3, 0},
+        {4, 0},
+        {5, 0},
+    };
+
+
 
 }
