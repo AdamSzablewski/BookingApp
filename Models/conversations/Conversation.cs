@@ -7,4 +7,5 @@ public class Conversation
     public List<Message> Messages {get; set;} = [];
     public List<ConversationPerson> Participants {get; set;} = [];
 
+    
 }

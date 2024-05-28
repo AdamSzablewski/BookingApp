@@ -5,9 +5,10 @@ namespace BookingApp;
 [ApiController]
 [Authorize]
 [Route("conversation")]
-public class ConversationController(ConversationService conversationService) : ControllerBase
+public class ConversationController(ConversationService conversationService, SecurityService securityService) : ControllerBase
 {
     private readonly ConversationService _conversationService = conversationService;
+    private readonly SecurityService _securityService = securityService;
 
     [HttpGet("{conversationId}")]
     public async Task<IActionResult> GetConversationById([FromRoute]long conversationId)
@@ -17,13 +18,20 @@ public class ConversationController(ConversationService conversationService) : C
         {
             return NotFound("Conversation not found");
         }
+        bool isMemebr = _securityService.IsMemberOfConversation(HttpContext, conversation);
+        if(!isMemebr)
+        {
+            return Unauthorized("You can not access this conversation");
+        }
         return Ok(conversation);
     }
 
+
     [HttpGet]
-    public async Task<IActionResult> GetAllConversationsForUser([FromQuery]string Id)
+    public async Task<IActionResult> GetAllConversationsForUser([FromQuery]string userId)
     {
-        return Ok(await _conversationService.GetConversationsForUser(Id));
+        
+        return Ok(await _conversationService.GetConversationsForUser(userId));
     }
     [HttpPost]
     public async Task<IActionResult> CreateConversation([FromBody]ConversationCreateDto conversationCreateDto)

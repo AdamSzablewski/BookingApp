@@ -18,6 +18,17 @@ public class SecurityService
         _facilityRepository = facilityRepository;
     }
 
+    public bool OwnsResource(HttpContext http, IUserResource userResource)
+    {
+        string userIdFromResource = userResource.GetUserId();
+        if(userIdFromResource == null)
+        {
+            return false;
+        }
+        string userIdFromRequest = GetUserIdFromRequest(http);
+        return userIdFromRequest.Equals(userIdFromResource);
+    }
+
     public string CreateToken(Person user)
     {
         List<Claim> claims = new List<Claim>
@@ -49,7 +60,7 @@ public class SecurityService
         return true;
 
     }
-    
+
     public async Task<bool> IsOwner(HttpContext http, long facilityId, string userId)
     {   
         if(!IsUser(http, userId))
@@ -77,6 +88,7 @@ public class SecurityService
         string token = http.Request.Headers.Authorization.FirstOrDefault()?.Split(" ").Last();
         return GetAuthorizationClaims(token);
     }
+
     public string GetAuthorizationClaims(string token)
     {
         var handler = new JwtSecurityTokenHandler();
@@ -89,4 +101,13 @@ public class SecurityService
         throw new NotAuthorizedException();
     }
 
+    public bool IsMemberOfConversation(HttpContext httpContext, Conversation conversation)
+    {
+        string userId = GetUserIdFromRequest(httpContext);
+        if(userId == null)
+        {
+            return false;
+        }
+        return conversation.Participants.Any(participant => participant.PersonId.Equals(userId));
+    }
 }

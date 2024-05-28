@@ -2,7 +2,7 @@
 
 namespace BookingApp;
 
-public class Facility
+public class Facility : IUserResource
 {
     public Facility(){
         Services = [];
@@ -27,6 +27,8 @@ public class Facility
         {5, 0},
     };
 
-
-
+    public string? GetUserId()
+    {
+        return Owner?.UserId;
+    }
 }

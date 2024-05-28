@@ -1,6 +1,6 @@
 ﻿namespace BookingApp;
 
-public class Appointment
+public class Appointment : IUserResource
 {
     public Appointment()
     {
@@ -18,7 +18,13 @@ public class Appointment
     public long EmployeeId {get; set;}
     public Employee Employee {get; set;}
     public bool Completed {get; set;}
-   public override string ToString()
+
+    public string? GetUserId()
+    {
+        return Customer?.UserId;
+    }
+
+    public override string ToString()
         {
             return $"Appointment ID: {Id}" + Environment.NewLine +
                    $"Service: {Service?.Name}" + Environment.NewLine +
