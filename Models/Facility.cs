@@ -18,17 +18,12 @@ public class Facility : IUserResource
     public TimeOnly StartTime {get; set;}
     public TimeOnly EndTime {get; set;}
     public List<Review> Reviews {get; set;}
-    public Dictionary<int, int> Points {get; set;} = new Dictionary<int, int>
-    {
-        {1, 0},
-        {2, 0},
-        {3, 0},
-        {4, 0},
-        {5, 0},
-    };
+    public List<FacilityPoint> Points {get; set;} = [];
+   
 
     public string? GetUserId()
     {
         return Owner?.UserId;
     }
 }
+

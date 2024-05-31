@@ -110,4 +110,9 @@ public class SecurityService
         }
         return conversation.Participants.Any(participant => participant.PersonId.Equals(userId));
     }
+
+    internal bool OwnsResource(Message message)
+    {
+        throw new NotImplementedException();
+    }
 }

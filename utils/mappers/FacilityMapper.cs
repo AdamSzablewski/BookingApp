@@ -8,7 +8,8 @@ public static class FacilityMapper
         {
             Id = facility.Id,
             Name = facility.Name,
-            Services = facility.Services.Select(s => s.MapToDto()).ToList()
+            Services = facility.Services.Select(s => s.MapToDto()).ToList(),
+            Points = PointsUtil.GetScore(facility.Points)
         };
     }
 }
