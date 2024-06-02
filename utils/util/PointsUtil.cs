@@ -1,14 +1,19 @@
 
+using BookingApp;
+
 public static class PointsUtil
 {
-    internal static int GetScore(Dictionary<int, int> points)
+    internal static int GetScore(List<Review> reviews)
     {
         int sum = 0;
-        List<int> values = new List<int>(points.Values);
-        foreach (int value in values)
+        foreach (Review review in reviews)
         {
-            sum += value;
+            sum += review.Points;
         }
-        return sum / values.Count;
+        if(reviews.Count == 0)
+        {
+            return 0;
+        }
+        return sum / reviews.Count;
     }
 }

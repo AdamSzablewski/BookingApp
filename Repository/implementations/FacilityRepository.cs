@@ -23,6 +23,7 @@ public class FacilityRepository(DbContext dbContext) : Repository<Facility, long
     {
         return await _dbContext.Facilities
             .Include(facility => facility.Adress)
+            .Include(facility => facility.Reviews)
             .Where(facility => facility.Adress.Country.Equals(country) && facility.Adress.City.Equals(city))
             .Take(FEED_AMOUNT)
             .ToListAsync();
@@ -32,6 +33,7 @@ public class FacilityRepository(DbContext dbContext) : Repository<Facility, long
     {
         return await _dbContext.Facilities
             .Include(facility => facility.Adress)
+            .Include(facility => facility.Reviews)
             .Where(facility => facility.Adress.Country.Equals(country))
             .Take(FEED_AMOUNT)
             .ToListAsync();

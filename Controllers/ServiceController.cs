@@ -30,7 +30,7 @@ public class ServiceController : ControllerBase
     public async Task<IActionResult> Create([FromQuery] long facilityId,[FromBody] ServiceCreateDto serviceCreateDto)
     {
         var createdService = await _serviceService.CreateAsync(facilityId, serviceCreateDto);
-        return CreatedAtAction(nameof(GetById), new {id = createdService.Id}, createdService);
+        return CreatedAtAction(nameof(GetById), new {serviceId = createdService.Id}, createdService.MapToDto());
     }
 
     [HttpPut("{serviceId:long}")]

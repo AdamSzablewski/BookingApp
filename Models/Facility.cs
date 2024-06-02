@@ -17,8 +17,7 @@ public class Facility : IUserResource
     public required Owner Owner {get; set;}
     public TimeOnly StartTime {get; set;}
     public TimeOnly EndTime {get; set;}
-    public List<Review> Reviews {get; set;}
-    public List<FacilityPoint> Points {get; set;} = [];
+    public List<Review> Reviews {get; set;} = [];
    
 
     public string? GetUserId()

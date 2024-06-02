@@ -18,18 +18,18 @@ public class FacilityController(FacilityService facilityService, SecurityService
         {
             return NotFound();
         }
-        return Ok(facility);
+        return Ok(facility.MapToDto());
     }
 
-    [HttpPost("{facilityId}")]
-    public async Task<IActionResult> Create([FromRoute]string facilityId, [FromBody]FacilityCreateDto dto)
+    [HttpPost("{userId}")]
+    public async Task<IActionResult> Create([FromRoute]string userId, [FromBody]FacilityCreateDto dto)
     {
         if(!ModelState.IsValid){ return BadRequest(ModelState);};
-        var facility = await _facilityService.CreateAsync(facilityId, dto);
+        var facility = await _facilityService.CreateAsync(userId, dto);
         if(facility == null)
         {
             return BadRequest("Failed to create the facility");
         }
-        return CreatedAtAction(nameof(GetById), facility.Id, facility);
+        return CreatedAtAction(nameof(GetById), new { facilityId = facility.Id}, facility.MapToDto());
     }
 }

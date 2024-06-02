@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BookingApp;
 [ApiController]
 [Authorize]
-[Route("home")]
+[Route("feed")]
 public class FeedController(SecurityService securityService, FeedService feedService) : ControllerBase
 {
     private readonly SecurityService _securityService = securityService;
@@ -12,6 +12,7 @@ public class FeedController(SecurityService securityService, FeedService feedSer
     [HttpGet]
     public async Task<IActionResult> GetFeed([FromQuery] string userId)
     {
+        Console.WriteLine(userId);
         _securityService.IsUser(HttpContext, userId);
         return Ok(await _feedService.GetFeed(userId));
     }

@@ -27,7 +27,6 @@ public class ReviewService(IReviewRepository reviewRepository, IFacilityReposito
             review.Text = reviewCreateDto.Text;
             facility.Reviews.Add(review);   
         }
-        facility.Points[pointsGiven]++;
         review.Points = pointsGiven;
         await _reviewRepository.UpdateAsync();
     }

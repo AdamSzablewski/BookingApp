@@ -11,9 +11,9 @@ public class FacilityService(
     private readonly DbContext _dbContext = dbContext;
     private readonly IAdressRepository _adressRepository = adressRepository;
 
-    public async Task<FacilityDto> GetById(long id){
+    public async Task<Facility> GetById(long id){
         Facility facility = await _facilityRepository.GetByIdAsync(id) ?? throw new FacilityNotFoundException();
-        return facility.MapToDto();
+        return facility;
     }
 
     public async Task<Facility> CreateAsync(string userId, FacilityCreateDto dto){

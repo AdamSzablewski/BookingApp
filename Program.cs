@@ -49,8 +49,6 @@ builder.Services.AddScoped<MessagingService>();
 builder.Services.AddScoped<ConversationService>();
 
 
-
-
 builder.Services.AddIdentity<Person, IdentityRole>(options => {
     options.Password.RequireDigit = true;
     options.Password.RequireLowercase = true;
@@ -59,6 +57,18 @@ builder.Services.AddIdentity<Person, IdentityRole>(options => {
     options.Password.RequiredLength = 4;
 
 }).AddEntityFrameworkStores<BookingApp.DbContext>(); 
+
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: "CORS",
+                      policy  =>
+                      {
+                          policy.WithOrigins("http://localhost:3000")
+                          .AllowAnyMethod()
+                          .AllowAnyHeader();
+                      });
+});
 
 builder.Logging.AddConsole();
 builder.Logging.AddDebug();
@@ -86,7 +96,7 @@ builder.Services.AddAuthentication(options => {
 
 var app = builder.Build();
 
-
+app.UseCors("CORS");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
