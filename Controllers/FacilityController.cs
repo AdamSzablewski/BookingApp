@@ -10,7 +10,7 @@ public class FacilityController(FacilityService facilityService, SecurityService
     private readonly FacilityService _facilityService = facilityService;
     private readonly SecurityService _securityService = securityService;
 
-    [HttpGet("{facilityId:long}")]
+    [HttpGet("{facilityId}")]
     public async Task<IActionResult> GetById([FromRoute]long facilityId)
     {
         var facility = await _facilityService.GetById(facilityId);
