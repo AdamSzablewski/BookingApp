@@ -20,6 +20,10 @@ public class Facility : IUserResource
     public List<Review> Reviews {get; set;} = [];
    
 
+    public string ToString()
+    {
+        return "Id: "+Id+" Name: "+Name;
+    }
     public string? GetUserId()
     {
         return Owner?.UserId;

@@ -2,7 +2,7 @@
 
 namespace BookingApp;
 
-public class Service
+public class Service : IUserResource
 {
     public Service() {
         Employees = [];
@@ -14,6 +14,11 @@ public class Service
     public long FacilityId {get; set;}
     public required Facility Facility {get; set;}
     public required TimeSpan Length {get; set;}
+
+    public string GetUserId()
+    {
+        return Facility.Owner.UserId;
+    }
 
     public override string ToString()
         {

@@ -35,6 +35,8 @@ public class ServiceRepository(DbContext dbContext) : Repository<Service, long>(
         .Include(e => e.Employees)
             .ThenInclude(e => e.Appointments)
         .Include(e => e.Facility)
+            .ThenInclude(f => f.Owner)
+                .ThenInclude(o => o.User)
         .FirstOrDefaultAsync(s => s.Id == Id);
     }
 

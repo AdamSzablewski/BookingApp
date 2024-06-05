@@ -11,6 +11,7 @@ public class EmploymentRequestRepository(DbContext dbContext) : Repository<Emplo
         .Include(e => e.Sender)
         .Include(e => e.Receiver)
         .Include(e => e.Facility)
+        .ThenInclude(f => f.Employees)
         .FirstOrDefault(e => e.Id == Id);
     }
 

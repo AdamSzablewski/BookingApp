@@ -11,22 +11,33 @@ public class SecurityService
     private readonly IConfiguration _configuration;
     private readonly SymmetricSecurityKey _symmetricSecurityKey;
     private readonly IFacilityRepository _facilityRepository;
-    public SecurityService(IConfiguration configuration, IFacilityRepository facilityRepository)
+    private readonly IServiceRepository _serviceRepository;
+    public SecurityService(IConfiguration configuration, IFacilityRepository facilityRepository, IServiceRepository serviceRepository)
     {
         _configuration = configuration;
         _symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:SigningKey"]));
         _facilityRepository = facilityRepository;
+        _serviceRepository = serviceRepository;
     }
 
-    public bool OwnsResource(HttpContext http, IUserResource userResource)
+    // public bool OwnsResource(HttpContext http, IUserResource userResource)
+    // {
+    //     string userIdFromResource = userResource.GetUserId();
+    //     if(userIdFromResource == null)
+    //     {
+    //         return false;
+    //     }
+    //     string userIdFromRequest = GetUserIdFromRequest(http);
+    //     return userIdFromRequest.Equals(userIdFromResource);
+    // }
+    public bool OwnsResource(string userId, IUserResource userResource)
     {
         string userIdFromResource = userResource.GetUserId();
         if(userIdFromResource == null)
         {
             return false;
         }
-        string userIdFromRequest = GetUserIdFromRequest(http);
-        return userIdFromRequest.Equals(userIdFromResource);
+        return userId.Equals(userIdFromResource);
     }
 
     public string CreateToken(Person user)
@@ -82,6 +93,17 @@ public class SecurityService
                             ?? throw new FacilityNotFoundException();
         Owner owner = facility.Owner;
         return owner.UserId.Equals(userId);
+    }
+    public async Task<bool> IsOwnerOfService(HttpContext http, long serviceId)
+    {
+        string userId = GetUserIdFromRequest(http);
+        if(userId == null)
+        {
+            return false;
+        }
+        Service service = await _serviceRepository.GetByIdAsync(serviceId) ?? throw new ServiceNotFoundException();
+        return OwnsResource(userId, service);
+
     }
     public string GetUserIdFromRequest(HttpContext http)
     {

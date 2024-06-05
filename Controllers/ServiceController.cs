@@ -79,7 +79,8 @@ public class ServiceController : ControllerBase
     [HttpPut("employee")]
     public async Task<IActionResult> AddEmployeeToService([FromQuery] long employeeId, [FromQuery] long serviceId)
     {
-        bool authenticated = await _securityService.IsOwner(HttpContext, serviceId);
+        bool authenticated = await _securityService.IsOwnerOfService(HttpContext, serviceId);
+        Console.WriteLine(authenticated);
         if(!authenticated)
         {
             return Unauthorized();

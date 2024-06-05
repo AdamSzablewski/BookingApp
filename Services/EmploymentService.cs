@@ -30,28 +30,29 @@ public class EmploymentService(
     }
 
     public async Task<EmploymentRequest> AnswereEmploymentRequest(long requestId, string userId, bool decision){
-        EmploymentRequest? employmentRequest = await _employmentRequestRepository.GetByIdAsync(requestId) ?? throw new Exception("No such employment request exist");
+        EmploymentRequest employmentRequest = await _employmentRequestRepository.GetByIdAsync(requestId) ?? throw new Exception("No such employment request exist");
         Person receiverUser = employmentRequest.Receiver.User;
         if(!receiverUser.Id.Equals(userId))
         {
             throw new NotAuthorizedException();
         }
+        
         if(decision){
-            AcceptRequest(employmentRequest);
+            await AcceptRequest(employmentRequest);
         }else{
-            DeclineRequest(employmentRequest);
+            await DeclineRequest(employmentRequest);
         }
         return employmentRequest;
     }
 
-    private async void DeclineRequest(EmploymentRequest employmentRequest)
+    private async Task DeclineRequest(EmploymentRequest employmentRequest)
     {
         employmentRequest.Closed = true;
         employmentRequest.Decision = false;
         await _employmentRequestRepository.UpdateAsync();
     }
 
-    public async void AcceptRequest(EmploymentRequest employmentRequest){
+    public async Task AcceptRequest(EmploymentRequest employmentRequest){
         Facility facility = employmentRequest.Facility;
         Employee employee = employmentRequest.Receiver;
         employee.StartTime = facility.StartTime;
@@ -62,7 +63,7 @@ public class EmploymentService(
         employmentRequest.Closed = true;
         employmentRequest.Decision = true;
         await _employmentRequestRepository.UpdateAsync();
-    
+
     }
     public async Task<Employee> CreateEmployee(string userId)
     {
