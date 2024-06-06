@@ -34,6 +34,8 @@ public class ServiceRepository(DbContext dbContext) : Repository<Service, long>(
         return await _dbContext.Services
         .Include(e => e.Employees)
             .ThenInclude(e => e.Appointments)
+        .Include(e => e.Employees)
+            .ThenInclude(o => o.User)
         .Include(e => e.Facility)
             .ThenInclude(f => f.Owner)
                 .ThenInclude(o => o.User)

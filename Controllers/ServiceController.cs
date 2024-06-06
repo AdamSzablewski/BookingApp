@@ -16,7 +16,7 @@ public class ServiceController : ControllerBase
         _securityService = securityService ?? throw new ArgumentNullException(nameof(serviceService));
     }
 
-    [HttpGet("{serviceId:long}")]
+    [HttpGet("{serviceId}")]
     public async Task<IActionResult> GetById([FromRoute] long serviceId){
         var service = await _serviceService.GetByIdAsync(serviceId);
         if(service == null)
@@ -33,7 +33,7 @@ public class ServiceController : ControllerBase
         return CreatedAtAction(nameof(GetById), new {serviceId = createdService.Id}, createdService.MapToDto());
     }
 
-    [HttpPut("{serviceId:long}")]
+    [HttpPut("{serviceId}")]
     public async Task<IActionResult> Update([FromRoute] long serviceId, [FromBody] ServiceCreateDto serviceDto)
     {
         bool authenticated = await _securityService.IsOwner(HttpContext, serviceId);
@@ -49,7 +49,7 @@ public class ServiceController : ControllerBase
         return Ok(updatedService);
     }
 
-    [HttpPatch("name/{serviceId:long}")]
+    [HttpPatch("name/{serviceId}")]
     public async Task<IActionResult> ChangeName([FromRoute] long serviceId, [FromQuery] string newName)
     {
         bool authenticated = await _securityService.IsOwner(HttpContext, serviceId);
@@ -65,7 +65,7 @@ public class ServiceController : ControllerBase
         return Ok(service);
     }
 
-    [HttpPatch("{serviceId:long}")]
+    [HttpPatch("{serviceId}")]
     public async Task<IActionResult> ChangePrice([FromRoute] long serviceId, [FromQuery] decimal newPrice)
     {
         bool authenticated = await _securityService.IsOwner(HttpContext, serviceId);
@@ -75,12 +75,21 @@ public class ServiceController : ControllerBase
         }
         return Ok(await _serviceService.ChangePriceAsync(serviceId, newPrice));
     }
+    [HttpGet("{serviceId}/employees")]
+    public async Task<IActionResult> GetEmployeesForService([FromRoute] long serviceId)
+    {
+        var result = await _serviceService.GetEmployeesForTask(serviceId);
+        if(result == null)
+        {
+            return NotFound();
+        }
+        return Ok(result);
+    }
 
     [HttpPut("employee")]
     public async Task<IActionResult> AddEmployeeToService([FromQuery] long employeeId, [FromQuery] long serviceId)
     {
         bool authenticated = await _securityService.IsOwnerOfService(HttpContext, serviceId);
-        Console.WriteLine(authenticated);
         if(!authenticated)
         {
             return Unauthorized();

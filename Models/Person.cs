@@ -11,6 +11,7 @@ public class Person : IdentityUser
     //public required string Email {get; set;}
     //public string PhoneNumber {get; set;}
     //public string Password {get; set;}
+    public string? ProfilePicture {get; set;}
     public long? OwnerId {get; set;}
     public Owner? Owner {get; set;}
     public long? CustomerId {get; set;}

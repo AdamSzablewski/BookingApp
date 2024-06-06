@@ -9,6 +9,7 @@ public class FacilityRepository(DbContext dbContext) : Repository<Facility, long
         return _dbContext.Facilities
         .Include(f => f.Services)
             .ThenInclude(s => s.Employees)
+                .ThenInclude(e => e.User)
         .FirstOrDefault(f => f.Id == Id);
     }
     public async override Task<Facility?> GetByIdAsync(long Id)
@@ -16,6 +17,7 @@ public class FacilityRepository(DbContext dbContext) : Repository<Facility, long
         return await _dbContext.Facilities
         .Include(f => f.Services)
             .ThenInclude(s => s.Employees)
+                .ThenInclude(e => e.User)
         .FirstOrDefaultAsync(f => f.Id == Id);
     }
 

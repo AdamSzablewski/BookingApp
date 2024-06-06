@@ -10,38 +10,80 @@ IServiceRepository serviceRepository, IEmployeeRepository employeeRepository, IC
     private readonly IReviewRepository _reviewRepository = reviewRepository;
     private readonly int MINUTE_INCREMENT = 15;
 
+    // public async Task<List<TimeSlot>> GetAvailableTimeSlotsForService(long serviceId, DateOnly date){
+    //     Service service = await _serviceRepository.GetByIdAsync(serviceId) ?? throw new ServiceNotFoundException();
+    //     Facility facility = service.Facility;
+    //     List<Employee> employeesForTask = service.Employees;
+    //     TimeSpan serviceDuration = service.Length;
+       
+    //     List<TimeSlot> timeSlots = [];
+    //     foreach(Employee employee in employeesForTask){
+        
+    //         DateTime currentTime = new(date.Year, date.Month, date.Day, service.Facility.StartTime.Hour, service.Facility.StartTime.Minute,  service.Facility.StartTime.Second);
+    //         DateTime bufferedTime = currentTime.AddHours(serviceDuration.Hours).AddMinutes(serviceDuration.Minutes);
+    //         DateTime employeeStartTime = new(date.Year, date.Month, date.Day, employee.StartTime.Hour, employee.StartTime.Minute,  employee.StartTime.Second);
+    //         DateTime employeeEndTime = new(date.Year, date.Month, date.Day, employee.EndTime.Hour, employee.EndTime.Minute,  employee.EndTime.Second);
+
+    //         while(employeeStartTime <= currentTime && bufferedTime <= employeeEndTime){
+    //             bool available = CheckIfTimeSlotAvailable(currentTime, bufferedTime, employee, date);
+    //             if(available){
+    //                 TimeSlot timeSlot = new TimeSlot
+    //                 {
+    //                     EmployeeDto = employee.MapToDto(),
+    //                     StartTime = new TimeOnly(currentTime.Hour, currentTime.Minute, currentTime.Second),
+    //                     EndTime = new TimeOnly(bufferedTime.Hour, bufferedTime.Minute, bufferedTime.Second),
+    //                     Date = new DateOnly(currentTime.Year, currentTime.Month, currentTime.Day)
+    //                 };
+    //             timeSlots.Add(timeSlot);
+    //             }
+               
+    //             currentTime = currentTime.AddMinutes(MINUTE_INCREMENT);
+    //             bufferedTime = bufferedTime.AddMinutes(MINUTE_INCREMENT);
+               
+    //         }
+    //     }
+    //     return timeSlots;
+    // }
     public async Task<List<TimeSlot>> GetAvailableTimeSlotsForService(long serviceId, DateOnly date){
         Service service = await _serviceRepository.GetByIdAsync(serviceId) ?? throw new ServiceNotFoundException();
+        Facility facility = service.Facility;
         List<Employee> employeesForTask = service.Employees;
         TimeSpan serviceDuration = service.Length;
-       
+        DateTime currentTime = new(date.Year, date.Month, date.Day, service.Facility.StartTime.Hour, service.Facility.StartTime.Minute,  service.Facility.StartTime.Second);
+        DateTime bufferedTime = currentTime.AddHours(serviceDuration.Hours).AddMinutes(serviceDuration.Minutes);
+        DateTime maxTime = new(date.Year, date.Month, date.Day, facility.EndTime.Hour, facility.EndTime.Minute, facility.EndTime.Second);  
         List<TimeSlot> timeSlots = [];
-        foreach(Employee employee in employeesForTask){
-        
-            DateTime currentTime = new(date.Year, date.Month, date.Day, service.Facility.StartTime.Hour, service.Facility.StartTime.Minute,  service.Facility.StartTime.Second);
-            DateTime bufferedTime = currentTime.AddHours(serviceDuration.Hours).AddMinutes(serviceDuration.Minutes);
+        while(bufferedTime < maxTime)
+        {
+            TimeSlot timeSlot = new TimeSlot
+                    {
+                        Employees = [],
+                        StartTime = new TimeOnly(currentTime.Hour, currentTime.Minute, currentTime.Second),
+                        EndTime = new TimeOnly(bufferedTime.Hour, bufferedTime.Minute, bufferedTime.Second),
+                        Date = new DateOnly(currentTime.Year, currentTime.Month, currentTime.Day)
+                    };
+           foreach(Employee employee in employeesForTask)
+           {
             DateTime employeeStartTime = new(date.Year, date.Month, date.Day, employee.StartTime.Hour, employee.StartTime.Minute,  employee.StartTime.Second);
             DateTime employeeEndTime = new(date.Year, date.Month, date.Day, employee.EndTime.Hour, employee.EndTime.Minute,  employee.EndTime.Second);
-
-            while(employeeStartTime <= currentTime && bufferedTime <= employeeEndTime){
-                bool available = CheckIfTimeSlotAvailable(currentTime, bufferedTime, employee, date);
-                if(available){
-                    TimeSlot timeSlot = new TimeSlot
-                    (
-                        employee.MapToDto(),
-                        currentTime,
-                        bufferedTime
-                    );
-                timeSlots.Add(timeSlot);
-                }
-               
-                currentTime = currentTime.AddMinutes(MINUTE_INCREMENT);
-                bufferedTime = bufferedTime.AddMinutes(MINUTE_INCREMENT);
-               
+            bool available = CheckIfTimeSlotAvailable(currentTime, bufferedTime, employee, date);
+            if(available)
+            {
+                timeSlot.Employees.Add(employee.MapToDto());
             }
+
+           } 
+            timeSlots.Add(timeSlot);
+            currentTime = currentTime.AddMinutes(MINUTE_INCREMENT);
+            bufferedTime = bufferedTime.AddMinutes(MINUTE_INCREMENT); 
         }
+        
+               
+            
+        
         return timeSlots;
     }
+
 
     public bool CheckIfTimeSlotAvailable(DateTime slotStartTime, DateTime slotEndTime, Employee employee, DateOnly date){
         List<Appointment> appointments = employee.Appointments;

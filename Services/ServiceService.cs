@@ -61,4 +61,22 @@ public class ServiceService(IServiceRepository serviceRepository, IFacilityRepos
         return service;
     }
 
+    public async Task<object?> GetEmployeesForTask(long serviceId)
+    {
+        Service? service = await _serviceRepository.GetByIdAsync(serviceId);
+        if(service == null)
+        {
+            return null;
+        }
+        List<EmployeeDto> employeeDtos =  service.Employees.MapToDto();
+        EmployeeDto presetAny = new()
+        {
+            Id = 0,
+            FirstName = "Any",
+            LastName =""
+
+        };
+        employeeDtos.Insert(0, presetAny);
+        return employeeDtos;
+    }
 }

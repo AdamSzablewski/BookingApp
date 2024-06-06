@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Globalization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookingApp;
@@ -13,7 +14,8 @@ public class AppointmentController(AppointmentService appointmentService, Securi
     [HttpGet]
     public async Task<IActionResult> GetTimeslotsForDay([FromQuery] long serviceId, [FromQuery] string date)
     {
-        return Ok(await _appointmentService.GetAvailableTimeSlotsForService(serviceId, DateOnly.Parse(date)));
+        DateOnly formattedDate = DateOnly.ParseExact(date, "dd/MM/yyyy");
+        return Ok(await _appointmentService.GetAvailableTimeSlotsForService(serviceId, formattedDate));
     }
 
     [HttpPost]

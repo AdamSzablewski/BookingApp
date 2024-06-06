@@ -15,4 +15,9 @@ public class Employee
     public List<EmployeeService> Services {get; set;} = [];
     public List<EmploymentRequest> EmploymentRequests {get; set;} = [];
 
+    public override string ToString()
+        {
+            // Create a string representation of the Employee object
+            return $"Employee Id: {Id}, ";
+        }
 }
