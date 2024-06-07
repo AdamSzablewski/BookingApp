@@ -10,45 +10,18 @@ IServiceRepository serviceRepository, IEmployeeRepository employeeRepository, IC
     private readonly IReviewRepository _reviewRepository = reviewRepository;
     private readonly int MINUTE_INCREMENT = 15;
 
-    // public async Task<List<TimeSlot>> GetAvailableTimeSlotsForService(long serviceId, DateOnly date){
-    //     Service service = await _serviceRepository.GetByIdAsync(serviceId) ?? throw new ServiceNotFoundException();
-    //     Facility facility = service.Facility;
-    //     List<Employee> employeesForTask = service.Employees;
-    //     TimeSpan serviceDuration = service.Length;
-       
-    //     List<TimeSlot> timeSlots = [];
-    //     foreach(Employee employee in employeesForTask){
-        
-    //         DateTime currentTime = new(date.Year, date.Month, date.Day, service.Facility.StartTime.Hour, service.Facility.StartTime.Minute,  service.Facility.StartTime.Second);
-    //         DateTime bufferedTime = currentTime.AddHours(serviceDuration.Hours).AddMinutes(serviceDuration.Minutes);
-    //         DateTime employeeStartTime = new(date.Year, date.Month, date.Day, employee.StartTime.Hour, employee.StartTime.Minute,  employee.StartTime.Second);
-    //         DateTime employeeEndTime = new(date.Year, date.Month, date.Day, employee.EndTime.Hour, employee.EndTime.Minute,  employee.EndTime.Second);
-
-    //         while(employeeStartTime <= currentTime && bufferedTime <= employeeEndTime){
-    //             bool available = CheckIfTimeSlotAvailable(currentTime, bufferedTime, employee, date);
-    //             if(available){
-    //                 TimeSlot timeSlot = new TimeSlot
-    //                 {
-    //                     EmployeeDto = employee.MapToDto(),
-    //                     StartTime = new TimeOnly(currentTime.Hour, currentTime.Minute, currentTime.Second),
-    //                     EndTime = new TimeOnly(bufferedTime.Hour, bufferedTime.Minute, bufferedTime.Second),
-    //                     Date = new DateOnly(currentTime.Year, currentTime.Month, currentTime.Day)
-    //                 };
-    //             timeSlots.Add(timeSlot);
-    //             }
-               
-    //             currentTime = currentTime.AddMinutes(MINUTE_INCREMENT);
-    //             bufferedTime = bufferedTime.AddMinutes(MINUTE_INCREMENT);
-               
-    //         }
-    //     }
-    //     return timeSlots;
-    // }
-    public async Task<List<TimeSlot>> GetAvailableTimeSlotsForService(long serviceId, DateOnly date){
+        public async Task<List<TimeSlot>> GetAvailableTimeSlotsForService(long serviceId, DateOnly date){
         Service service = await _serviceRepository.GetByIdAsync(serviceId) ?? throw new ServiceNotFoundException();
         Facility facility = service.Facility;
         List<Employee> employeesForTask = service.Employees;
         TimeSpan serviceDuration = service.Length;
+         EmployeeDto presetAny = new()
+        {
+            Id = 0,
+            FirstName = "Any",
+            LastName =""
+
+        };
         DateTime currentTime = new(date.Year, date.Month, date.Day, service.Facility.StartTime.Hour, service.Facility.StartTime.Minute,  service.Facility.StartTime.Second);
         DateTime bufferedTime = currentTime.AddHours(serviceDuration.Hours).AddMinutes(serviceDuration.Minutes);
         DateTime maxTime = new(date.Year, date.Month, date.Day, facility.EndTime.Hour, facility.EndTime.Minute, facility.EndTime.Second);  
@@ -64,14 +37,16 @@ IServiceRepository serviceRepository, IEmployeeRepository employeeRepository, IC
                     };
            foreach(Employee employee in employeesForTask)
            {
-            DateTime employeeStartTime = new(date.Year, date.Month, date.Day, employee.StartTime.Hour, employee.StartTime.Minute,  employee.StartTime.Second);
-            DateTime employeeEndTime = new(date.Year, date.Month, date.Day, employee.EndTime.Hour, employee.EndTime.Minute,  employee.EndTime.Second);
-            bool available = CheckIfTimeSlotAvailable(currentTime, bufferedTime, employee, date);
-            if(available)
-            {
-                timeSlot.Employees.Add(employee.MapToDto());
-            }
-
+                bool anyAvailable = false;
+                DateTime employeeStartTime = new(date.Year, date.Month, date.Day, employee.StartTime.Hour, employee.StartTime.Minute,  employee.StartTime.Second);
+                DateTime employeeEndTime = new(date.Year, date.Month, date.Day, employee.EndTime.Hour, employee.EndTime.Minute,  employee.EndTime.Second);
+                bool available = CheckIfTimeSlotAvailable(currentTime, bufferedTime, employee, date);
+                if(available)
+                {
+                    timeSlot.Employees.Add(employee.MapToDto());
+                    timeSlot.Employees.Add(presetAny);
+                    
+                }
            } 
             timeSlots.Add(timeSlot);
             currentTime = currentTime.AddMinutes(MINUTE_INCREMENT);
@@ -109,18 +84,44 @@ IServiceRepository serviceRepository, IEmployeeRepository employeeRepository, IC
     {
         return slotStartTime >= employeeStartTime && slotEndTime <= employeeEndTime;
     }
-
-    public async Task<Appointment> BookAppointment(AppointmentCreateDto appointmentDto)
+    public long GetBackupForTask(List<long> ids)
     {
-        Employee employee = await _employeeRepository.GetByIdAsync(appointmentDto.EmployeeId) ?? throw new EmployeeNotFoundException();
+        int i = 0;
+        while(i < ids.Count && ids[i] != 0)
+        {
+            if(ids[i] != 0)
+            {
+                return ids[i];
+            }
+            i++;
+        }
+        return -1;
+    }
+
+    public async Task<Appointment?> BookAppointment(AppointmentCreateDto appointmentDto)
+    {
+        long employeeId;
+        if(appointmentDto.EmployeeId == 0)
+        {
+            employeeId = GetBackupForTask(appointmentDto.Employees.Select(employee => employee.Id).ToList());
+        }
+        else
+        {
+            employeeId = appointmentDto.EmployeeId;
+        }
+        if(employeeId == -1)
+        {
+            return null;
+        }
+        Employee employee = await _employeeRepository.GetByIdAsync(employeeId) ?? throw new EmployeeNotFoundException();
         Customer customer = await _customerRepository.GetByIdAsync(appointmentDto.CustomerId) ?? throw new CustomerNotFoundException();
         Service service = await _serviceRepository.GetByIdAsync(appointmentDto.ServiceId) ?? throw new ServiceNotFoundException();
         Appointment appointment = new(){
             ServiceId = appointmentDto.ServiceId,
             Employee = employee,
             Customer = customer,
-            StartTime = appointmentDto.StartTime,
-            EndTime = appointmentDto.EndTime,
+            StartTime = new DateTime(appointmentDto.Date, appointmentDto.StartTime),
+            EndTime = new DateTime(appointmentDto.Date, appointmentDto.EndTime),
             Service = service
         };
         await _appointmentRepository.CreateAsync(appointment);

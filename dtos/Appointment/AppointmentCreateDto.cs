@@ -13,7 +13,13 @@ public  class AppointmentCreateDto
     [Required(ErrorMessage = "UserId is required.")]
     public string UserId {get; set;}
     [Required(ErrorMessage = "StartTime is required.")]
-    public DateTime StartTime {get; set;}
+    public TimeOnly StartTime {get; set;}
     [Required(ErrorMessage = "EndTime is required.")]
-    public DateTime EndTime {get; set;}
+    public TimeOnly EndTime {get; set;}
+    [Required(ErrorMessage = "StartTime is required.")]
+    public DateOnly Date {get; set;}
+    [Required(ErrorMessage = "Backup employees are required.")]
+    public List<EmployeeDto> Employees {get; set;}
+    
+    
 };
