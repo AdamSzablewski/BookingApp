@@ -1,13 +1,14 @@
 ﻿namespace BookingApp;
 
 public class AppointmentService(IAppointmentRepository appointmentRepository,
-IServiceRepository serviceRepository, IEmployeeRepository employeeRepository, ICustomerRepository customerRepository, IReviewRepository reviewRepository)
+IServiceRepository serviceRepository, IEmployeeRepository employeeRepository, ICustomerRepository customerRepository, IReviewRepository reviewRepository, IPersonRepository personRepository)
 {
     private readonly IAppointmentRepository _appointmentRepository = appointmentRepository;
     private readonly IServiceRepository _serviceRepository = serviceRepository;
     private readonly IEmployeeRepository _employeeRepository = employeeRepository;
     private readonly ICustomerRepository _customerRepository = customerRepository;
     private readonly IReviewRepository _reviewRepository = reviewRepository;
+    private readonly IPersonRepository _personRepository = personRepository;
     private readonly int MINUTE_INCREMENT = 15;
 
         public async Task<List<TimeSlot>> GetAvailableTimeSlotsForService(long serviceId, DateOnly date){
@@ -98,7 +99,7 @@ IServiceRepository serviceRepository, IEmployeeRepository employeeRepository, IC
         return -1;
     }
 
-    public async Task<Appointment?> BookAppointment(AppointmentCreateDto appointmentDto)
+    public async Task<Appointment?> BookAppointment(AppointmentCreateDto appointmentDto, string userId)
     {
         long employeeId;
         if(appointmentDto.EmployeeId == 0)
@@ -109,12 +110,15 @@ IServiceRepository serviceRepository, IEmployeeRepository employeeRepository, IC
         {
             employeeId = appointmentDto.EmployeeId;
         }
+        Console.WriteLine(appointmentDto);
+
         if(employeeId == -1)
         {
             return null;
         }
+        Person user = await _personRepository.GetByIdAsync(userId) ?? throw new UserNotFoundException();
+        Customer? customer = user.Customer ?? throw new CustomerNotFoundException();
         Employee employee = await _employeeRepository.GetByIdAsync(employeeId) ?? throw new EmployeeNotFoundException();
-        Customer customer = await _customerRepository.GetByIdAsync(appointmentDto.CustomerId) ?? throw new CustomerNotFoundException();
         Service service = await _serviceRepository.GetByIdAsync(appointmentDto.ServiceId) ?? throw new ServiceNotFoundException();
         Appointment appointment = new(){
             ServiceId = appointmentDto.ServiceId,

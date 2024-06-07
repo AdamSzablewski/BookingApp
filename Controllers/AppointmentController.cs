@@ -21,9 +21,12 @@ public class AppointmentController(AppointmentService appointmentService, Securi
     [HttpPost]
     public async Task<IActionResult> BookAppointment([FromBody] AppointmentCreateDto appointmentCreateDto)
     {   
-        if(!ModelState.IsValid){ return BadRequest(ModelState);};
+        // Console.WriteLine("------------------before");
+        //  if(!ModelState.IsValid){ return BadRequest(ModelState);};
+        //         Console.WriteLine("after");
+
         var userId = _securityService.GetUserIdFromRequest(HttpContext);
-        var appointment = await _appointmentService.BookAppointment(appointmentCreateDto);
+        var appointment = await _appointmentService.BookAppointment(appointmentCreateDto, userId);
         if(appointment == null)
         {
             return BadRequest("Failed to book the appointment");

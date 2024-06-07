@@ -8,10 +8,7 @@ public  class AppointmentCreateDto
     public long ServiceId {get; set;}
     [Required(ErrorMessage = "EmployeeId is required.")]
     public long EmployeeId {get; set;}
-    [Required(ErrorMessage = "CustomerId is required.")]
-    public long CustomerId {get; set;}
-    [Required(ErrorMessage = "UserId is required.")]
-    public string UserId {get; set;}
+    
     [Required(ErrorMessage = "StartTime is required.")]
     public TimeOnly StartTime {get; set;}
     [Required(ErrorMessage = "EndTime is required.")]
