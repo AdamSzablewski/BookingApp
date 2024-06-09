@@ -20,6 +20,16 @@ public class FacilityController(FacilityService facilityService, SecurityService
         }
         return Ok(facility.MapToDto());
     }
+    [HttpGet("user/{userId}")]
+    public async Task<IActionResult> GetFacilityForUser([FromRoute] string userId)
+    {
+        var facilities = await _facilityService.GetForUser(userId);
+        if(facilities == null)
+        {
+            return NotFound();
+        }
+        return Ok(facilities);
+    }
 
     [HttpPost("{userId}")]
     public async Task<IActionResult> Create([FromRoute]string userId, [FromBody]FacilityCreateDto dto)

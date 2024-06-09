@@ -5,12 +5,9 @@ namespace BookingApp;
 
 public class Person : IdentityUser
 {
-    //public override long Id {get; set;}
+   
     public required string FirstName {get; set;}
     public required string LastName {get; set;}
-    //public required string Email {get; set;}
-    //public string PhoneNumber {get; set;}
-    //public string Password {get; set;}
     public string? ProfilePicture {get; set;}
     public long? OwnerId {get; set;}
     public Owner? Owner {get; set;}
@@ -22,6 +19,6 @@ public class Person : IdentityUser
     public Adress? Adress {get; set;}
     public override string ToString()
     {
-        return $"FirstName: {FirstName}, LastName: {LastName}, Employee: {Employee}";
+        return $"FirstName: {FirstName}, LastName: {LastName}, Email: {Email}, PhoneNumber: {PhoneNumber}";
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.JsonWebTokens;
 
 namespace BookingApp;
@@ -26,16 +27,30 @@ public class AccountController : ControllerBase
     {
         if(!ModelState.IsValid){ return BadRequest(ModelState);};
 
-        var user = _userManager.Users.FirstOrDefault(u => u.UserName.Equals(loginDto.Username));
+        var user = _userManager.Users
+        .Include(u => u.Customer)
+        .Include(u => u.Owner)
+        .Include(u => u.Employee)
+        .FirstOrDefault(u => u.UserName.Equals(loginDto.Username));
         if(user == null) return Unauthorized();
         var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
         if(!result.Succeeded) return Unauthorized("Username not found or invalid password");
-
+        string role = "";
+        if(user.Customer != null){
+            role = "Customer";
+        }
+        else if( user.Employee != null){
+            role = "Employee";
+        }
+        else if( user.Owner != null){
+            role = "Owner";
+        }
         JWTDto jwtDto = new()
             {
                 Token = _tokenService.CreateToken(user),
                 Email = user.Email,
-                UserId = user.Id
+                UserId = user.Id,
+                Role = role
             };
         return Ok(jwtDto);
     }
@@ -44,9 +59,9 @@ public class AccountController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
     {
-        if(!ModelState.IsValid){return BadRequest(ModelState);};
         try
         {
+            
             Person user = new()
             {
                 UserName = registerDto.Email,
@@ -55,8 +70,11 @@ public class AccountController : ControllerBase
                 PhoneNumber = registerDto.PhoneNumber,
                 Email = registerDto.Email
             };
+            Console.WriteLine(user);
 
             var createdUser = await _userManager.CreateAsync(user, registerDto.Password);
+            Console.WriteLine(createdUser);
+
             Adress adress = new(){
                 Country = registerDto.Country,
                 City = registerDto.City
@@ -72,7 +90,8 @@ public class AccountController : ControllerBase
                     JWTDto jwtDto = new(){
                         Token = _tokenService.CreateToken(user),
                         Email = user.Email,
-                        UserId = user.Id
+                        UserId = user.Id,
+                        Role = null
                     };
                     return Ok(jwtDto);
                 }

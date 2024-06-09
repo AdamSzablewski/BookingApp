@@ -14,4 +14,9 @@ public static class FacilityMapper
             ReviewAmmount = facility.Reviews.Count
         };
     }
+    public static List<FacilityDto>? MapToDto(this List<Facility> facilities)
+    {
+        if(facilities == null) return null;
+        return facilities.Select(MapToDto).ToList();
+    }
 }

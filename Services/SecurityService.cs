@@ -137,4 +137,16 @@ public class SecurityService
     {
         throw new NotImplementedException();
     }
+
+    internal string GetUserIdFromToken(string token)
+    {
+        var handler = new JwtSecurityTokenHandler();
+        var parsedJwt = handler.ReadJwtToken(token);
+        var userIdClaim = parsedJwt.Claims.FirstOrDefault(c => c.Type == "UserId");
+        if(userIdClaim != null)
+        {
+            return userIdClaim.Value;
+        }
+        throw new NotAuthorizedException();
+    }
 }

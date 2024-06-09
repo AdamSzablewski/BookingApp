@@ -21,6 +21,7 @@ public class FacilityRepository(DbContext dbContext) : Repository<Facility, long
         .FirstOrDefaultAsync(f => f.Id == Id);
     }
 
+
     public async Task<List<Facility>> GetInArea(string country, string city, int FEED_AMOUNT)
     {
         return await _dbContext.Facilities

@@ -48,4 +48,13 @@ public class FacilityService(
         return facility;
     }
 
+    internal async Task<List<FacilityDto>>? GetForUser(string userId)
+    {
+        Person user = await _personRepository.GetByIdAsync(userId);
+        if(user == null || user.Owner == null)
+        {
+            return null;
+        }
+        return user.Owner.Facilities.MapToDto();
+    }
 }

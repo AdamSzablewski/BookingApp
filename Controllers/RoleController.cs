@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Org.BouncyCastle.Bcpg;
 
 namespace BookingApp;
 [ApiController]
-[Authorize]
 [Route("role")]
 public class RoleController : ControllerBase
 {
@@ -17,9 +17,9 @@ public class RoleController : ControllerBase
         _customerService = customerService;
         _securityService = securityService;
     }
-    [HttpGet("owner/{userId}")]
-    public IActionResult AddOwnerFunctionality([FromRoute] string userId){
-        _securityService.IsUser(HttpContext, userId);
+    [HttpGet("owner")]
+    public IActionResult AddOwnerFunctionality([FromQuery] string token){
+        string userId = _securityService.GetUserIdFromToken(token);
         Person? person = _dbContext.Persons.Find(userId);
         if(person == null){
             return NotFound();
@@ -36,9 +36,9 @@ public class RoleController : ControllerBase
         return Ok();
     }
 
-    [HttpGet("customer/{userId}")]
-    public IActionResult AddCustomerFunctionality([FromRoute] string userId){
-        _securityService.IsUser(HttpContext, userId);
+    [HttpGet("customer")]
+    public IActionResult AddCustomerFunctionality([FromQuery] string token){
+        string userId = _securityService.GetUserIdFromToken(token);
         Person? person = _dbContext.Persons.Find(userId);
         if(person == null){
             return NotFound();
@@ -54,9 +54,9 @@ public class RoleController : ControllerBase
         _dbContext.SaveChanges();
         return Ok();
     }
-    [HttpGet("employee/{userId}")]
-    public async Task<IActionResult> AddEmployeeFunctionality([FromRoute] string userId){
-        _securityService.IsUser(HttpContext, userId);
+    [HttpGet("employee")]
+    public async Task<IActionResult> AddEmployeeFunctionality([FromQuery] string token){
+        string userId = _securityService.GetUserIdFromToken(token);
         Person? person = _dbContext.Persons.Find(userId);
         if(person == null){
             return NotFound();
