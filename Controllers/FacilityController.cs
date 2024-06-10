@@ -10,6 +10,16 @@ public class FacilityController(FacilityService facilityService, SecurityService
     private readonly FacilityService _facilityService = facilityService;
     private readonly SecurityService _securityService = securityService;
 
+    [HttpGet]
+    public async Task<IActionResult> GetFacilitiesByCriteria([FromQuery] string country, [FromQuery] string city, [FromQuery] string serviceName)
+    {
+        var facilities = await _facilityService.GetFacilitiesByCriteria(country, city, serviceName);
+        if(facilities == null)
+        {
+            return NotFound();
+        }
+        return Ok(facilities);
+    }
     [HttpGet("{facilityId}")]
     public async Task<IActionResult> GetById([FromRoute]long facilityId)
     {

@@ -57,4 +57,10 @@ public class FacilityService(
         }
         return user.Owner.Facilities.MapToDto();
     }
+
+    internal async Task<List<Facility>> GetFacilitiesByCriteria(string country, string city, string serviceName)
+    {
+        List<Facility> facilities = await _facilityRepository.GetFacilitiesByCriteria(country, city, serviceName, 50);
+        return facilities;
+    }
 }

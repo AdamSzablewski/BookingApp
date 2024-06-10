@@ -21,6 +21,21 @@ public class FacilityRepository(DbContext dbContext) : Repository<Facility, long
         .FirstOrDefaultAsync(f => f.Id == Id);
     }
 
+    public async Task<List<Facility>> GetFacilitiesByCriteria(string country, string city, string serviceName,int FEED_AMOUNT)
+    {
+        return await _dbContext.Facilities
+        .Include(f => f.Services)
+            .ThenInclude(s => s.Employees)
+                .ThenInclude(e => e.User)
+        .Where(f => f.Adress.Country.Equals(country))
+        .Where(f => f.Adress.City.Equals(city))
+        .Where(f => f.Services.Any(s => s.Name.Equals(serviceName)))
+        .OrderBy(f  => PointsUtil.GetScore(f.Reviews))
+        .Take(FEED_AMOUNT)
+        .ToListAsync();
+    }
+
+
 
     public async Task<List<Facility>> GetInArea(string country, string city, int FEED_AMOUNT)
     {

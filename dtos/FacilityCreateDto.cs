@@ -6,8 +6,7 @@ public class FacilityCreateDto
 {
     [Required(ErrorMessage = "Name is required.")]
     public required string Name {get; set;}
-    [Required(ErrorMessage = "OwnerId is required.")]
-    public required long OwnerId {get; set;}
+    
     [Required(ErrorMessage = "Country is required.")]
     public required string Country {get; set;}
     [Required(ErrorMessage = "City is required.")]
@@ -16,5 +15,7 @@ public class FacilityCreateDto
     public required string Street {get; set;}
     [Required(ErrorMessage = "HouseNumber is required.")]
     public required string HouseNumber {get; set;}
+    [Required(ErrorMessage = "Category is required.")]
+    public required string Category {get; set;}
 
 }
