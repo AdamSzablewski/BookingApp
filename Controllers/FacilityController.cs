@@ -31,6 +31,16 @@ public class FacilityController(FacilityService facilityService, SecurityService
         }
         return Ok(facility.MapToDto());
     }
+    [HttpGet("picture/{facilityId}")]
+    public async Task<IActionResult> GetImgForFacility([FromRoute]long facilityId)
+    {
+        var facility = await _facilityService.GetById(facilityId);
+        if(facility == null)
+        {
+            return NotFound();
+        }
+        return Ok(facility.ImgUrl);
+    }
     [HttpGet("user/{userId}")]
     public async Task<IActionResult> GetFacilityForUser([FromRoute] string userId)
     {

@@ -46,16 +46,13 @@ IServiceRepository serviceRepository, IEmployeeRepository employeeRepository, IC
                 {
                     timeSlot.Employees.Add(employee.MapToDto());
                     timeSlot.Employees.Add(presetAny);
-                    
+                    timeSlots.Add(timeSlot);
                 }
            } 
-            timeSlots.Add(timeSlot);
+            
             currentTime = currentTime.AddMinutes(MINUTE_INCREMENT);
             bufferedTime = bufferedTime.AddMinutes(MINUTE_INCREMENT); 
         }
-        
-               
-            
         
         return timeSlots;
     }
