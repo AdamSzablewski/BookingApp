@@ -19,7 +19,11 @@ public class FacilityService(
     public async Task<Facility> CreateAsync(string userId, FacilityCreateDto dto){
         Person person = await _personRepository.GetByIdAsync(userId) ??  throw new Exception("User not found");
         Owner owner = person.Owner ?? throw new Exception("user is not an owner");
-
+        bool hasValidCategory = CategoryManager.GetCategoriesForServices().Any(c => c.Equals(dto.Category));
+        if(!hasValidCategory)
+        {
+            dto.Category = "Other";
+        }
         Adress adress = new(){
             Country = dto.Country,
             City = dto.City,
@@ -34,7 +38,8 @@ public class FacilityService(
             Adress = adress,
             Owner = owner,
             StartTime = new TimeOnly(9,0),
-            EndTime = new TimeOnly(17,0)
+            EndTime = new TimeOnly(17,0),
+            Category = dto.Category
         };
         await _facilityRepository.CreateAsync(facility); 
         owner.Facilities.Add(facility);
@@ -58,9 +63,9 @@ public class FacilityService(
         return user.Owner.Facilities.MapToDto();
     }
 
-    internal async Task<List<Facility>> GetFacilitiesByCriteria(string country, string city, string serviceName)
+    internal async Task<List<FacilityDto>> GetFacilitiesByCriteria(string country, string city, string category)
     {
-        List<Facility> facilities = await _facilityRepository.GetFacilitiesByCriteria(country, city, serviceName, 50);
-        return facilities;
+        List<Facility> facilities = await _facilityRepository.GetFacilitiesByCriteria(country, city, category, 50);
+        return facilities.MapToDto();
     }
 }

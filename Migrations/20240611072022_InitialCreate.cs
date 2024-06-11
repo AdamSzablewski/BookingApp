@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BookingApp.Migrations
 {
     /// <inheritdoc />
-    public partial class AddFacilityPoints : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -135,6 +135,8 @@ namespace BookingApp.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     AdressId = table.Column<long>(type: "bigint", nullable: false),
                     OwnerId = table.Column<long>(type: "bigint", nullable: false),
+                    Category = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     StartTime = table.Column<TimeOnly>(type: "time(6)", nullable: false),
                     EndTime = table.Column<TimeOnly>(type: "time(6)", nullable: false)
                 },
@@ -255,6 +257,8 @@ namespace BookingApp.Migrations
                     FirstName = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     LastName = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ProfilePicture = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     OwnerId = table.Column<long>(type: "bigint", nullable: true),
                     CustomerId = table.Column<long>(type: "bigint", nullable: true),
@@ -595,8 +599,8 @@ namespace BookingApp.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "65af3346-d96d-4f5b-9426-f53795519e04", null, "User", "USER" },
-                    { "92bbe89b-5b89-4b28-b5fa-2d97afe233d4", null, "Admin", "ADMIN" }
+                    { "0d4217e8-1dc1-4d31-84ac-8197d26401a9", null, "Admin", "ADMIN" },
+                    { "76e6b102-153d-4b6c-ae6d-58dbdceba3bc", null, "User", "USER" }
                 });
 
             migrationBuilder.CreateIndex(

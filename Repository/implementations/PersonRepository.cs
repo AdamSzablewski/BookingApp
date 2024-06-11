@@ -33,6 +33,10 @@ public class PersonRepository(DbContext dbContext) : Repository<Person, string>(
         return await _dbContext.Persons
             .Include(p => p.Owner)
                 .ThenInclude(e => e.Facilities)
+                    .ThenInclude(f => f.Adress)
+            .Include(p => p.Owner)
+                .ThenInclude(e => e.Facilities)
+                    .ThenInclude(f => f.Reviews)
             .Include(p => p.Employee)
             .Include(p => p.Customer)
             .Include(p => p.Adress)

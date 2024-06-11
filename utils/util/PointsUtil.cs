@@ -5,6 +5,7 @@ public static class PointsUtil
 {
     internal static int GetScore(List<Review> reviews)
     {
+        Console.WriteLine("pointsss   ------ "+reviews.Count);
         int sum = 0;
         foreach (Review review in reviews)
         {

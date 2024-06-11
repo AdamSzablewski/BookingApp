@@ -7,6 +7,7 @@ public class FacilityRepository(DbContext dbContext) : Repository<Facility, long
     public override Facility? GetById(long Id)
     {
         return _dbContext.Facilities
+        .Include(f => f.Adress)
         .Include(f => f.Services)
             .ThenInclude(s => s.Employees)
                 .ThenInclude(e => e.User)
@@ -15,22 +16,23 @@ public class FacilityRepository(DbContext dbContext) : Repository<Facility, long
     public async override Task<Facility?> GetByIdAsync(long Id)
     {
         return await _dbContext.Facilities
+        .Include(f => f.Adress)
         .Include(f => f.Services)
             .ThenInclude(s => s.Employees)
                 .ThenInclude(e => e.User)
         .FirstOrDefaultAsync(f => f.Id == Id);
     }
 
-    public async Task<List<Facility>> GetFacilitiesByCriteria(string country, string city, string serviceName,int FEED_AMOUNT)
+    public async Task<List<Facility>> GetFacilitiesByCriteria(string country, string city, string category,int FEED_AMOUNT)
     {
         return await _dbContext.Facilities
+        .Include(f => f.Adress)
         .Include(f => f.Services)
             .ThenInclude(s => s.Employees)
                 .ThenInclude(e => e.User)
         .Where(f => f.Adress.Country.Equals(country))
         .Where(f => f.Adress.City.Equals(city))
-        .Where(f => f.Services.Any(s => s.Name.Equals(serviceName)))
-        .OrderBy(f  => PointsUtil.GetScore(f.Reviews))
+        .Where(f => f.Category.Equals(category))
         .Take(FEED_AMOUNT)
         .ToListAsync();
     }

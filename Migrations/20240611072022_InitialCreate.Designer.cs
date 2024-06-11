@@ -4,6 +4,7 @@ using BookingApp;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookingApp.Migrations
 {
     [DbContext(typeof(DbContext))]
-    partial class DbContextModelSnapshot : ModelSnapshot
+    [Migration("20240611072022_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -246,9 +249,6 @@ namespace BookingApp.Migrations
                     b.Property<TimeOnly>("EndTime")
                         .HasColumnType("time(6)");
 
-                    b.Property<string>("ImgUrl")
-                        .HasColumnType("longtext");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -443,7 +443,7 @@ namespace BookingApp.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<long>("FacilityId")
+                    b.Property<long?>("FacilityId")
                         .HasColumnType("bigint");
 
                     b.Property<bool>("IsActive")
@@ -525,13 +525,13 @@ namespace BookingApp.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "37e0766f-4ad3-4e28-82dd-6f8d206d8960",
+                            Id = "0d4217e8-1dc1-4d31-84ac-8197d26401a9",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "7136ea04-2ee2-44a0-9bdf-0f57018f7366",
+                            Id = "76e6b102-153d-4b6c-ae6d-58dbdceba3bc",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -830,19 +830,15 @@ namespace BookingApp.Migrations
 
             modelBuilder.Entity("BookingApp.Review", b =>
                 {
-                    b.HasOne("BookingApp.Facility", "Facility")
+                    b.HasOne("BookingApp.Facility", null)
                         .WithMany("Reviews")
-                        .HasForeignKey("FacilityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("FacilityId");
 
                     b.HasOne("BookingApp.Person", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Facility");
 
                     b.Navigation("User");
                 });

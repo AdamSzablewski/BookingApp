@@ -57,7 +57,7 @@ public class DbContext : IdentityDbContext<Person>
                 .WithOne(p => p.User)
                 .HasForeignKey<Person>(e => e.EmployeeId);
 
-
+    
     modelBuilder.Entity<Owner>()
                 .HasOne(o => o.User)
                 .WithOne(p => p.Owner)

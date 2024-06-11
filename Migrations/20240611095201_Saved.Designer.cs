@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookingApp.Migrations
 {
     [DbContext(typeof(DbContext))]
-    [Migration("20240601160835_AddFacilityPoints")]
-    partial class AddFacilityPoints
+    [Migration("20240611095201_Saved")]
+    partial class Saved
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -242,8 +242,15 @@ namespace BookingApp.Migrations
                     b.Property<long>("AdressId")
                         .HasColumnType("bigint");
 
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.Property<TimeOnly>("EndTime")
                         .HasColumnType("time(6)");
+
+                    b.Property<string>("ImgUrl")
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -395,6 +402,9 @@ namespace BookingApp.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<string>("ProfilePicture")
+                        .HasColumnType("longtext");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("longtext");
 
@@ -436,7 +446,7 @@ namespace BookingApp.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<long?>("FacilityId")
+                    b.Property<long>("FacilityId")
                         .HasColumnType("bigint");
 
                     b.Property<bool>("IsActive")
@@ -518,13 +528,13 @@ namespace BookingApp.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "92bbe89b-5b89-4b28-b5fa-2d97afe233d4",
+                            Id = "37e0766f-4ad3-4e28-82dd-6f8d206d8960",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "65af3346-d96d-4f5b-9426-f53795519e04",
+                            Id = "7136ea04-2ee2-44a0-9bdf-0f57018f7366",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -823,15 +833,19 @@ namespace BookingApp.Migrations
 
             modelBuilder.Entity("BookingApp.Review", b =>
                 {
-                    b.HasOne("BookingApp.Facility", null)
+                    b.HasOne("BookingApp.Facility", "Facility")
                         .WithMany("Reviews")
-                        .HasForeignKey("FacilityId");
+                        .HasForeignKey("FacilityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("BookingApp.Person", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Facility");
 
                     b.Navigation("User");
                 });

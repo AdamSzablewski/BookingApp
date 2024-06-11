@@ -11,9 +11,10 @@ public class FacilityController(FacilityService facilityService, SecurityService
     private readonly SecurityService _securityService = securityService;
 
     [HttpGet]
-    public async Task<IActionResult> GetFacilitiesByCriteria([FromQuery] string country, [FromQuery] string city, [FromQuery] string serviceName)
+    public async Task<IActionResult> GetFacilitiesByCriteria([FromQuery] string country, [FromQuery] string city, [FromQuery] string category)
     {
-        var facilities = await _facilityService.GetFacilitiesByCriteria(country, city, serviceName);
+        var facilities = await _facilityService.GetFacilitiesByCriteria(country, city, category);
+        Console.WriteLine($"facilites /////// ----: {facilities.Count}");
         if(facilities == null)
         {
             return NotFound();

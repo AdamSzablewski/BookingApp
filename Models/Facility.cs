@@ -14,10 +14,12 @@ public class Facility : IUserResource
     public List<Service> Services {get; set;}
     public List<Employee> Employees {get; set;}
     public long OwnerId {get; set;}
+    public string Category {get; set;}
     public required Owner Owner {get; set;}
     public TimeOnly StartTime {get; set;}
     public TimeOnly EndTime {get; set;}
     public List<Review> Reviews {get; set;} = [];
+    public string? ImgUrl {get; set;}
    
 
     public string ToString()
