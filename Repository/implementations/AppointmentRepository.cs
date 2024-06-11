@@ -14,4 +14,16 @@ public class AppointmentRepository(DbContext dbContext) : Repository<Appointment
     {
         return await _dbContext.Appointments.FindAsync(Id);
     }
+
+    public async Task<List<Appointment>> GetForUser(string userId)
+    {
+        return await _dbContext.Appointments
+            .Include(a => a.Customer)
+                .ThenInclude(c => c.User)
+            .Include(a => a.Service)
+                .ThenInclude(s => s.Facility)
+                    .ThenInclude(f => f.Adress)
+            .Where(a => a.Customer.UserId.Equals(userId))
+            .ToListAsync();
+    }
 }

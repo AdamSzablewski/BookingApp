@@ -17,6 +17,12 @@ public class AppointmentController(AppointmentService appointmentService, Securi
         DateOnly formattedDate = DateOnly.ParseExact(date, "dd/MM/yyyy");
         return Ok(await _appointmentService.GetAvailableTimeSlotsForService(serviceId, formattedDate));
     }
+    [HttpGet("latest")]
+    public async Task<IActionResult> GetLatestAppointment([FromQuery] string userId)
+    {
+        
+        return Ok(await _appointmentService.GetLatestAppointment(userId));
+    }
 
     [HttpPost]
     public async Task<IActionResult> BookAppointment([FromBody] AppointmentCreateDto appointmentCreateDto)

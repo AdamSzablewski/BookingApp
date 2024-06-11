@@ -16,11 +16,11 @@ public class FeedService(IPersonRepository personRepository, DbContext dbContext
         string Country = user.Adress.Country;
         string City = user.Adress.City;
         List<Facility> facilitiesInArea = await _facilityRepository.GetInArea(Country, City, FEED_AMOUNT);
-        if(facilitiesInArea.Count < FEED_AMOUNT)
-        {
-            int amount = FEED_AMOUNT - facilitiesInArea.Count;
-            facilitiesInArea.AddRange( await _facilityRepository.GetInCountry(Country, amount, FEED_AMOUNT));
-        }
+        // if(facilitiesInArea.Count < FEED_AMOUNT)
+        // {
+        //     int amount = FEED_AMOUNT - facilitiesInArea.Count;
+        //     facilitiesInArea.AddRange( await _facilityRepository.GetInCountry(Country, amount, FEED_AMOUNT));
+        // }
         List<FacilityDto> facilities = facilitiesInArea.Select(f => f.MapToDto()).ToList();
         
         return facilities;

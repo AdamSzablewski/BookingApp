@@ -167,4 +167,10 @@ IServiceRepository serviceRepository, IEmployeeRepository employeeRepository, IC
         await _reviewRepository.UpdateAsync();
         return true;
     }
+
+    internal async Task<List<AppointmentDto>> GetLatestAppointment(string userId)
+    {
+        List<Appointment> appointments = await _appointmentRepository.GetForUser(userId);
+        return appointments.MapToDto();
+    }
 }
