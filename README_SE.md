@@ -12,8 +12,9 @@ BookingApp är ett API skrivet i C# och .NET Core 8, utformat för att underlät
 - **xUnit.net**
 - **Moq**
 
-## Nyckelfunktioner
-- **Sökfunktion:** Användare kan söka efter tjänster baserat på både plats och kategori av tjänst som sökes.
+# Nyckelfunktioner
+## Sökfunktion
+Användare kan söka efter tjänster baserat på både plats och kategori av tjänst som sökes.
 
 
 ![Search480](https://github.com/AdamSzablewski/BookingApp/assets/114603622/d81acbd6-e63f-454b-8434-6f8d0542c1a3)
