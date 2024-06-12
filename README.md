@@ -11,7 +11,26 @@ BookingApp is an API written in C# and .NET Core 8, designed to facilitate busin
 - **MySQL**
 
 ## Key Features
+- **Search function:** Users can search for services based on both location and the category of the service being sought.
+
+
+![Search480](https://github.com/AdamSzablewski/BookingApp/assets/114603622/d81acbd6-e63f-454b-8434-6f8d0542c1a3)
+
+
+[Click here to see the video](https://www.youtube.com/watch?v=DwFj8CUOouo)
+
+
 - **Booking:** Customers can easily view available times for a service on any given day and filter based on the employee performing the service.
+
+![bokning480](https://github.com/AdamSzablewski/BookingApp/assets/114603622/793f6945-0bb5-42ce-8c59-e2a815af3d01)
+
+
+[Click here to see the video](https://www.youtube.com/watch?v=J6DY4IG1EOE)
+
+
+
+## Other features
+
 - **Services and Facilities:** Businesses can have multiple facilities where they offer a wide range of services worldwide.
 - **Messaging Functionality:** Users can send messages to each other to get answers to questions or obtain more information about services.
 - **History:** Access to a history of previous bookings that influences the website's recommendations and provides users with a more personalized experience.
