@@ -27,6 +27,7 @@ public class FacilityRepository(DbContext dbContext) : Repository<Facility, long
     {
         return await _dbContext.Facilities
         .Include(f => f.Adress)
+        .Include(f => f.Reviews)
         .Include(f => f.Services)
             .ThenInclude(s => s.Employees)
                 .ThenInclude(e => e.User)
