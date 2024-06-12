@@ -22,6 +22,11 @@ BookingApp är ett API skrivet i C# och .NET Core 8, utformat för att underlät
 [Klicka här för att se videon](https://www.youtube.com/watch?v=DwFj8CUOouo)
 
 
+- **Bokning:** Kunder kan enkelt se tillgängliga tider för en tjänst under valfri dag och filtrera baserat på den anställda som utför tjänsten.
+
+![bokning480](https://github.com/AdamSzablewski/BookingApp/assets/114603622/793f6945-0bb5-42ce-8c59-e2a815af3d01)
+[Klicka här för att se videon](https://www.youtube.com/watch?v=J6DY4IG1EOE)
+
 
 
 ## Nyckelfunktioner
