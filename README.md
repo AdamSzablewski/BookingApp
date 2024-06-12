@@ -47,6 +47,5 @@ When logged in as an owner, you have access to features such as:
 
 ## Other features
 
-- **Services and Facilities:** Businesses can have multiple facilities where they offer a wide range of services worldwide.
 - **Messaging Functionality:** Users can send messages to each other to get answers to questions or obtain more information about services.
-- **History:** Access to a history of previous bookings that influences the website's recommendations and provides users with a more personalized experience.
+
